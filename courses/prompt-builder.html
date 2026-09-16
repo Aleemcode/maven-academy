@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Prompt Builder · Design Vocabulary & XML Synthesizer | Maven Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --wf-ground: #F4F0E5;
+  --wf-ground-2: #FBF9F2;
+  --wf-surface: #FFFFFF;
+  --wf-forest: #14261D;
+  --wf-pine: #1B3428;
+  --wf-ink: #14261D;
+  --wf-ink-2: #454F48;
+  --wf-muted: #7A837C;
+  --wf-ink-inv: #EDE9DC;
+  --wf-ink-inv-2: #C4C9BF;
+  --wf-terra: #E8722C;
+  --wf-terra-deep: #C85A1E;
+  --wf-terra-tint: #FBE3D3;
+  --wf-lime: #D6E59A;
+  --wf-sky: #C9E0F2;
+  --wf-pink: #F6D7E8;
+  --wf-peach: #F7DCC4;
+  --wf-success: #3F8F5F;
+  --wf-success-tint: #DFF0E4;
+  --wf-border: #14261D;
+  --wf-bw: 2.5px;
+  --wf-bw-thin: 2px;
+  --wf-shadow: 5px 5px 0 var(--wf-border);
+  --wf-shadow-sm: 3px 3px 0 var(--wf-border);
+  --wf-shadow-lg: 8px 8px 0 var(--wf-border);
+  --wf-r-xl: 18px;
+  --wf-r-lg: 14px;
+  --wf-r-md: 11px;
+  --wf-r-sm: 8px;
+  --wf-r-pill: 40px;
+  --wf-f-disp: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --wf-f-body: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --wf-f-mono: "Space Mono", ui-monospace, Menlo, monospace;
+  --wf-ease: cubic-bezier(.2, .7, .3, 1);
+}
+*{box-sizing:border-box}
+body{
+  margin: 0;
+  background: var(--wf-ground);
+  color: var(--wf-ink);
+  font-family: var(--wf-f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOP COCKPIT BAR */
+.cockpit-bar{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--wf-ground);
+  border-bottom: var(--wf-bw) solid var(--wf-border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--wf-forest);
+  font-family: var(--wf-f-disp);
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+.brand svg{display:block}
+.cockpit-actions{display:flex; align-items:center; gap:10px}
+.btn-nav{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background: var(--wf-surface);
+  color: var(--wf-forest);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 7px 12px;
+  box-shadow: var(--wf-shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-nav.primary{background:var(--wf-terra); color:#fff}
+
+/* WRAPPER */
+.builder-layout{
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) minmax(420px, 1.2fr);
+  gap: 28px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* LEFT: CONTROLS & LEXICON */
+.panel{
+  background: var(--wf-surface);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-xl);
+  box-shadow: var(--wf-shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.panel-head{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wf-terra-deep);
+  margin-bottom: 6px;
+  display: block;
+}
+.panel-title{
+  font-family: var(--wf-f-disp);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  color: var(--wf-forest);
+  margin: 0 0 16px;
+}
+
+/* CHIPS SELECTOR */
+.selector-group{
+  margin-bottom: 18px;
+}
+.group-label{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+.chips-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip-btn{
+  font-family: var(--wf-f-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  background: var(--wf-ground-2);
+  color: var(--wf-forest);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 120ms var(--wf-ease);
+}
+.chip-btn:hover{background: #fff; transform: translate(-1px, -1px)}
+.chip-btn.active{
+  background: var(--wf-forest);
+  color: #fff;
+  box-shadow: var(--wf-shadow-sm);
+}
+
+/* INPUT FIELD */
+.text-input{
+  width: 100%;
+  background: var(--wf-ground-2);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 12px 14px;
+  font-family: var(--wf-f-body);
+  font-size: 14.5px;
+  color: var(--wf-ink);
+  outline: none;
+}
+.text-input:focus{border-color: var(--wf-terra); background: #fff}
+
+/* LINGO ACCORDION */
+.lingo-pill{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--wf-ground-2);
+  border: 1.5px solid var(--wf-border);
+  border-radius: var(--wf-r-sm);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.lingo-term{font-weight: 700; font-size: 14px; color: var(--wf-forest)}
+.lingo-desc{font-size: 12.5px; color: var(--wf-muted)}
+
+/* RIGHT: LIVE XML SYNTHESIZER */
+.preview-panel{
+  background: var(--wf-forest);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-xl);
+  box-shadow: var(--wf-shadow-lg);
+  padding: 24px;
+  color: var(--wf-ink-inv);
+  position: sticky;
+  top: 80px;
+}
+.preview-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #33473B;
+  padding-bottom: 14px;
+}
+.preview-title{
+  font-family: var(--wf-f-disp);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.copy-xml-btn{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--wf-terra);
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: var(--wf-r-sm);
+  padding: 6px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: all 120ms var(--wf-ease);
+}
+.copy-xml-btn.done{background: var(--wf-success)}
+
+.xml-output{
+  background: #0B1711;
+  border: 1px solid #33473B;
+  border-radius: var(--wf-r-md);
+  padding: 18px;
+  font-family: var(--wf-f-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-x: auto;
+  color: #EDE9DC;
+  white-space: pre-wrap;
+  min-height: 380px;
+}
+.tag{color: #E8722C; font-weight:700}
+.val{color: #D6E59A}
+.comment{color: #7A837C; font-style:italic}
+
+@media (max-width: 960px){
+  .builder-layout{grid-template-columns: 1fr}
+  .preview-panel{position: static}
+}
+</style>
+</head>
+<body>
+
+<header class="cockpit-bar">
+  <a href="layout-b-split-screen.html" class="brand">
+    <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+      <path d="M20 3.5L4 12.8V27.2L20 36.5L36 27.2V12.8L20 3.5Z" stroke="#14261D" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M20 3.5V36.5M4 12.8L36 27.2M4 27.2L36 12.8" stroke="#14261D" stroke-width="2.5"/>
+      <circle cx="20" cy="20" r="4.5" fill="#E8722C"/>
+    </svg>
+    <span>Maven Prompt Builder</span>
+  </a>
+
+  <div class="cockpit-actions">
+    <a href="taste-trainer.html" class="btn-nav">
+      <svg width="14" height="14" viewBox="0 0 256 256" fill="#14261D"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM136,48v72H48V48Zm-88,88h88v72H48Zm160,72H152V136h72Zm0-88H152V48h72Z"/></svg>
+      Taste Trainer
+    </a>
+    <a href="layout-b-split-screen.html" class="btn-nav primary">Return to Lesson 1.1</a>
+  </div>
+</header>
+
+<main class="builder-layout">
+
+  <!-- LEFT: CONTROLS & LEXICON -->
+  <div>
+
+    <div class="panel">
+      <span class="panel-head">Step 1: Direct the Model</span>
+      <h1 class="panel-title">Architectural Prompt Synthesizer</h1>
+      
+      <!-- TARGET TOOL -->
+      <div class="selector-group">
+        <label class="group-label">1. Target Tool</label>
+        <div class="chips-row" id="toolGroup">
+          <button class="chip-btn active" data-tool="Google Stitch">Google Stitch</button>
+          <button class="chip-btn" data-tool="Anthropic Claude">Anthropic Claude</button>
+          <button class="chip-btn" data-tool="Google Antigravity">Google Antigravity</button>
+        </div>
+      </div>
+
+      <!-- DESIGN MOVEMENT -->
+      <div class="selector-group">
+        <label class="group-label">2. Design Movement & Taste</label>
+        <div class="chips-row" id="movementGroup">
+          <button class="chip-btn active" data-style="Warm Fusion">Warm Fusion (Tactile Cream + Forest)</button>
+          <button class="chip-btn" data-style="Swiss Modernism">Swiss Modernism (Grid + Grotesk)</button>
+          <button class="chip-btn" data-style="Neo-Brutalism">Neo-Brutalism (Hard Black Offsets)</button>
+          <button class="chip-btn" data-style="Dark Minimalist">Dark Minimalist (Linear Slate)</button>
+        </div>
+      </div>
+
+      <!-- SCREEN OBJECTIVE -->
+      <div class="selector-group">
+        <label class="group-label">3. Screen Objective</label>
+        <input type="text" class="text-input" id="screenObjective" value="A quiet notes app screen that feels like archival paper with deep negative space">
+      </div>
+
+      <!-- TOKEN GUARDRAILS -->
+      <div class="selector-group">
+        <label class="group-label">4. Enforced Design Tokens</label>
+        <div class="chips-row" id="tokenToggles">
+          <button class="chip-btn active" data-token="12-Step Radix Semantic Mapping">Radix 12-Step</button>
+          <button class="chip-btn active" data-token="Hard 5px 5px 0 Black Offsets">Brutalist Elevation</button>
+          <button class="chip-btn active" data-token="Negative Space (Min 64px)">Archival Breathing</button>
+          <button class="chip-btn active" data-token="Zero Emoji Iconography">Phosphor SVGs Only</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESIGN LINGO LEXICON -->
+    <div class="panel">
+      <span class="panel-head">Step 2: Master the Vocabulary</span>
+      <h2 class="panel-title" style="font-size:1.3rem">Design Lingo to Steer the Guesser</h2>
+      <p style="font-size:13.5px; color:var(--wf-ink-2); margin-top:0">
+        Click any term to inject it directly into your architectural prompt:
+      </p>
+
+      <div class="lingo-pill" onclick="injectLingo('Optical Balance: Align elements by visual weight rather than raw pixels.')">
+        <div>
+          <div class="lingo-term">Optical Balance</div>
+          <div class="lingo-desc">Compensating for letterforms and geometric mass so items appear centered.</div>
+        </div>
+        <span style="color:var(--wf-terra); font-weight:700">+ Add</span>
+      </div>
+
+      <div class="lingo-pill" onclick="injectLingo('Negative Constraints: Do NOT generate drop shadows, gradients, or rounded pills.')">
+        <div>
+          <div class="lingo-term">Negative Constraints</div>
+          <div class="lingo-desc">Declaring taboo patterns that kill AI defaults before generation starts.</div>
+        </div>
+        <span style="color:var(--wf-terra); font-weight:700">+ Add</span>
+      </div>
+
+      <div class="lingo-pill" onclick="injectLingo('Tactile Offset: Apply hard border-box 5px 5px 0 #14261D.')">
+        <div>
+          <div class="lingo-term">Tactile Offset</div>
+          <div class="lingo-desc">Physical neo-brutalist groundings that replace muddy CSS box-shadow blurs.</div>
+        </div>
+        <span style="color:var(--wf-terra); font-weight:700">+ Add</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: LIVE XML SYNTHESIZER -->
+  <aside>
+    <div class="preview-panel">
+      <div class="preview-header">
+        <span class="preview-title">
+          <svg width="20" height="20" viewBox="0 0 256 256" fill="#E8722C"><path d="M69.12,94.15,28.5,128l40.62,33.85a8,8,0,1,1-10.24,12.29l-48-40a8,8,0,0,1,0-12.29l48-40a8,8,0,0,1,10.24,12.3Zm176,27.7-48-40a8,8,0,1,0-10.24,12.3L227.5,128l-40.62,33.85a8,8,0,1,0,10.24,12.29l48-40a8,8,0,0,0,0-12.29ZM162.73,32.48a8,8,0,0,0-10.25,4.79l-64,176a8,8,0,0,0,4.79,10.26,8.14,8.14,0,0,0,2.73.48,8,8,0,0,0,7.52-5.27l64-176A8,8,0,0,0,162.73,32.48Z"/></svg>
+          Synthesized XML Senior Prompt
+        </span>
+        <button class="copy-xml-btn" id="copyXmlBtn">
+          <svg width="12" height="12" viewBox="0 0 256 256" fill="#fff"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></svg>
+          <span id="copyXmlText">Copy 1-Click</span>
+        </button>
+      </div>
+
+      <div class="xml-output" id="xmlDisplay"></div>
+    </div>
+  </aside>
+
+</main>
+
+<script>
+var state = {
+  tool: 'Google Stitch',
+  movement: 'Warm Fusion',
+  objective: 'A quiet notes app screen that feels like archival paper with deep negative space',
+  lingoInjections: []
+};
+
+function renderXML(){
+  var xml = '&lt;screen_request target="' + state.tool.toLowerCase().replace(/ /g,'_') + '"&gt;\n' +
+    '  &lt;role&gt;Lead ' + state.movement + ' UI Architect&lt;/role&gt;\n' +
+    '  &lt;objective&gt;' + state.objective + '&lt;/objective&gt;\n\n' +
+    '  &lt;design_tokens&gt;\n' +
+    '    - Ground: --wf-ground (#F4F0E5)\n' +
+    '    - Surface: --wf-surface (#FFFFFF)\n' +
+    '    - Ink: --wf-ink (#14261D)\n' +
+    '    - Accent: --wf-terra (#E8722C)\n' +
+    '    - Elevation: Hard 5px 5px 0 var(--wf-border)\n' +
+    '    - Taboo: No arbitrary hex codes, zero emojis\n' +
+    '  &lt;/design_tokens&gt;\n\n' +
+    '  &lt;spatial_rules&gt;\n' +
+    '    - Min 64px padding on desktop screens.\n' +
+    '    - One dominant focal point.\n' +
+    '    - Unambiguous visual hierarchy.\n' +
+    '  &lt;/spatial_rules&gt;\n';
+
+  if(state.lingoInjections.length > 0){
+    xml += '\n  &lt;architectural_constraints&gt;\n';
+    state.lingoInjections.forEach(function(inj){
+      xml += '    - ' + inj + '\n';
+    });
+    xml += '  &lt;/architectural_constraints&gt;\n';
+  }
+
+  xml += '&lt;/screen_request&gt;';
+  document.getElementById('xmlDisplay').innerHTML = xml;
+}
+
+// Chips event listeners
+document.querySelectorAll('#toolGroup .chip-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('#toolGroup .chip-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    state.tool = btn.getAttribute('data-tool');
+    renderXML();
+  });
+});
+
+document.querySelectorAll('#movementGroup .chip-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('#movementGroup .chip-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    state.movement = btn.getAttribute('data-style');
+    renderXML();
+  });
+});
+
+document.getElementById('screenObjective').addEventListener('input', function(e){
+  state.objective = e.target.value;
+  renderXML();
+});
+
+window.injectLingo = function(lingoStr){
+  if(!state.lingoInjections.includes(lingoStr)){
+    state.lingoInjections.push(lingoStr);
+    renderXML();
+  }
+};
+
+// Copy XML button
+document.getElementById('copyXmlBtn').addEventListener('click', function(){
+  var rawText = document.getElementById('xmlDisplay').innerText;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(rawText).then(function(){
+      var btn = document.getElementById('copyXmlBtn');
+      var txt = document.getElementById('copyXmlText');
+      btn.classList.add('done');
+      txt.textContent = 'Copied!';
+      setTimeout(function(){
+        btn.classList.remove('done');
+        txt.textContent = 'Copy 1-Click';
+      }, 2000);
+    });
+  }
+});
+
+renderXML();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Taste Trainer · Calibrate Aesthetic Discernment | Maven Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --wf-ground: #F4F0E5;
+  --wf-ground-2: #FBF9F2;
+  --wf-surface: #FFFFFF;
+  --wf-forest: #14261D;
+  --wf-pine: #1B3428;
+  --wf-ink: #14261D;
+  --wf-ink-2: #454F48;
+  --wf-muted: #7A837C;
+  --wf-ink-inv: #EDE9DC;
+  --wf-ink-inv-2: #C4C9BF;
+  --wf-terra: #E8722C;
+  --wf-terra-deep: #C85A1E;
+  --wf-terra-tint: #FBE3D3;
+  --wf-lime: #D6E59A;
+  --wf-sky: #C9E0F2;
+  --wf-pink: #F6D7E8;
+  --wf-peach: #F7DCC4;
+  --wf-success: #3F8F5F;
+  --wf-border: #14261D;
+  --wf-bw: 2.5px;
+  --wf-bw-thin: 2px;
+  --wf-shadow: 5px 5px 0 var(--wf-border);
+  --wf-shadow-sm: 3px 3px 0 var(--wf-border);
+  --wf-shadow-lg: 8px 8px 0 var(--wf-border);
+  --wf-r-xl: 18px;
+  --wf-r-lg: 14px;
+  --wf-r-md: 11px;
+  --wf-r-sm: 8px;
+  --wf-r-pill: 40px;
+  --wf-f-disp: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --wf-f-body: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --wf-f-mono: "Space Mono", ui-monospace, Menlo, monospace;
+  --wf-ease: cubic-bezier(.2, .7, .3, 1);
+}
+*{box-sizing:border-box}
+body{
+  margin: 0;
+  background: var(--wf-ground);
+  color: var(--wf-ink);
+  font-family: var(--wf-f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOP COCKPIT BAR */
+.cockpit-bar{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--wf-ground);
+  border-bottom: var(--wf-bw) solid var(--wf-border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--wf-forest);
+  font-family: var(--wf-f-disp);
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+.brand svg{display:block}
+.cockpit-actions{display:flex; align-items:center; gap:10px}
+.btn-nav{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background: var(--wf-surface);
+  color: var(--wf-forest);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 7px 12px;
+  box-shadow: var(--wf-shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-nav.primary{background:var(--wf-terra); color:#fff}
+
+.wrap{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 36px 24px 80px;
+}
+
+/* HERO SECTION */
+.hero-tag{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wf-terra-deep);
+  background: var(--wf-terra-tint);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-pill);
+  padding: 4px 12px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+h1{
+  font-family: var(--wf-f-disp);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  color: var(--wf-forest);
+  margin: 0 0 14px;
+}
+.lead{
+  font-size: 1.1rem;
+  color: var(--wf-ink-2);
+  max-width: 66ch;
+  line-height: 1.6;
+  margin: 0 0 32px;
+}
+
+/* SECTION HEADERS */
+.sec-head{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 40px 0 18px;
+  border-bottom: var(--wf-bw) solid var(--wf-border);
+  padding-bottom: 10px;
+}
+.sec-title{
+  font-family: var(--wf-f-disp);
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--wf-forest);
+}
+
+/* MOVEMENTS GALLERY */
+.movements-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+.movement-card{
+  background: var(--wf-surface);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-xl);
+  box-shadow: var(--wf-shadow);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 120ms var(--wf-ease);
+}
+.movement-card:hover{transform: translate(-2px, -2px); box-shadow: var(--wf-shadow-lg)}
+.m-badge{
+  font-family: var(--wf-f-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1.5px solid var(--wf-border);
+  border-radius: var(--wf-r-sm);
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.m-title{font-family: var(--wf-f-disp); font-weight: 700; font-size: 1.35rem; color: var(--wf-forest); margin: 0 0 8px}
+.m-desc{font-size: 13.5px; color: var(--wf-ink-2); line-height: 1.5; margin: 0 0 16px}
+.m-spec{
+  background: var(--wf-ground-2);
+  border: 1px solid var(--wf-border);
+  border-radius: var(--wf-r-sm);
+  padding: 10px 12px;
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  color: var(--wf-forest);
+  margin-bottom: 16px;
+}
+
+.btn-vault{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--wf-ground-2);
+  color: var(--wf-forest);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 120ms var(--wf-ease);
+}
+.btn-vault:hover{background: var(--wf-forest); color: #fff}
+.btn-vault.saved{background: var(--wf-success); color: #fff; border-color: var(--wf-success)}
+
+/* BEFORE / AFTER DRILL */
+.drill-card{
+  background: var(--wf-surface);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-xl);
+  box-shadow: var(--wf-shadow-lg);
+  padding: 24px;
+  margin: 32px 0;
+}
+.drill-toggle-bar{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.toggle-btn{
+  font-family: var(--wf-f-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--wf-ground-2);
+  color: var(--wf-forest);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 10px 18px;
+  cursor: pointer;
+}
+.toggle-btn.active{
+  background: var(--wf-forest);
+  color: #fff;
+  box-shadow: var(--wf-shadow-sm);
+}
+
+.comparison-stage{
+  background: var(--wf-ground-2);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-lg);
+  padding: 30px;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SLOP PREVIEW */
+.slop-box{
+  width: 100%;
+  max-width: 480px;
+  background: #f8fafc;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  border: 1px solid #e2e8f0;
+}
+.slop-title{font-size: 18px; font-weight: 600; color: #334155; margin-bottom: 8px}
+.slop-btn{
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
+
+/* CRAFTED PREVIEW */
+.crafted-box{
+  width: 100%;
+  max-width: 480px;
+  background: var(--wf-surface);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-lg);
+  padding: 24px;
+  box-shadow: var(--wf-shadow);
+}
+.crafted-title{
+  font-family: var(--wf-f-disp);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--wf-forest);
+  margin-bottom: 8px;
+}
+.crafted-btn{
+  font-family: var(--wf-f-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--wf-terra);
+  color: #fff;
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 10px 18px;
+  cursor: pointer;
+  box-shadow: var(--wf-shadow-sm);
+}
+
+/* TASTE VAULT DRAWER */
+.vault-drawer{
+  background: var(--wf-forest);
+  color: var(--wf-ink-inv);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-xl);
+  box-shadow: var(--wf-shadow-lg);
+  padding: 26px;
+  margin-top: 40px;
+}
+.vault-title{
+  font-family: var(--wf-f-disp);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.vault-count{
+  font-family: var(--wf-f-mono);
+  font-size: 12px;
+  background: var(--wf-terra);
+  padding: 4px 10px;
+  border-radius: var(--wf-r-pill);
+}
+.vault-items-list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.vault-item{
+  background: #1B3428;
+  border: 1px solid #33473B;
+  border-radius: var(--wf-r-md);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--wf-f-mono);
+  font-size: 12.5px;
+}
+</style>
+</head>
+<body>
+
+<header class="cockpit-bar">
+  <a href="layout-b-split-screen.html" class="brand">
+    <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+      <path d="M20 3.5L4 12.8V27.2L20 36.5L36 27.2V12.8L20 3.5Z" stroke="#14261D" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M20 3.5V36.5M4 12.8L36 27.2M4 27.2L36 12.8" stroke="#14261D" stroke-width="2.5"/>
+      <circle cx="20" cy="20" r="4.5" fill="#E8722C"/>
+    </svg>
+    <span>Maven Taste Trainer</span>
+  </a>
+
+  <div class="cockpit-actions">
+    <a href="prompt-builder.html" class="btn-nav">
+      <svg width="14" height="14" viewBox="0 0 256 256" fill="#14261D"><path d="M213.66,82.34l-56-56a8,8,0,0,0-11.32,0l-112,112a8,8,0,0,0,0,11.32l56,56a8,8,0,0,0,11.32,0l112-112A8,8,0,0,0,213.66,82.34ZM152,43.31,188.69,80,168,100.69,131.31,64ZM48,144l24-24,32,32-24,24ZM96,160l-32-32,64-64,32,32Z"/></svg>
+      Prompt Builder
+    </a>
+    <a href="layout-b-split-screen.html" class="btn-nav primary">Return to Lesson 1.1</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <span class="hero-tag">Aesthetic Calibration & The Last Mile</span>
+  <h1>Train Your Eye. Reject the Slop.</h1>
+  <p class="lead">
+    Code can be generated in seconds. What separates an amateur with an AI subscription from a top 1% builder is the refusal to ship what is merely functional. Use this space to curate your Taste Vault and study foundational design movements.
+  </p>
+
+  <!-- BEFORE / AFTER DRILL -->
+  <div class="drill-card">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px">
+      <span style="font-family:var(--wf-f-mono); font-size:11px; font-weight:700; text-transform:uppercase; color:var(--wf-terra-deep)">Interactive Eye Calibration</span>
+      <span style="font-size:12.5px; color:var(--wf-muted)">Click to toggle output styles</span>
+    </div>
+
+    <div class="drill-toggle-bar">
+      <button class="toggle-btn" id="btnSlop">AI Default Slop</button>
+      <button class="toggle-btn active" id="btnCraft">Warm Fusion Craft</button>
+    </div>
+
+    <div class="comparison-stage">
+      <div class="slop-box" id="slopBox" style="display:none">
+        <div style="font-size:11px; color:#94a3b8; font-weight:600; text-transform:uppercase; margin-bottom:4px">Standard LLM Output</div>
+        <div class="slop-title">Dashboard Overview Screen</div>
+        <p style="font-size:13px; color:#64748b; line-height:1.5; margin-bottom:16px">
+          Notice the muddy 40px blurry drop-shadow, non-standard purple gradient button, and lack of visual boundary tension.
+        </p>
+        <button class="slop-btn">Explore Metrics →</button>
+      </div>
+
+      <div class="crafted-box" id="craftedBox">
+        <div style="font-family:var(--wf-f-mono); font-size:10px; color:var(--wf-terra-deep); font-weight:700; text-transform:uppercase; margin-bottom:4px">Directed Craftsmanship</div>
+        <div class="crafted-title">Executive Command Deck</div>
+        <p style="font-size:13.5px; color:var(--wf-ink-2); line-height:1.55; margin-bottom:16px">
+          Crisp 2.5px solid border, 5px hard black elevation, high-contrast forest ink (#14261D), and purposeful Bricolage display typography.
+        </p>
+        <button class="crafted-btn">Explore Metrics →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOVEMENTS GALLERY -->
+  <div class="sec-head">
+    <div class="sec-title">The Design Movements Museum</div>
+    <span style="font-family:var(--wf-f-mono); font-size:11px; color:var(--wf-muted)">4 Foundational Disciplines</span>
+  </div>
+
+  <div class="movements-grid">
+
+    <!-- MOVEMENT 1 -->
+    <div class="movement-card">
+      <div>
+        <span class="m-badge" style="background:var(--wf-lime)">Primary Stack</span>
+        <h3 class="m-title">Warm Fusion</h3>
+        <p class="m-desc">
+          The synthesis of Swiss typographic warmth with Neo-Brutalist tactile physics. Archival cream grounds, deep forest borders, and a single terracotta spark.
+        </p>
+        <div class="m-spec">
+          Tokens: #F4F0E5 · #14261D · #E8722C<br>
+          Elevation: 5px 5px 0 #14261D
+        </div>
+      </div>
+      <button class="btn-vault" onclick="saveToVault('Warm Fusion Design System')">
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM216,200H40V56H216V200Z"/></svg>
+        Save to Taste Vault
+      </button>
+    </div>
+
+    <!-- MOVEMENT 2 -->
+    <div class="movement-card">
+      <div>
+        <span class="m-badge" style="background:var(--wf-sky)">The Foundation</span>
+        <h3 class="m-title">Swiss Modernism</h3>
+        <p class="m-desc">
+          Mathematical grid rigor, asymmetric balance, pure sans-serif letterforms, and radical visual hierarchy pioneered in Zurich and Basel.
+        </p>
+        <div class="m-spec">
+          Tokens: Grid 8pt · High Contrast · Monospaced Accents
+        </div>
+      </div>
+      <button class="btn-vault" onclick="saveToVault('Swiss Modernism Grid Rules')">
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM216,200H40V56H216V200Z"/></svg>
+        Save to Taste Vault
+      </button>
+    </div>
+
+    <!-- MOVEMENT 3 -->
+    <div class="movement-card">
+      <div>
+        <span class="m-badge" style="background:var(--wf-peach)">Tactile Depth</span>
+        <h3 class="m-title">Neo-Brutalism</h3>
+        <p class="m-desc">
+          Bold black outlines, unblurred physical drop shadows, unapologetic raw geometries, and honest material boundaries.
+        </p>
+        <div class="m-spec">
+          Tokens: 2.5px Solid Lines · Zero Blurs
+        </div>
+      </div>
+      <button class="btn-vault" onclick="saveToVault('Neo-Brutalist Elevation Physics')">
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM216,200H40V56H216V200Z"/></svg>
+        Save to Taste Vault
+      </button>
+    </div>
+
+  </div>
+
+  <!-- PERSONAL TASTE VAULT -->
+  <div class="vault-drawer">
+    <div class="vault-title">
+      <div style="display:flex; align-items:center; gap:10px">
+        <svg width="22" height="22" viewBox="0 0 256 256" fill="#E8722C"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM136,48v72H48V48Zm-88,88h88v72H48Zm160,72H152V136h72Zm0-88H152V48h72Z"/></svg>
+        My Personal Taste Vault
+      </div>
+      <span class="vault-count" id="vaultCount">2 Items Saved</span>
+    </div>
+
+    <ul class="vault-items-list" id="vaultList">
+      <li class="vault-item">
+        <span>✦ Warm Fusion Design System (Default Brand Spine)</span>
+        <span style="color:#C4C9BF; font-size:11px">Auto-Enrolled</span>
+      </li>
+      <li class="vault-item">
+        <span>✦ Optical Balance & Negative Space Constraints</span>
+        <span style="color:#C4C9BF; font-size:11px">Lesson 1.1 Extract</span>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+// Toggle drill
+var btnSlop = document.getElementById('btnSlop');
+var btnCraft = document.getElementById('btnCraft');
+var slopBox = document.getElementById('slopBox');
+var craftedBox = document.getElementById('craftedBox');
+
+btnSlop.addEventListener('click', function(){
+  btnSlop.classList.add('active');
+  btnCraft.classList.remove('active');
+  slopBox.style.display = 'block';
+  craftedBox.style.display = 'none';
+});
+
+btnCraft.addEventListener('click', function(){
+  btnCraft.classList.add('active');
+  btnSlop.classList.remove('active');
+  slopBox.style.display = 'none';
+  craftedBox.style.display = 'block';
+});
+
+// Taste vault local storage
+var savedItems = JSON.parse(localStorage.getItem('maven_taste_vault') || '["Warm Fusion Design System", "Optical Balance & Negative Space"]');
+
+function updateVaultUI(){
+  var countEl = document.getElementById('vaultCount');
+  countEl.textContent = savedItems.length + ' Items Saved';
+  var list = document.getElementById('vaultList');
+  list.innerHTML = '';
+  savedItems.forEach(function(item){
+    var li = document.createElement('li');
+    li.className = 'vault-item';
+    li.innerHTML = '<span>✦ ' + item + '</span><span style="color:#C4C9BF; font-size:11px">Saved</span>';
+    list.appendChild(li);
+  });
+}
+
+window.saveToVault = function(name){
+  if(!savedItems.includes(name)){
+    savedItems.push(name);
+    localStorage.setItem('maven_taste_vault', JSON.stringify(savedItems));
+    updateVaultUI();
+  }
+};
+updateVaultUI();
+</script>
+
+</body>
+</html>

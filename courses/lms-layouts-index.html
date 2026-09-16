@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LMS Lesson Player Layout Comparison | Maven Builder Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --wf-ground: #F4F0E5;
+  --wf-ground-2: #FBF9F2;
+  --wf-surface: #FFFFFF;
+  --wf-forest: #14261D;
+  --wf-pine: #1B3428;
+  --wf-ink: #14261D;
+  --wf-ink-2: #454F48;
+  --wf-muted: #7A837C;
+  --wf-ink-inv: #EDE9DC;
+  --wf-ink-inv-2: #C4C9BF;
+  --wf-terra: #E8722C;
+  --wf-terra-deep: #C85A1E;
+  --wf-terra-tint: #FBE3D3;
+  --wf-lime: #D6E59A;
+  --wf-sky: #C9E0F2;
+  --wf-pink: #F6D7E8;
+  --wf-peach: #F7DCC4;
+  --wf-success: #3F8F5F;
+  --wf-success-tint: #DFF0E4;
+  --wf-border: #14261D;
+  --wf-bw: 2.5px;
+  --wf-bw-thin: 2px;
+  --wf-shadow: 5px 5px 0 var(--wf-border);
+  --wf-shadow-sm: 3px 3px 0 var(--wf-border);
+  --wf-shadow-lg: 8px 8px 0 var(--wf-border);
+  --wf-r-xl: 18px;
+  --wf-r-lg: 14px;
+  --wf-r-md: 11px;
+  --wf-r-sm: 8px;
+  --wf-r-pill: 40px;
+  --wf-f-disp: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --wf-f-body: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --wf-f-mono: "Space Mono", ui-monospace, Menlo, monospace;
+  --wf-ease: cubic-bezier(.2, .7, .3, 1);
+}
+*{box-sizing:border-box}
+body{
+  margin: 0;
+  background: var(--wf-ground);
+  color: var(--wf-ink);
+  font-family: var(--wf-f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.top-pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wf-terra-deep);
+  background: var(--wf-terra-tint);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-pill);
+  padding: 5px 14px;
+  margin-bottom: 12px;
+}
+h1{
+  font-family: var(--wf-f-disp);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--wf-forest);
+  margin: 0 0 16px;
+}
+.lead{
+  font-size: 1.15rem;
+  color: var(--wf-ink-2);
+  max-width: 68ch;
+  line-height: 1.6;
+  margin: 0 0 36px;
+}
+
+/* LAYOUT CARDS GRID */
+.layout-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+.layout-card{
+  background: var(--wf-surface);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-xl);
+  box-shadow: var(--wf-shadow);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 140ms var(--wf-ease), box-shadow 140ms var(--wf-ease);
+}
+.layout-card:hover{
+  transform: translate(-2px, -2px);
+  box-shadow: var(--wf-shadow-lg);
+}
+.layout-card.featured{
+  border-color: var(--wf-forest);
+  background: #FFFDF7;
+}
+.badge-rec{
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--wf-terra);
+  color: #fff;
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-pill);
+  font-family: var(--wf-f-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 12px;
+  box-shadow: var(--wf-shadow-sm);
+}
+.card-tag{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wf-forest);
+  background: var(--wf-lime);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-sm);
+  padding: 2px 8px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+.card-h2{
+  font-family: var(--wf-f-disp);
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+  color: var(--wf-forest);
+  margin: 0 0 10px;
+}
+.card-desc{
+  font-size: 14.5px;
+  color: var(--wf-ink-2);
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+
+/* WIREFRAME DIAGRAM */
+.wireframe{
+  background: var(--wf-ground-2);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 14px;
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  color: var(--wf-forest);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.pros-cons{
+  margin-bottom: 24px;
+}
+.pc-row{
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13.5px;
+  margin-bottom: 6px;
+}
+.pc-icon{min-width: 16px; margin-top: 2px}
+
+.btn-open{
+  font-family: var(--wf-f-mono);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  background: var(--wf-forest);
+  color: #fff;
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--wf-shadow-sm);
+  transition: transform 120ms var(--wf-ease);
+}
+.btn-open:hover{transform: translate(-1px, -1px)}
+.btn-open.primary{
+  background: var(--wf-terra);
+}
+
+/* COMPARISON TABLE */
+.matrix-card{
+  background: var(--wf-surface);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-xl);
+  box-shadow: var(--wf-shadow);
+  padding: 28px;
+}
+.matrix-h2{
+  font-family: var(--wf-f-disp);
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: -0.03em;
+  margin: 0 0 20px;
+  color: var(--wf-forest);
+}
+table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th, td{
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--wf-border);
+}
+th{
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--wf-ground-2);
+  color: var(--wf-forest);
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <span class="top-pill">
+    <svg width="14" height="14" viewBox="0 0 256 256" fill="#C85A1E"><path d="M213.66,82.34l-56-56a8,8,0,0,0-11.32,0l-112,112a8,8,0,0,0,0,11.32l56,56a8,8,0,0,0,11.32,0l112-112A8,8,0,0,0,213.66,82.34Z"/></svg>
+    Studio Architecture · Layout Comparison
+  </span>
+
+  <h1>Compare 3 LMS Lesson Player Layouts</h1>
+  <p class="lead">
+    Before starting video recordings tomorrow, test these three distinct learning surfaces. Each represents a different ergonomic balance between video instruction, technical reading, and prompt engineering drills.
+  </p>
+
+  <div class="layout-grid">
+
+    <!-- LAYOUT A -->
+    <div class="layout-card">
+      <div>
+        <span class="card-tag">Layout A</span>
+        <h2 class="card-h2">Growth.design Story</h2>
+        <p class="card-desc">
+          Single-column vertical comic/editorial format. The student scrolls sequentially through the narrative, dilemma card, prompt copy box, and voice quote.
+        </p>
+        <div class="wireframe">
+          ┌──────────────────────────┐<br>
+          │ Header & Progress        │<br>
+          │ 16:9 Video Mock          │<br>
+          │ Story Panel Cards        │<br>
+          │ Predict Dilemma Drill    │<br>
+          │ 1-Click Prompt Box       │<br>
+          │ Aleem's Voice Hinge      │<br>
+          └──────────────────────────┘
+        </div>
+        <div class="pros-cons">
+          <div class="pc-row">
+            <span class="pc-icon">✦</span>
+            <span><b>Pro:</b> Ultra-focused mobile reading experience with zero cognitive clutter.</span>
+          </div>
+          <div class="pc-row">
+            <span class="pc-icon">✕</span>
+            <span><b>Con:</b> Video scrolls out of view once the student begins reading or copying prompts.</span>
+          </div>
+        </div>
+      </div>
+      <a href="layout-a-growth-design.html" class="btn-open">
+        Test Layout A
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+      </a>
+    </div>
+
+    <!-- LAYOUT B (RECOMMENDED) -->
+    <div class="layout-card featured">
+      <span class="badge-rec">Recommended</span>
+      <div>
+        <span class="card-tag" style="background:var(--wf-terra-tint); color:var(--wf-terra-deep)">Layout B</span>
+        <h2 class="card-h2">Split-Screen Studio</h2>
+        <p class="card-desc">
+          Left column pins the 16:9 video stage with interactive chapter jumps. Right column scrolls the rich workbook with prompt box, dilemmas, and checklists.
+        </p>
+        <div class="wireframe">
+          ┌───────────────┬──────────────┐<br>
+          │ STICKY VIDEO  │ WORKBOOK     │<br>
+          │ 16:9 Player   │ Lesson Spine │<br>
+          │ Scrubber      │ Dilemma Drill│<br>
+          │ Chapters List │ XML Prompts  │<br>
+          │ Active Tool   │ Verification │<br>
+          └───────────────┴──────────────┘
+        </div>
+        <div class="pros-cons">
+          <div class="pc-row">
+            <span class="pc-icon">✦</span>
+            <span><b>Pro:</b> True builder ergonomics. Video stays fixed while typing in Stitch/Claude and copying prompts.</span>
+          </div>
+          <div class="pc-row">
+            <span class="pc-icon">✦</span>
+            <span><b>Pro:</b> Chapter jumps let students jump directly between live demo and technical text.</span>
+          </div>
+        </div>
+      </div>
+      <a href="layout-b-split-screen.html" class="btn-open primary">
+        Test Layout B (Split-Screen)
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+      </a>
+    </div>
+
+    <!-- LAYOUT C -->
+    <div class="layout-card">
+      <div>
+        <span class="card-tag" style="background:var(--wf-sky)">Layout C</span>
+        <h2 class="card-h2">Cinema Cockpit</h2>
+        <p class="card-desc">
+          Full-width 16:9 cinema stage on top. Beneath the video is a 4-tab docked drawer switching between Reading, XML Prompts, Dilemmas, and Design Vocabulary.
+        </p>
+        <div class="wireframe">
+          ┌──────────────────────────┐<br>
+          │ 16:9 CINEMA STAGE        │<br>
+          ├──────┬──────┬─────┬──────┤<br>
+          │ READ │ XML  │ QUIZ│ TASTE│<br>
+          ├──────┴──────┴─────┴──────┤<br>
+          │ Active Drawer Panel      │<br>
+          └──────────────────────────┘
+        </div>
+        <div class="pros-cons">
+          <div class="pc-row">
+            <span class="pc-icon">✦</span>
+            <span><b>Pro:</b> Immersive video-first feel ideal for long, deep architectural walkthroughs.</span>
+          </div>
+          <div class="pc-row">
+            <span class="pc-icon">✕</span>
+            <span><b>Con:</b> Requires tab switching to see the prompt recipe while reading the technical guide.</span>
+          </div>
+        </div>
+      </div>
+      <a href="layout-c-cinema-dock.html" class="btn-open">
+        Test Layout C
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="matrix-card">
+    <h2 class="matrix-h2">Feature & Ergonomics Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Layout A: Growth.design</th>
+          <th>Layout B: Split-Screen Studio</th>
+          <th>Layout C: Cinema Cockpit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Video Focus</b></td>
+          <td>Scrolls with page</td>
+          <td>Sticky Stage (Always visible)</td>
+          <td>Cinema Wide (Top centered)</td>
+        </tr>
+        <tr>
+          <td><b>Multitasking with Stitch/Claude</b></td>
+          <td>Requires scrolling up/down</td>
+          <td>Optimal (Side-by-side)</td>
+          <td>Moderate (Tab click required)</td>
+        </tr>
+        <tr>
+          <td><b>Prompt Copy Ergonomics</b></td>
+          <td>End of page section</td>
+          <td>Always reachable in workbook</td>
+          <td>Dedicated tab</td>
+        </tr>
+        <tr>
+          <td><b>Mobile Ergonomics</b></td>
+          <td>Natural vertical flow</td>
+          <td>Stacks gracefully into video + text</td>
+          <td>Scrolls below video tabs</td>
+        </tr>
+        <tr>
+          <td><b>Best Suited For</b></td>
+          <td>Micro-reading & conceptual reframes</td>
+          <td>Hands-on builds & code companion</td>
+          <td>Long-form keynote masterclasses</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
