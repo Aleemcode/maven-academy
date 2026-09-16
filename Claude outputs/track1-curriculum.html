@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track 1 Curriculum — Maven Builder Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --wf-ground:#F4F0E5; --wf-ground-2:#FBF9F2; --wf-surface:#FFFFFF;
+  --wf-forest:#14261D; --wf-pine:#1B3428;
+  --wf-ink:#14261D; --wf-ink-2:#454F48; --wf-muted:#7A837C;
+  --wf-ink-inv:#EDE9DC; --wf-ink-inv-2:#C4C9BF;
+  --wf-terra:#E8722C; --wf-terra-deep:#C85A1E; --wf-terra-tint:#FBE3D3;
+  --wf-lime:#D6E59A; --wf-sky:#C9E0F2; --wf-pink:#F6D7E8; --wf-peach:#F7DCC4;
+  --wf-success:#3F8F5F; --wf-success-tint:#DFF0E4;
+  --wf-warning:#C9902E; --wf-warning-tint:#FBEECB;
+  --wf-error:#C8452F; --wf-error-tint:#F7DAD2;
+  --wf-info:#3E7CA8; --wf-info-tint:#DCEAF3;
+  --wf-border:#14261D; --wf-bw:2.5px; --wf-bw-thin:2px;
+  --wf-shadow:5px 5px 0 var(--wf-border); --wf-shadow-sm:3px 3px 0 var(--wf-border); --wf-shadow-lg:8px 8px 0 var(--wf-border);
+  --wf-r-xl:20px; --wf-r-lg:14px; --wf-r-md:11px; --wf-r-sm:8px; --wf-r-pill:40px;
+  --wf-s1:4px; --wf-s2:8px; --wf-s3:12px; --wf-s4:16px; --wf-s5:20px; --wf-s6:24px; --wf-s7:32px; --wf-s8:40px; --wf-s9:56px; --wf-s10:72px; --wf-s11:96px;
+  --wf-f-disp:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --wf-f-body:"Instrument Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --wf-f-mono:"Space Mono",ui-monospace,Menlo,monospace;
+  --wf-dur:200ms; --wf-dur-fast:120ms; --wf-ease:cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--wf-ground); color:var(--wf-ink); font-family:var(--wf-f-body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased}
+.wrap{max-width:960px; margin:0 auto; padding:var(--wf-s8) var(--wf-s5) var(--wf-s11)}
+h1,h2,h3,h4{font-family:var(--wf-f-disp); font-weight:700; margin:0; letter-spacing:-0.03em; line-height:1.06; color:var(--wf-forest); text-wrap:balance}
+.disp{font-size:clamp(2.4rem,6vw,3.8rem); letter-spacing:-0.05em}
+.h1{font-size:clamp(1.9rem,4.5vw,2.9rem); letter-spacing:-0.04em}
+.h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.h3{font-size:1.28rem}
+.h4{font-size:1.02rem}
+.lead{font-size:1.12rem; color:var(--wf-ink-2); max-width:64ch}
+.label{font-family:var(--wf-f-mono); text-transform:uppercase; font-size:11px; letter-spacing:0.09em; font-weight:700; color:var(--wf-terra-deep)}
+.mono{font-family:var(--wf-f-mono)}
+.muted{color:var(--wf-muted)}
+p{max-width:66ch}
+a{color:var(--wf-terra-deep)}
+.code{font-family:var(--wf-f-mono); font-size:0.84em; background:var(--wf-ground-2); border:1px solid rgba(20,38,29,0.16); border-radius:5px; padding:1px 6px; color:var(--wf-forest)}
+.chip{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase; font-size:0.7rem; letter-spacing:0.03em; padding:5px 11px; border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-sm); color:var(--wf-forest); display:inline-block; background:var(--wf-lime)}
+.chip.sky{background:var(--wf-sky)} .chip.pink{background:var(--wf-pink)} .chip.peach{background:var(--wf-peach)} .chip.lime{background:var(--wf-lime)}
+.panel{background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); padding:var(--wf-s7)}
+.panel-dark{background:var(--wf-forest); color:var(--wf-ink-inv); border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); padding:var(--wf-s7)}
+.panel-dark h1,.panel-dark h2,.panel-dark h3,.panel-dark h4{color:var(--wf-ink-inv)}
+.card{background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); padding:var(--wf-s6)}
+.tile{width:52px; height:52px; min-width:52px; border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md); box-shadow:var(--wf-shadow-sm); display:flex; align-items:center; justify-content:center; color:var(--wf-forest); background:var(--wf-lime)}
+.callout{border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md); padding:16px 18px; box-shadow:var(--wf-shadow-sm); margin:20px 0}
+.callout .ct{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em; margin-bottom:7px; display:flex; align-items:center; gap:8px}
+.callout p{margin:0; max-width:none}
+.c-insight{background:var(--wf-sky)} .c-insight .ct{color:var(--wf-info)}
+.c-tip{background:var(--wf-lime)} .c-tip .ct{color:var(--wf-success)}
+.c-watch{background:var(--wf-peach)} .c-watch .ct{color:var(--wf-terra-deep)}
+.c-aleem{background:var(--wf-terra-tint)} .c-aleem .ct{color:var(--wf-terra-deep)}
+/* Word You'll Own — signature lexicon device */
+.lex{background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md); box-shadow:var(--wf-shadow-sm); margin:22px 0; overflow:hidden}
+.lex-top{background:var(--wf-forest); padding:10px 16px; display:flex; align-items:center; gap:10px}
+.lex-top .lt{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase; font-size:.66rem; letter-spacing:.09em; color:var(--wf-terra)}
+.lex-body{padding:16px 18px}
+.lex-term{font-family:var(--wf-f-mono); font-weight:700; font-size:1.15rem; color:var(--wf-forest); letter-spacing:-.01em}
+.lex-say{font-family:var(--wf-f-mono); font-size:.72rem; color:var(--wf-muted); margin-left:8px}
+.lex-def{margin:8px 0 0; font-size:.97rem; color:var(--wf-ink)}
+.lex-use{margin-top:12px; padding:10px 12px; background:var(--wf-ground-2); border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-sm)}
+.lex-use .ul{font-family:var(--wf-f-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--wf-terra-deep); display:block; margin-bottom:3px}
+.lex-use .uq{font-size:.92rem; color:var(--wf-forest)}
+.btn{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase; letter-spacing:0.04em; font-size:0.8rem; border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md); padding:11px 18px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; background:var(--wf-terra); color:#fff; box-shadow:var(--wf-shadow-sm); transition:transform var(--wf-dur-fast) var(--wf-ease), box-shadow var(--wf-dur-fast) var(--wf-ease)}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:var(--wf-shadow)}
+.btn:active{transform:translate(3px,3px); box-shadow:0 0 0 var(--wf-border)}
+.btn.sec{background:var(--wf-surface); color:var(--wf-ink)}
+.divider{height:var(--wf-bw); background:var(--wf-border); border:0; margin:var(--wf-s9) 0; opacity:1}
+.sect-label{display:flex; align-items:center; gap:10px; margin-bottom:var(--wf-s4); flex-wrap:wrap}
+.beat{display:flex; gap:16px; align-items:flex-start}
+.beat-n{font-family:var(--wf-f-mono); font-weight:700; font-size:1rem; color:#fff; background:var(--wf-forest); border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-sm); width:38px; height:38px; min-width:38px; display:flex; align-items:center; justify-content:center; box-shadow:var(--wf-shadow-sm)}
+.loop{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:16px}
+.loopcard{border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md); padding:16px; box-shadow:var(--wf-shadow-sm); background:var(--wf-surface)}
+.loopcard .ln{font-family:var(--wf-f-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--wf-terra-deep)}
+.loopcard .lh{font-family:var(--wf-f-disp); font-weight:700; font-size:1.1rem; margin-top:4px; color:var(--wf-forest)}
+.loopcard .ld{font-size:.86rem; color:var(--wf-ink-2); margin-top:6px}
+.loopcard.base{background:var(--wf-sky)} .loopcard.taste{background:var(--wf-terra-tint)} .loopcard.arena{background:var(--wf-lime)}
+.stepgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:14px}
+.step{border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-sm); padding:12px; background:var(--wf-ground-2)}
+.step .sl{font-family:var(--wf-f-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--wf-terra-deep)}
+.step .st{font-family:var(--wf-f-disp); font-weight:700; font-size:1rem; margin-top:3px; color:var(--wf-forest)}
+.step .sd{font-size:.82rem; color:var(--wf-ink-2); margin-top:4px}
+.dilemma-opt{display:block; width:100%; text-align:left; background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md); padding:14px 16px; margin:10px 0; cursor:pointer; box-shadow:var(--wf-shadow-sm); font-family:var(--wf-f-body); font-size:.98rem; color:var(--wf-ink); transition:transform var(--wf-dur-fast) var(--wf-ease), box-shadow var(--wf-dur-fast) var(--wf-ease)}
+.dilemma-opt:hover{transform:translate(-1px,-1px); box-shadow:var(--wf-shadow)}
+.dilemma-opt .ok{font-family:var(--wf-f-mono); font-weight:700; margin-right:10px; color:var(--wf-terra-deep)}
+.dilemma-opt.correct{background:var(--wf-success-tint); border-color:var(--wf-success)}
+.dilemma-opt.wrong{background:var(--wf-error-tint); border-color:var(--wf-error)}
+.reveal{display:none; margin-top:16px}
+.reveal.show{display:block}
+.slot{border:var(--wf-bw) dashed var(--wf-terra-deep); border-radius:var(--wf-r-md); padding:14px 16px; background:repeating-linear-gradient(135deg,var(--wf-terra-tint),var(--wf-terra-tint) 10px,#FBEEE0 10px,#FBEEE0 20px); margin:16px 0}
+.slot .sh{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase; font-size:.7rem; letter-spacing:.05em; color:var(--wf-terra-deep); display:flex; align-items:center; gap:8px; margin-bottom:6px}
+.slot p{margin:0; font-size:.92rem; color:var(--wf-ink-2); font-style:italic}
+.lessonmap{display:grid; gap:14px}
+.lrow{display:flex; gap:16px; align-items:flex-start; background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); padding:var(--wf-s5) var(--wf-s6)}
+.lrow.flag{background:var(--wf-terra-tint)}
+.lnum{font-family:var(--wf-f-mono); font-weight:700; font-size:.9rem; color:#fff; background:var(--wf-terra); border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-sm); width:52px; height:44px; min-width:52px; display:flex; align-items:center; justify-content:center; box-shadow:var(--wf-shadow-sm)}
+.beatrow{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+.beatrow .bt{font-family:var(--wf-f-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:3px 8px; border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-sm); background:var(--wf-ground-2); color:var(--wf-ink-2)}
+.two{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.status{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase; font-size:.66rem; padding:4px 10px; border-radius:var(--wf-r-pill); border:var(--wf-bw-thin) solid var(--wf-border); background:var(--wf-forest); color:#fff}
+.vaultbar{display:flex; gap:8px; margin-top:16px; flex-wrap:wrap}
+.vslice{flex:1; min-width:120px; border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-sm); padding:10px 12px; background:var(--wf-ground-2)}
+.vslice.on{background:var(--wf-terra-tint); border-color:var(--wf-terra-deep)}
+.vslice .vt{font-family:var(--wf-f-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--wf-terra-deep)}
+.vslice .vd{font-family:var(--wf-f-disp); font-weight:700; font-size:.98rem; color:var(--wf-forest); margin-top:2px}
+@media (max-width:720px){ .stepgrid,.loop{grid-template-columns:1fr} .two{grid-template-columns:1fr} }
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== HEADER ===== -->
+  <div class="sect-label">
+    <span class="chip peach">Track 01 · Foundation</span>
+    <span class="chip sky">Pillar I · Think with the machine</span>
+    <span class="status">Draft v0.3 — steer me</span>
+  </div>
+  <h1 class="disp">Think Like a Builder</h1>
+  <p class="lead" style="margin-top:14px">The shortest track, and the one the whole course stands on. Before you touch a single tool, we change how you see the machine — from "AI writes it for me" to "I decide, I direct, I judge." And we start building the one thing you'll carry all the way to launch.</p>
+
+  <!-- ===== HOW WE TALK TO YOU (the clarity principle, made a visible value) ===== -->
+  <div class="panel" style="margin-top:26px; background:var(--wf-ground-2)">
+    <div class="sect-label" style="margin-bottom:12px">
+      <span class="tile" style="background:var(--wf-pink)"><svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V184a16,16,0,0,0,16,16H80v24a8,8,0,0,0,13,6.22L131.53,200H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM84,132a12,12,0,1,1,12-12A12,12,0,0,1,84,132Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,128,132Zm44,0a12,12,0,1,1,12-12A12,12,0,0,1,172,132Z"/></svg></span>
+      <div><div class="label">How this course talks to you</div><h2 class="h3">No mystery words. Plain English, all the way up.</h2></div>
+    </div>
+    <p>Every idea here is said in words a total beginner understands — and taken all the way to what an expert knows, with nothing skipped in between. When we reach for a real industry term — <strong>especially a design word</strong> — we stop, hand it to you, and show you how to use it. You don't just learn to build with AI. <strong>You walk out design-literate</strong> — fluent in the language pros use to name what's right and what's wrong.</p>
+    <p style="margin-top:10px">That's not decoration. It's the single most practical anti-slop tool you'll own: <strong>you can't fix what you can't name.</strong> When you know what a <span class="code">pixel</span> is and how it changes a design, the next time something feels off you can say <em>exactly</em> what's wrong — and the machine can act on "exactly," never on "make it nicer."</p>
+  </div>
+
+  <!-- ===== THE CAPSTONE ===== -->
+  <div class="panel-dark" style="margin-top:22px">
+    <div class="label" style="color:var(--wf-terra)">What you'll build — one thing, six slices</div>
+    <h2 class="h2" style="color:var(--wf-ink-inv); margin-top:6px">Your Memory Vault</h2>
+    <p style="color:var(--wf-ink-inv-2); margin-top:10px; max-width:70ch">Across the whole course you build <em>one real product</em>, a slice per track — a place to catch a passing thought, tag it, find it again, and let AI resurface the ones that matter. Everyone builds the same base, so the community can compare taste fairly. Then each of you adds your own layer. By the last track you haven't finished six exercises — <strong>you've shipped a thing you actually use.</strong></p>
+    <div class="vaultbar">
+      <div class="vslice on"><div class="vt">Track 1</div><div class="vd">The capture moment</div></div>
+      <div class="vslice"><div class="vt">Track 2</div><div class="vd">Core build</div></div>
+      <div class="vslice"><div class="vt">Track 3</div><div class="vd">Refine &amp; debug</div></div>
+      <div class="vslice"><div class="vt">Track 4</div><div class="vd">Brand &amp; assets</div></div>
+      <div class="vslice"><div class="vt">Track 5</div><div class="vd">Ship it live</div></div>
+    </div>
+    <p style="color:var(--wf-ink-inv-2); margin-top:14px; font-size:.9rem">Track 1 builds the smallest possible slice — the single moment where a thought becomes a saved note — because the mindset is the lesson, not the feature count.</p>
+  </div>
+
+  <!-- ===== THE PER-TRACK LOOP ===== -->
+  <div style="margin-top:22px">
+    <div class="sect-label"><span class="label">The rhythm of every track</span></div>
+    <h2 class="h3">Baseline → Taste Layer → Arena</h2>
+    <p style="margin-top:8px">The same three moves, every track — until refusing slop is a reflex, not a step.</p>
+    <div class="loop">
+      <div class="loopcard base">
+        <div class="ln">01 · Guided</div>
+        <div class="lh">Baseline</div>
+        <div class="ld">A simple prompt, walked through the 4 pillars, until you hit a working result. Everyone lands the same solid floor. This is "it works."</div>
+      </div>
+      <div class="loopcard taste">
+        <div class="ln">02 · Yours</div>
+        <div class="lh">Taste Layer</div>
+        <div class="ld">Now you're charged to push it — add refinement from your own eye and imagination. This is where "it works" becomes "it's <em>right</em>," and where you stop looking like everyone else.</div>
+      </div>
+      <div class="loopcard arena">
+        <div class="ln">03 · Shared</div>
+        <div class="lh">The Arena</div>
+        <div class="ld">Not a beauty contest — a <em>spot &amp; fix</em> room. Post your work; the community names the slop or bug (in real design words) and proposes the fix. You do the same for others. Sharpest eye and cleanest fix win.</div>
+      </div>
+    </div>
+    <div class="callout c-watch" style="margin-top:16px">
+      <div class="ct"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M232.49,215.51,185,168a92.12,92.12,0,1,0-17,17l47.53,47.54a12,12,0,0,0,17-17ZM44,112a68,68,0,1,1,68,68A68.07,68.07,0,0,1,44,112Z"/></svg>How the Arena actually works — Spot &amp; Fix</div>
+      <p>A rating contest would reward what's <em>popular</em>, and popular drifts to the crowd's average — the exact slop we refuse. So the Arena isn't rating; it's <strong>spot the slop, then fix it.</strong> Someone posts an output (their own, or a "Slop of the Week" I seed). The room does two things: <strong>Spot</strong> — name precisely what's wrong, using the design words we teach ("the hierarchy is flat," "a 3px gap breaks the alignment") — and <strong>Fix</strong> — post an actual repair: a better prompt, a corrected snippet, a redone pass. Two badges: <strong>Sharp Eye</strong> for the diagnosis, <strong>Fixer</strong> for the repair; your <strong>Maven's Pick</strong> crowns the best of each. It's collaborative, everyone helps — and it drills your Judge pillar (spot slop) plus recovery (fix it) instead of judging looks. Because you can only <em>Spot</em> well if you have the vocabulary, the design words become the currency of the room. (Platform/social feature — ship capstone + loop first, Arena as fast-follow, data seam reserved now.)</p>
+    </div>
+  </div>
+
+  <!-- ===== LESSON MAP ===== -->
+  <hr class="divider">
+  <div class="sect-label"><span class="tile" style="background:var(--wf-sky)"><svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor"><path d="M224,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h64a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z"/></svg></span>
+    <div><div class="label">The map</div><h2 class="h2">Six lessons, one arc</h2></div>
+  </div>
+  <p class="muted" style="margin-bottom:22px">Every lesson runs the same four beats — <span class="mono">Learn → Builder Dilemma → Build → Apply</span>. Lesson 1.5 is written out in full below as the reference.</p>
+
+  <div class="lessonmap">
+    <div class="lrow">
+      <div class="lnum">1.1</div>
+      <div>
+        <div class="chip sky" style="margin-bottom:6px">Reframe</div>
+        <h3 class="h3">The machine is a guessing machine, not a genius</h3>
+        <p style="font-size:.94rem; margin-top:6px">Ask AI to "build a notes app" and it hands you the average of every notes app ever made. That's not a bug — it's how it works. Understand that, and you stop obeying it and start steering it.</p>
+        <div class="beatrow"><span class="bt">Learn</span><span class="bt">Dilemma</span><span class="bt">Build</span><span class="bt">Apply</span></div>
+      </div>
+    </div>
+
+    <div class="lrow">
+      <div class="lnum">1.2</div>
+      <div>
+        <div class="chip lime" style="margin-bottom:6px">Mindset</div>
+        <h3 class="h3">Architect, not typist</h3>
+        <p style="font-size:.94rem; margin-top:6px">The winner isn't the fastest typist — it's the one who decides <em>what</em> gets built and <em>whether it's right</em>. Your job moves up: intent, structure, judgment. The machine handles the keystrokes.</p>
+        <div class="beatrow"><span class="bt">Learn</span><span class="bt">Dilemma</span><span class="bt">Build</span><span class="bt">Apply</span></div>
+      </div>
+    </div>
+
+    <div class="lrow">
+      <div class="lnum">1.3</div>
+      <div>
+        <div class="chip peach" style="margin-bottom:6px">Mechanic</div>
+        <h3 class="h3">Context is the machine's working memory</h3>
+        <p style="font-size:.94rem; margin-top:6px">The model only knows what's in front of it right now. What you feed in — and leave out — decides what comes back. Load context on purpose instead of hoping it "remembers" your Vault.</p>
+        <div class="beatrow"><span class="bt">Learn</span><span class="bt">Dilemma</span><span class="bt">Build</span><span class="bt">Apply</span></div>
+      </div>
+    </div>
+
+    <div class="lrow">
+      <div class="lnum">1.4</div>
+      <div>
+        <div class="chip pink" style="margin-bottom:6px">Discipline</div>
+        <h3 class="h3">Slow the start: brief before build</h3>
+        <p style="font-size:.94rem; margin-top:6px">The universal beginner trap — and, honestly, mine: so eager to see something on screen you skip the brief and jump to building. You'll write your Vault's soul brief here, and feel why the five minutes you "save" cost you an hour.</p>
+        <div class="beatrow"><span class="bt">Learn</span><span class="bt">Dilemma</span><span class="bt">Build</span><span class="bt">Apply</span></div>
+      </div>
+    </div>
+
+    <div class="lrow flag">
+      <div class="lnum">1.5</div>
+      <div>
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap"><span class="chip">Throughline</span><span class="status" style="background:var(--wf-terra)">Flagship · written below</span></div>
+        <h3 class="h3">Taste is the last mile</h3>
+        <p style="font-size:.94rem; margin-top:6px">The machine gets your Vault's capture screen to "it works." The gap to "it's right" is yours — and it's the whole game. You'll take the baseline, add your taste layer, and submit it to the Arena for the first time.</p>
+        <div class="beatrow"><span class="bt">Learn</span><span class="bt">Dilemma</span><span class="bt">Build</span><span class="bt">Apply</span></div>
+      </div>
+    </div>
+
+    <div class="lrow">
+      <div class="lnum">LIVE</div>
+      <div>
+        <div class="chip lime" style="margin-bottom:6px">Track reward</div>
+        <h3 class="h3">Live session — how I actually think through a build</h3>
+        <p style="font-size:.94rem; margin-top:6px">You close the track watching me work a real brief live: reframe the machine, load context, resist the jump, make a taste call in front of you. Not a recording — a room. Never gates your progress; it's the reward for finishing.</p>
+        <div class="beatrow"><span class="bt">Live walkthrough</span><span class="bt">Q&amp;A</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FLAGSHIP LESSON ===== -->
+  <hr class="divider">
+  <div class="sect-label">
+    <span class="chip">Lesson 1.5 — fully written</span>
+    <span class="chip peach">~15 min</span>
+  </div>
+  <h1 class="h1" style="margin-bottom:10px">Taste is the last mile</h1>
+  <p class="lead">The reference lesson — how a Maven lesson is built, beat by beat, on your Vault.</p>
+
+  <!-- BEAT 1: LEARN -->
+  <div class="panel" style="margin-top:28px">
+    <div class="beat">
+      <div class="beat-n">1</div>
+      <div style="flex:1">
+        <div class="label">Beat one</div>
+        <h2 class="h3" style="margin-top:2px">Learn — the machine gets you to "it works." Not to "it's right."</h2>
+        <p style="margin-top:12px">You just built the capture screen of your Vault — the little box where a thought becomes a saved note. It works. It saves, it lists, it's responsive. And here's the trap: <strong>"it works" feels like "it's done."</strong> Your brain gets a hit of relief, you move on, and you've just shipped the same screen ten thousand other people shipped this week — because you all accepted the same first draft from the same machine.</p>
+        <p style="margin-top:12px">That's not the machine failing. It's trained on the average of everything, so when you ask for a "clean notes app" it gives you the <em>average</em> clean notes app: a plain input, a flat list, a grey card. The most likely answer is, by definition, the least distinctive one. (Remember Lesson 1.1 — it's a guessing machine, and it guesses toward the middle.)</p>
+
+        <div class="callout c-insight">
+          <div class="ct"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M176,232a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.49C39.74,56.83,78.26,17.14,125.88,16A88,88,0,0,1,216,104Z"/></svg>Builder Insight</div>
+          <p>"It works" is the machine's finish line. "It's right" is <em>yours.</em> The distance between those two lines is where every product you love was actually made — and it's the one thing that can't be copied off you, because it comes from your judgment, not your keyboard.</p>
+        </div>
+
+        <!-- WORD YOU'LL OWN -->
+        <div class="lex">
+          <div class="lex-top"><svg width="15" height="15" viewBox="0 0 256 256" fill="#E8722C"><path d="M208,24H72A32,32,0,0,0,40,56V224a8,8,0,0,0,8,8H192a8,8,0,0,0,0-16H56a16,16,0,0,1,16-16H208a8,8,0,0,0,8-8V32A8,8,0,0,0,208,24Z"/></svg><span class="lt">Word You'll Own</span></div>
+          <div class="lex-body">
+            <span class="lex-term">Pixel</span><span class="lex-say">/ˈpɪk.səl/ · the atom of a screen</span>
+            <p class="lex-def">The single smallest square of light a screen can show. Every design is built out of them. When a spacing looks "a little off," what's often wrong is a difference of just a few pixels — sometimes <strong>half a pixel</strong> — between two things that should line up. Trained eyes feel that gap before they can measure it.</p>
+            <div class="lex-use">
+              <span class="ul">Use it to direct the machine</span>
+              <span class="uq">Instead of "the spacing feels weird," you say: <em>"there's a ~2px gap between the icon and the label that should be 8px — even it out."</em> Now the machine can act. That precision is the whole difference.</span>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top:12px">This is the muscle the whole course is really building. Not "how to prompt" — prompting gets you to it-works. <strong>Taste — looking at it-works, feeling exactly what's wrong, and naming it until it's right — is the last mile.</strong> And the last mile is the only one with no traffic on it.</p>
+
+        <div class="slot">
+          <div class="sh"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34Z"/></svg>Aleem's voice — open the lesson</div>
+          <p>[Your first line, straight to the learner. Suggested spirit: the moment you looked at something that "worked" and knew it wasn't right yet — and what that feeling is. Say it your way.]</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTRUCTOR DEMO: BAYTUL ASMAA (clearly separated — the instructor's own product) -->
+  <div class="panel-dark" style="margin-top:22px">
+    <div class="sect-label" style="margin-bottom:10px">
+      <span class="tile" style="background:var(--wf-terra); color:#fff"><svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor"><path d="M232,64V192a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V64A16,16,0,0,1,40,48H216A16,16,0,0,1,232,64ZM128,84a36,36,0,1,0,36,36A36,36,0,0,0,128,84Z"/></svg></span>
+      <div><div class="label" style="color:var(--wf-terra)">From the instructor · a worked example</div><h3 class="h3" style="color:var(--wf-ink-inv)">How I did this on my own product</h3></div>
+    </div>
+    <p style="color:var(--wf-ink-inv-2); max-width:72ch">This one's not for you to build — it's me showing you the same move on a real product of mine, <strong>Baytul&nbsp;Asmaa</strong>, so "taste is the last mile" isn't just a slogan. My first draft was slop: a generic block, a plain sans, a name sitting there like a database row. It <em>worked.</em> I wasn't satisfied. So I named what it should <em>feel</em> like — these are sacred names with history, not app rows — and I directed the machine there, pass after pass, until it reached my taste.</p>
+    <div class="two" style="margin-top:18px">
+      <div style="background:var(--wf-pine); border:var(--wf-bw-thin) solid var(--wf-terra); border-radius:var(--wf-r-md); padding:16px">
+        <div class="label" style="color:var(--wf-ink-inv-2)">What the machine gave · it works</div>
+        <ul style="margin:10px 0 0; padding-left:18px; color:var(--wf-ink-inv-2); font-size:.92rem; line-height:1.7">
+          <li>One generic sans, one weight</li>
+          <li>Flat block, flat cards</li>
+          <li>A name treated as a data row</li>
+          <li>Could be any app, any founder</li>
+        </ul>
+      </div>
+      <div style="background:var(--wf-pine); border:var(--wf-bw-thin) solid var(--wf-terra); border-radius:var(--wf-r-md); padding:16px">
+        <div class="label" style="color:var(--wf-terra)">What my taste made · it's right</div>
+        <ul style="margin:10px 0 0; padding-left:18px; color:var(--wf-ink-inv); font-size:.92rem; line-height:1.7">
+          <li>An editorial serif for the name; true Arabic calligraphy for the script</li>
+          <li>Deep-green cards on cream, hairline gold dividers — a manuscript, not a dashboard</li>
+          <li>A name treated as an heirloom, tied to the figure who bore it</li>
+          <li>Unmistakably <em>mine</em></li>
+        </ul>
+      </div>
+    </div>
+    <div class="slot" style="background:repeating-linear-gradient(135deg,#20402F,#20402F 10px,#1B3428 10px,#1B3428 20px); border-color:var(--wf-terra)">
+      <div class="sh" style="color:var(--wf-terra)"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34Z"/></svg>Aleem's voice — the demo</div>
+      <p style="color:var(--wf-ink-inv-2)">[Narrate or screen-record your real Baytul Asmaa taste loop: the soul sentence, the brief you gave Stitch, the pass you rejected and why, the pass you kept. Plus your "0.5px gap" story — the level of noticing that IS this lesson.]</p>
+    </div>
+  </div>
+
+  <!-- BEAT 2: BUILDER DILEMMA -->
+  <div class="panel" style="margin-top:22px">
+    <div class="beat">
+      <div class="beat-n">2</div>
+      <div style="flex:1">
+        <div class="label">Beat two</div>
+        <h2 class="h3" style="margin-top:2px">Builder Dilemma — your Vault's capture screen works. Now what?</h2>
+        <p style="margin-top:12px; font-size:.98rem">The capture screen saves a thought, lists it, no bugs, responsive. It looks like a plain, generic app. You've got an hour before you wanted to move on. <strong>Predict what a builder with taste does next — commit before you reveal.</strong></p>
+
+        <div id="opts" style="margin-top:16px">
+          <button class="dilemma-opt" data-k="a"><span class="ok">A</span>Ship it. It works and it's responsive — done beats perfect, polish later.</button>
+          <button class="dilemma-opt" data-k="b"><span class="ok">B</span>Tell the AI "make it look more premium and modern" and take whatever comes back.</button>
+          <button class="dilemma-opt" data-k="c"><span class="ok">C</span>Name the soul first — what should capturing a thought <em>feel</em> like? — then direct the machine toward that exact feeling, judging every pass against it.</button>
+          <button class="dilemma-opt" data-k="d"><span class="ok">D</span>Pile on features — tags, folders, a share button — so there's more to show.</button>
+        </div>
+
+        <div class="reveal" id="reveal">
+          <div class="callout c-tip" style="margin-top:8px">
+            <div class="ct"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M243.33,90.91,152,10.42a16,16,0,0,0-21.06.1L37.71,90.87A16,16,0,0,0,32,103v96a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V103A16,16,0,0,0,243.33,90.91ZM208,199H48V103l91.9-79.66L208,103Z"/></svg>The taste move is C</div>
+            <p><strong>A</strong> ships the crowd's average with your name on it. <strong>B</strong> hands judgment back to the machine — "premium and modern" is the vague brief that just produces a <em>different</em> average. <strong>D</strong> adds surface area to something that isn't right yet — more generic, not more you. Only <strong>C</strong> does what the machine can't: decide what it should feel like, then hold every pass to that standard.</p>
+          </div>
+          <p style="font-size:.96rem"><strong>Why it matters:</strong> "Make it premium" is a wish. "Make capturing a thought feel <em>frictionless and quiet</em> — one calm input, generous space around it, the saved thought landing softly below" is a <em>direction.</em> A vague brief lets the guessing machine guess average; a specific one lets it guess toward <em>your</em> target. Taste isn't the polish at the end — it's the standard you hold the whole way.</p>
+          <div class="slot">
+            <div class="sh"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34Z"/></svg>Aleem's voice — the reveal</div>
+            <p>[The line only you can deliver: what your eye catches that the machine never would, and why that noticing is the job. Land it hard.]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEAT 3: BUILD -->
+  <div class="panel" style="margin-top:22px">
+    <div class="beat">
+      <div class="beat-n">3</div>
+      <div style="flex:1">
+        <div class="label">Beat three</div>
+        <h2 class="h3" style="margin-top:2px">Build — take the baseline, add your taste layer</h2>
+        <p style="margin-top:12px">You already have the baseline capture screen (everyone does — that's the point). Now the taste layer. Four moves:</p>
+
+        <div class="stepgrid">
+          <div class="step"><div class="sl">Step 1 · Name the soul</div><div class="st">Feel</div><div class="sd">One sentence: what should capturing a thought feel like? No adjective you'd give any app.</div></div>
+          <div class="step"><div class="sl">Step 2 · Direct</div><div class="st">Brief</div><div class="sd">Turn the feeling into specifics — space, type, weight, rhythm — and hand the machine that, not "make it nice."</div></div>
+          <div class="step"><div class="sl">Step 3 · Judge</div><div class="st">Discern</div><div class="sd">Put the result next to your sentence. Name what's still off — out loud, in real words. Push again.</div></div>
+          <div class="step"><div class="sl">Step 4 · Stop</div><div class="st">Land it</div><div class="sd">Taste isn't endless. Stop when it matches the sentence — not before, not forever after.</div></div>
+        </div>
+
+        <div class="callout c-watch">
+          <div class="ct"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22a24,24,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z"/></svg>Watch Out</div>
+          <p>Taste has an evil twin: <strong>fiddling.</strong> Refinement moves toward a named target and stops when it lands. Fiddling has no target and never stops. If you can't say the sentence your change is serving, you're fiddling — go back to Step 1.</p>
+        </div>
+
+        <div class="callout c-tip">
+          <div class="ct"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M164,168a12,12,0,1,1-12-12A12,12,0,0,1,164,168Zm-60-12a12,12,0,1,0,12,12A12,12,0,0,0,104,156Zm128-28A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>Pro Tip</div>
+          <p>Give the machine a <em>reference</em>, not an adjective. "Calm like a blank page in a good notebook" moves it a mile further than "clean." One concrete reference collapses a hundred vague guesses into one clear target — that's you doing the machine's hardest thinking for it.</p>
+        </div>
+
+        <div class="slot">
+          <div class="sh"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34Z"/></svg>Aleem's voice — the build demo</div>
+          <p>[Screen-record ONE real taste loop on the Vault capture screen: soul sentence → the brief you gave → a pass you rejected and exactly why → the pass you kept. This is the money moment of the track.]</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEAT 4: APPLY + ARENA -->
+  <div class="panel-dark" style="margin-top:22px">
+    <div class="beat">
+      <div class="beat-n" style="background:var(--wf-terra); color:#fff">4</div>
+      <div style="flex:1">
+        <div class="label" style="color:var(--wf-terra)">Beat four</div>
+        <h2 class="h3" style="margin-top:2px; color:var(--wf-ink-inv)">Apply — enter the Arena, both sides</h2>
+        <p style="margin-top:12px; color:var(--wf-ink-inv-2); max-width:70ch">The Arena isn't a gallery you're rated in — it's a workshop you work in. You do two things, and both make you sharper:</p>
+        <ol style="margin-top:14px; color:var(--wf-ink-inv); max-width:68ch; line-height:1.8">
+          <li><strong>Post your capture screen</strong> with one line: the default you refused, and the one way yours isn't that. (Same baseline for everyone, so what shows is purely your layer.)</li>
+          <li><strong>Take a turn as the eye.</strong> Open someone else's — or this week's seeded "Slop of the Week" — and do the two moves: <strong>Spot</strong> what's wrong in real design words, then <strong>Fix</strong> it: a better prompt, a corrected pass, a redone version.</li>
+        </ol>
+        <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap">
+          <span class="status" style="background:var(--wf-terra)">Sharp Eye — best diagnosis</span>
+          <span class="status" style="background:var(--wf-terra)">Fixer — best repair</span>
+          <span class="status" style="background:var(--wf-pine); color:var(--wf-ink-inv)">Maven's Pick + a feature</span>
+        </div>
+        <p style="margin-top:14px; color:var(--wf-ink-inv-2); font-size:.9rem; max-width:70ch">Spotting forces you to <em>name</em> the flaw — which is why the design words matter. Fixing forces you to <em>recover</em> — the exact skill that separates a builder from someone who's stuck the moment AI hands them something broken.</p>
+        <p style="margin-top:16px; color:var(--wf-ink-inv-2); font-size:.92rem; max-width:70ch">And when you're ready for the real thing: point these exact four moves at <em>your own</em> idea — not the Vault, yours. That's the graduation move, and by the last track you'll make it without fear.</p>
+        <div class="slot" style="background:repeating-linear-gradient(135deg,#20402F,#20402F 10px,#1B3428 10px,#1B3428 20px); border-color:var(--wf-terra)">
+          <div class="sh" style="color:var(--wf-terra)"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34Z"/></svg>Aleem's voice — the send-off</div>
+          <p style="color:var(--wf-ink-inv-2)">[Your closing line. Suggested spirit: "The machine will always get you to 'it works.' Whether it's ever 'right' was always going to be up to you." Say it like you mean it.]</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WHY 1.5 ===== -->
+  <hr class="divider">
+  <div class="sect-label"><span class="tile" style="background:var(--wf-pink)"><svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24a104,104,0,1,0,104,104A104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span>
+    <div><div class="label">Why taste is Lesson 1.5, not Lesson 6</div><h2 class="h2">Planted early so it can grow everywhere</h2></div>
+  </div>
+  <p>Most courses save "polish" for the end, as a nice-to-have. We do the opposite. Taste is the throughline — your throughline — so we name it in the foundation track, when the learner has only built the smallest slice. By the time they hit Direct (a soul brief), Judge (discern, and know when to stop), Brand (the same eye on assets), and Ship (refusing to publish slop), taste isn't a lesson anymore. It's how they see. And the design words we hand them — <strong>one at a time, lesson by lesson</strong>, so each one actually sticks — are the tools that make that seeing sayable. (A full design-language "gym" — a visual glossary plus a daily spot-name-fix drill — is a v2 module; the daily drill is the same muscle as the Arena.)</p>
+
+  <div class="two" style="margin-top:20px">
+    <div class="card">
+      <div class="label">What I'll bring next (the trainer)</div>
+      <p style="font-size:.95rem; margin-top:8px">Lessons 1.1–1.4 written to this depth, each advancing the Vault a slice and each carrying its own "Word You'll Own." Then Pillar II (Direct), where I lead the mechanics and you lead the taste of a brief.</p>
+    </div>
+    <div class="card" style="background:var(--wf-terra-tint)">
+      <div class="label">What only you can bring (the soul)</div>
+      <p style="font-size:.95rem; margin-top:8px">The five orange slots — your opener, your Baytul Asmaa demo, your reveal line, your build demo, your send-off. Fill those and 1.5 stops being a great draft and becomes the lesson no one else could teach.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:32px; display:flex; gap:12px; flex-wrap:wrap; align-items:center">
+    <button class="btn">Steer this draft</button>
+    <button class="btn sec">Write 1.1–1.4 next</button>
+    <span class="muted mono" style="font-size:.8rem">Track 01 / 06 · Draft v0.3 · capstone = Memory Vault</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var opts = document.querySelectorAll('.dilemma-opt');
+  var reveal = document.getElementById('reveal');
+  var answered = false;
+  opts.forEach(function(o){
+    o.addEventListener('click', function(){
+      if(answered) return;
+      answered = true;
+      var k = o.getAttribute('data-k');
+      opts.forEach(function(x){ x.style.cursor='default'; });
+      if(k === 'c'){ o.classList.add('correct'); }
+      else {
+        o.classList.add('wrong');
+        document.querySelector('.dilemma-opt[data-k="c"]').classList.add('correct');
+      }
+      reveal.classList.add('show');
+      reveal.scrollIntoView({behavior:'smooth', block:'nearest'});
+    });
+  });
+})();
+</script>
+</body>
+</html>

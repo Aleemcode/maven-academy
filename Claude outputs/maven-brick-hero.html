@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Builder's Field</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --cream:#F4F0E5; --paper:#FBF8EF; --paper2:#FFFDF7;
+  --forest:#14261D; --forest2:#33473B;
+  --terra:#E8722C; --terra-deep:#B8551A; --muted:#53625A;
+  --bw:2.5px; --shadow:5px 5px 0 var(--forest); --shadow-sm:3px 3px 0 var(--forest);
+  --r:12px; --pill:40px;
+  --disp:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"Instrument Sans",-apple-system,sans-serif;
+  --mono:"Space Mono",ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--cream); color:var(--forest); font-family:var(--body); -webkit-font-smoothing:antialiased}
+.hero{position:relative; min-height:560px; overflow:hidden; border-bottom:var(--bw) solid var(--forest)}
+#field{position:absolute; inset:0; width:100%; height:100%; display:block; cursor:none}
+/* legibility scrim so text stays AA over the field */
+.scrim{position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(80% 70% at 26% 46%, rgba(244,240,229,.94) 0%, rgba(244,240,229,.7) 42%, rgba(244,240,229,0) 78%)}
+.content{position:relative; max-width:1080px; margin:0 auto; padding:64px 24px; pointer-events:none}
+.content > *{pointer-events:auto}
+.eyebrow{font-family:var(--mono); text-transform:uppercase; font-size:11px; letter-spacing:.11em; font-weight:700; color:var(--terra-deep)}
+.pill{display:inline-flex; align-items:center; gap:9px; background:#FBEEE0; border:var(--bw) solid var(--forest); border-radius:var(--pill); box-shadow:var(--shadow-sm); padding:6px 15px; font-family:var(--mono); font-size:.76rem; font-weight:700; color:var(--forest)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--terra);box-shadow:0 0 0 3px #F7DCC4}
+h1{font-family:var(--disp); font-weight:800; font-size:clamp(2.5rem,6vw,4.2rem); letter-spacing:-.05em; line-height:1.02; margin:16px 0 0; max-width:15ch; text-wrap:balance}
+.sub{font-size:1.15rem; color:var(--forest2); max-width:44ch; margin-top:16px}
+.cta{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:26px}
+.btn{font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.04em; font-size:.8rem; border:var(--bw) solid var(--forest); border-radius:var(--r); padding:14px 22px; cursor:pointer; display:inline-flex; align-items:center; gap:9px; background:var(--terra); color:var(--forest); box-shadow:var(--shadow-sm); text-decoration:none; transition:transform .12s var(--ease), box-shadow .12s var(--ease)}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:var(--shadow)}
+.btn:active{transform:translate(3px,3px); box-shadow:0 0 0 var(--forest)}
+.hint{font-family:var(--mono); font-size:.74rem; color:var(--muted)}
+.note{max-width:1080px; margin:0 auto; padding:22px 24px 40px; color:var(--muted); font-size:.92rem}
+.note b{color:var(--forest)}
+@media (prefers-reduced-motion:reduce){ #field{cursor:auto} }
+</style>
+</head>
+<body>
+<section class="hero">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="scrim"></div>
+  <div class="content">
+    <span class="pill"><span class="dot"></span>Founding cohort · opens October</span>
+    <h1>Become a builder with a designer's eye.</h1>
+    <p class="sub">Move your cursor through the stack. Knock it about — watch it settle back into order. That's the whole promise.</p>
+    <div class="cta">
+      <a href="#" class="btn">Reserve your seat — ₦20,000</a>
+      <span class="hint">the field reacts to your mouse · an AI chip follows you</span>
+    </div>
+  </div>
+</section>
+<div class="note">
+  <b>Why it's not just decoration:</b> disturb the bricks and they ease back into a clean arrangement — the machine brings chaos, your taste restores order. Subtle and tonal on purpose, so it never fights the words. (Reduced-motion shows a still, arranged field.)
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv = document.getElementById('field'), ctx = cv.getContext('2d');
+  var DPR = Math.min(window.devicePixelRatio||1, 2);
+  var W=0,H=0, bricks=[], mouse={x:-9999,y:-9999,tx:-9999,ty:-9999,active:false};
+  var chip={x:-9999,y:-9999};
+
+  // palette — mostly tonal, sparse accents
+  var fills = ['#FBF8EF','#F1EBDC','#FBF8EF','#EDE6D6','#FBF8EF','#F1EBDC'];
+  var accents = ['#F7DCC4','#D6E59A','#C9E0F2']; // rare pastel bricks
+  var GAP=8, BW_MIN=44, ROWH=26;
+
+  function build(){
+    var r = cv.getBoundingClientRect();
+    W=r.width; H=r.height;
+    cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    bricks=[];
+    var pad=18;
+    var y=pad, row=0;
+    while(y < H-pad){
+      // brick-wall offset every other row
+      var offset = (row%2===0)? 0 : -(BW_MIN*0.5);
+      var x = pad + offset;
+      while(x < W-pad){
+        var w = BW_MIN + (Math.random()*22);
+        if(x+w > W-pad) w = (W-pad)-x;
+        if(w < 22){ x+=w+GAP; continue; }
+        var isAccent = Math.random()<0.06;
+        var isAI = Math.random()<0.05;
+        bricks.push({
+          hx:x, hy:y, x:x, y:y, vx:0, vy:0, w:w, h:ROWH,
+          fill: isAccent ? accents[(Math.random()*accents.length)|0] : fills[(Math.random()*fills.length)|0],
+          ai: isAI
+        });
+        x += w + GAP;
+      }
+      y += ROWH + GAP; row++;
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<bricks.length;i++){
+      var b=bricks[i];
+      if(!reduce){
+        // spring home
+        var ax=(b.hx-b.x)*0.06, ay=(b.hy-b.y)*0.06;
+        // cursor repulsion
+        if(mouse.active){
+          var cx=b.x+b.w/2, cy=b.y+b.h/2;
+          var dx=cx-mouse.x, dy=cy-mouse.y, d2=dx*dx+dy*dy, R=118;
+          if(d2 < R*R){
+            var d=Math.sqrt(d2)||1, f=(1-d/R)*5.2;
+            ax += (dx/d)*f; ay += (dy/d)*f;
+          }
+        }
+        b.vx=(b.vx+ax)*0.86; b.vy=(b.vy+ay)*0.86;
+        b.x+=b.vx; b.y+=b.vy;
+      }
+      // draw brick
+      var rr=5;
+      roundRect(ctx, b.x, b.y, b.w, b.h, rr);
+      ctx.fillStyle=b.fill; ctx.fill();
+      ctx.lineWidth=1.6; ctx.strokeStyle='rgba(20,38,29,0.28)'; ctx.stroke();
+      if(b.ai){ // tiny AI spark embedded in some bricks
+        drawSpark(ctx, b.x+b.w/2, b.y+b.h/2, 4.5, 'rgba(184,85,26,0.55)');
+      }
+    }
+    // AI chip follows cursor
+    if(!reduce && mouse.tx>-9000){
+      chip.x += (mouse.tx-chip.x)*0.14; chip.y += (mouse.ty-chip.y)*0.14;
+      drawChip(ctx, chip.x, chip.y);
+    }
+    requestAnimationFrame(draw);
+  }
+
+  function roundRect(c,x,y,w,h,r){ r=Math.min(r,h/2,w/2); c.beginPath();
+    c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+    c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+
+  function drawSpark(c,x,y,s,col){ c.save(); c.translate(x,y); c.fillStyle=col; c.beginPath();
+    for(var i=0;i<4;i++){ var a=i*Math.PI/2; c.moveTo(0,0);
+      c.lineTo(Math.cos(a-.35)*s, Math.sin(a-.35)*s); c.lineTo(Math.cos(a)*s*2, Math.sin(a)*s*2);
+      c.lineTo(Math.cos(a+.35)*s, Math.sin(a+.35)*s);} c.closePath(); c.fill(); c.restore(); }
+
+  function drawChip(c,x,y){
+    // small rounded chip with a spark = the AI companion
+    var w=44,h=26;
+    c.save();
+    roundRect(c, x-w/2, y-h/2, w, h, 8);
+    c.fillStyle='#14261D'; c.fill();
+    c.lineWidth=2; c.strokeStyle='#14261D'; c.stroke();
+    // spark in terracotta
+    drawSpark(c, x-9, y, 4.5, '#E8722C');
+    // 'AI' label
+    c.fillStyle='#EDE9DC'; c.font='700 11px "Space Mono", monospace'; c.textBaseline='middle';
+    c.fillText('AI', x-1, y+1);
+    c.restore();
+  }
+
+  function onMove(e){
+    var r=cv.getBoundingClientRect();
+    mouse.tx=e.clientX-r.left; mouse.ty=e.clientY-r.top;
+    mouse.x=mouse.tx; mouse.y=mouse.ty; mouse.active=true;
+  }
+  function onLeave(){ mouse.active=false; mouse.x=-9999; mouse.y=-9999; }
+
+  build();
+  if(reduce){ // one static arranged frame
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<bricks.length;i++){ var b=bricks[i]; roundRect(ctx,b.x,b.y,b.w,b.h,5);
+      ctx.fillStyle=b.fill; ctx.fill(); ctx.lineWidth=1.6; ctx.strokeStyle='rgba(20,38,29,0.28)'; ctx.stroke();
+      if(b.ai) drawSpark(ctx,b.x+b.w/2,b.y+b.h/2,4.5,'rgba(184,85,26,0.55)'); }
+  } else {
+    cv.addEventListener('mousemove', onMove);
+    cv.addEventListener('mouseleave', onLeave);
+    cv.addEventListener('touchmove', function(ev){ if(ev.touches[0]){ var t=ev.touches[0]; onMove(t); } }, {passive:true});
+    requestAnimationFrame(draw);
+  }
+  var rt; window.addEventListener('resize', function(){ clearTimeout(rt); rt=setTimeout(function(){ build(); if(reduce){location.reload();} }, 200); });
+})();
+</script>
+</body>
+</html>

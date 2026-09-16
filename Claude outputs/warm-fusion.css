@@ -1,0 +1,166 @@
+/* ============================================================
+   MAVEN BUILDER ACADEMY — WARM FUSION DESIGN SYSTEM v1
+   Drop this into your project and import it once.
+   Everything derives from the tokens in :root — change a token,
+   the whole product moves. Framework-agnostic plain CSS classes.
+   Fonts: load Bricolage Grotesque, Instrument Sans, Space Mono
+   from Google Fonts in your <head> (see rules file).
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+
+  /* — Grounds & surfaces — */
+  --wf-ground:#F4F0E5;      /* app background (cream) */
+  --wf-ground-2:#FBF9F2;    /* raised / alt section */
+  --wf-surface:#FFFFFF;     /* cards */
+  --wf-forest:#14261D;      /* ink + dark panels + borders */
+  --wf-pine:#1B3428;        /* dark panel alt / marquee */
+
+  /* — Ink hierarchy — */
+  --wf-ink:#14261D;
+  --wf-ink-2:#454F48;
+  --wf-muted:#7A837C;
+  --wf-ink-inv:#EDE9DC;     /* text on dark panels */
+  --wf-ink-inv-2:#C4C9BF;
+
+  /* — Accent (ONE, sacred) — */
+  --wf-terra:#E8722C;       /* primary action / emphasis */
+  --wf-terra-deep:#C85A1E;  /* hover, links, small text on light */
+  --wf-terra-tint:#FBE3D3;  /* subtle accent wash */
+
+  /* — Category chips (tag / sort only) — */
+  --wf-lime:#D6E59A;
+  --wf-sky:#C9E0F2;
+  --wf-pink:#F6D7E8;
+  --wf-peach:#F7DCC4;
+
+  /* — Semantic (separate from accent) — */
+  --wf-success:#3F8F5F; --wf-success-tint:#DFF0E4;
+  --wf-warning:#C9902E; --wf-warning-tint:#FBEECB;
+  --wf-error:#C8452F;   --wf-error-tint:#F7DAD2;
+  --wf-info:#3E7CA8;    --wf-info-tint:#DCEAF3;
+
+  /* — Structure: the brutalist bone — */
+  --wf-border:#14261D;
+  --wf-bw:2.5px;
+  --wf-bw-thin:2px;
+  --wf-shadow:5px 5px 0 var(--wf-border);
+  --wf-shadow-sm:3px 3px 0 var(--wf-border);
+  --wf-shadow-lg:8px 8px 0 var(--wf-border);
+
+  /* — Radius: the warm half — */
+  --wf-r-xl:20px; --wf-r-lg:14px; --wf-r-md:11px; --wf-r-sm:8px; --wf-r-pill:40px;
+
+  /* — Spacing (4px base) — */
+  --wf-s1:4px; --wf-s2:8px; --wf-s3:12px; --wf-s4:16px; --wf-s5:20px;
+  --wf-s6:24px; --wf-s7:32px; --wf-s8:40px; --wf-s9:56px; --wf-s10:72px; --wf-s11:96px;
+
+  /* — Type — */
+  --wf-f-disp:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --wf-f-body:"Instrument Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --wf-f-mono:"Space Mono",ui-monospace,Menlo,monospace;
+
+  /* — Motion — */
+  --wf-dur:200ms; --wf-dur-fast:120ms; --wf-ease:cubic-bezier(.2,.7,.3,1);
+}
+
+/* ---- base ---- */
+body.wf, .wf-app{
+  background:var(--wf-ground);
+  color:var(--wf-ink);
+  font-family:var(--wf-f-body);
+  font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wf-display,.wf-h1,.wf-h2,.wf-h3,.wf-h4{
+  font-family:var(--wf-f-disp); font-weight:700; margin:0;
+  letter-spacing:-0.03em; line-height:1.05; text-wrap:balance; color:var(--wf-forest);
+}
+.wf-display{font-size:clamp(2.6rem,7vw,4.6rem); letter-spacing:-0.05em}
+.wf-h1{font-size:clamp(2rem,5vw,3.2rem); letter-spacing:-0.04em}
+.wf-h2{font-size:clamp(1.7rem,3.6vw,2.4rem)}
+.wf-h3{font-size:1.4rem}
+.wf-h4{font-size:1.05rem}
+.wf-lead{font-size:1.08rem; color:var(--wf-ink-2); max-width:60ch}
+.wf-label{font-family:var(--wf-f-mono); text-transform:uppercase; font-size:11px;
+  letter-spacing:0.08em; font-weight:700; color:var(--wf-terra-deep)}
+.wf-mono{font-family:var(--wf-f-mono)}
+.wf-accent{color:var(--wf-terra)}
+.wf-code{font-family:var(--wf-f-mono); font-size:0.84em; background:var(--wf-ground-2);
+  border:1px solid rgba(20,38,29,0.16); border-radius:5px; padding:1px 6px; color:var(--wf-forest)}
+
+/* ---- buttons (press interaction: hover lifts, active slams) ---- */
+.wf-btn{
+  font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase;
+  letter-spacing:0.04em; font-size:0.82rem;
+  border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md);
+  padding:12px 20px; cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--wf-terra); color:#fff; box-shadow:var(--wf-shadow-sm);
+  transition:transform var(--wf-dur-fast) var(--wf-ease), box-shadow var(--wf-dur-fast) var(--wf-ease);
+}
+.wf-btn:hover{transform:translate(-1px,-1px); box-shadow:var(--wf-shadow)}
+.wf-btn:active{transform:translate(3px,3px); box-shadow:0 0 0 var(--wf-border)}
+.wf-btn--secondary{background:var(--wf-surface); color:var(--wf-ink)}
+.wf-btn--tertiary{background:transparent; color:var(--wf-ink); border-color:transparent;
+  box-shadow:none; text-decoration:underline; text-underline-offset:4px; text-decoration-color:var(--wf-terra)}
+.wf-btn--lg{padding:15px 26px; font-size:0.9rem}
+.wf-btn[disabled],.wf-btn--disabled{opacity:0.45; cursor:not-allowed; box-shadow:none; transform:none}
+
+/* ---- surfaces ---- */
+.wf-panel{background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border);
+  box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg)}
+.wf-card{background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border);
+  box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); padding:var(--wf-s6);
+  transition:transform var(--wf-dur) var(--wf-ease), box-shadow var(--wf-dur) var(--wf-ease)}
+.wf-card--hover:hover{transform:translate(-2px,-2px); box-shadow:var(--wf-shadow-lg)}
+.wf-panel-dark{background:var(--wf-forest); color:var(--wf-ink-inv);
+  border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg)}
+
+/* ---- chips & tags (category pastels only) ---- */
+.wf-chip{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase;
+  font-size:0.72rem; letter-spacing:0.03em; padding:6px 12px;
+  border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-sm);
+  color:var(--wf-forest); display:inline-block; background:var(--wf-lime)}
+.wf-chip--sky{background:var(--wf-sky)} .wf-chip--pink{background:var(--wf-pink)}
+.wf-chip--peach{background:var(--wf-peach)} .wf-chip--lime{background:var(--wf-lime)}
+.wf-status{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase;
+  font-size:0.7rem; padding:5px 11px; border-radius:var(--wf-r-pill);
+  border:var(--wf-bw-thin) solid var(--wf-border); background:var(--wf-terra); color:#fff}
+
+/* ---- icon tile (neo-brutalist treatment for section/feature markers) ---- */
+.wf-tile{width:56px; height:56px; border:var(--wf-bw) solid var(--wf-border);
+  border-radius:var(--wf-r-md); box-shadow:var(--wf-shadow-sm);
+  display:flex; align-items:center; justify-content:center; color:var(--wf-forest); background:var(--wf-lime)}
+
+/* ---- inputs ---- */
+.wf-field{display:block; margin-bottom:var(--wf-s4)}
+.wf-field-label{font-family:var(--wf-f-mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:0.06em; color:var(--wf-ink-2); font-weight:700; margin-bottom:7px; display:block}
+.wf-input{width:100%; font-family:var(--wf-f-body); font-size:1rem; color:var(--wf-ink);
+  background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border);
+  border-radius:var(--wf-r-md); padding:12px 14px; box-shadow:var(--wf-shadow-sm)}
+.wf-input::placeholder{color:var(--wf-muted)}
+.wf-input:focus{outline:none; box-shadow:var(--wf-shadow)}
+
+/* ---- callouts ---- */
+.wf-callout{border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md);
+  padding:16px 18px; box-shadow:var(--wf-shadow-sm); margin:18px 0}
+.wf-callout__title{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase;
+  font-size:0.74rem; letter-spacing:0.05em; margin-bottom:7px; display:flex; align-items:center; gap:8px}
+.wf-callout--insight{background:var(--wf-sky)}  .wf-callout--insight .wf-callout__title{color:var(--wf-info)}
+.wf-callout--tip{background:var(--wf-lime)}     .wf-callout--tip .wf-callout__title{color:var(--wf-success)}
+.wf-callout--watch{background:var(--wf-peach)}  .wf-callout--watch .wf-callout__title{color:var(--wf-terra-deep)}
+.wf-callout--success{background:var(--wf-success-tint)} .wf-callout--success .wf-callout__title{color:var(--wf-success)}
+.wf-callout--error{background:var(--wf-error-tint)}     .wf-callout--error .wf-callout__title{color:var(--wf-error)}
+
+/* ---- badges (mastery, coin style) ---- */
+.wf-badge{display:inline-flex; align-items:center; gap:11px; background:var(--wf-surface);
+  border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-pill);
+  padding:9px 16px 9px 10px; box-shadow:var(--wf-shadow-sm)}
+.wf-badge__coin{width:26px; height:26px; border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#F2CE84,var(--wf-terra)); border:2px solid var(--wf-border)}
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }

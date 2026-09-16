@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maven Hero Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --cream:#F4F0E5; --paper:#FBF8EF; --paper2:#FFFDF7;
+  --forest:#14261D; --forest2:#33473B;
+  --terra:#E8722C; --terra-deep:#B8551A;
+  --muted:#53625A; --hair:#D8D2C2; --wash:#EDE6D6;
+  --sky:#C9E0F2; --lime:#D6E59A; --pink:#F6D7E8; --peach:#F7DCC4;
+  --ok:#2E7D57;
+  --bw:2.5px; --shadow:5px 5px 0 var(--forest); --shadow-sm:3px 3px 0 var(--forest); --shadow-lg:8px 8px 0 var(--forest);
+  --r:12px; --r-lg:16px; --r-sm:8px; --pill:40px;
+  --disp:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"Instrument Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:"Space Mono",ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--cream); color:var(--forest); font-family:var(--body); font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--disp); font-weight:700; margin:0; letter-spacing:-.03em; line-height:1.03; text-wrap:balance}
+.mono{font-family:var(--mono)}
+img{max-width:100%}
+.wrap{max-width:1120px; margin:0 auto; padding-inline:22px}
+.eyebrow{font-family:var(--mono); text-transform:uppercase; font-size:11px; letter-spacing:.11em; font-weight:700; color:var(--terra-deep)}
+/* showcase chrome */
+.sc-head{padding-block:34px 20px}
+.sc-head h1{font-size:clamp(1.9rem,4vw,2.6rem); letter-spacing:-.04em}
+.sc-head p{color:var(--muted); max-width:62ch; margin-top:10px}
+.dir-tag{display:inline-flex; align-items:center; gap:10px; margin-bottom:14px}
+.dir-tag .n{font-family:var(--mono); font-weight:700; font-size:12px; color:#fff; background:var(--forest); border:var(--bw) solid var(--forest); border-radius:var(--r-sm); padding:4px 10px}
+.dir-tag .rec{font-family:var(--mono); font-weight:700; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:#fff; background:var(--terra); border:2px solid var(--forest); border-radius:var(--pill); padding:3px 10px}
+.dir-note{color:var(--muted); font-size:.92rem; max-width:70ch; margin:12px 0 0}
+.frame{border:var(--bw) solid var(--forest); border-radius:var(--r-lg); box-shadow:var(--shadow-lg); overflow:hidden; margin-top:16px; background:var(--cream)}
+hr.gap{border:0; height:var(--bw); background:var(--forest); margin:54px 0 0}
+/* buttons — press interaction; FOREST text on terracotta (AA) */
+.btn{font-family:var(--mono); font-weight:700; text-transform:uppercase; letter-spacing:.04em; font-size:.8rem; border:var(--bw) solid var(--forest); border-radius:var(--r); padding:14px 22px; cursor:pointer; display:inline-flex; align-items:center; gap:9px; background:var(--terra); color:var(--forest); box-shadow:var(--shadow-sm); text-decoration:none; transition:transform .12s var(--ease), box-shadow .12s var(--ease)}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:var(--shadow)}
+.btn:active{transform:translate(3px,3px); box-shadow:0 0 0 var(--forest)}
+.btn.ghost{background:var(--paper2); color:var(--forest)}
+.btn:focus-visible{outline:3px solid var(--terra-deep); outline-offset:2px}
+.vchip{display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-weight:700; font-size:.74rem; color:var(--forest); background:transparent; border:none; cursor:pointer; padding:8px 4px}
+.vchip .play{width:34px;height:34px;border:var(--bw) solid var(--forest); border-radius:50%; background:var(--paper2); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm); transition:transform .12s var(--ease)}
+.vchip:hover .play{transform:scale(1.06)}
+.pill{display:inline-flex; align-items:center; gap:9px; background:var(--wash); border:var(--bw) solid var(--forest); border-radius:var(--pill); box-shadow:var(--shadow-sm); padding:6px 15px; font-family:var(--mono); font-size:.76rem; font-weight:700; color:var(--forest)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--terra);box-shadow:0 0 0 3px var(--peach)}
+
+/* ============ HERO A — TASTE IT LIVE ============ */
+.hA{padding:40px; display:grid; grid-template-columns:1.02fr .98fr; gap:38px; align-items:center; background:radial-gradient(120% 120% at 0% 0%, var(--paper) 0%, var(--cream) 60%)}
+.hA h2{font-size:clamp(2.4rem,4.6vw,3.7rem); font-weight:800; letter-spacing:-.05em; margin-top:14px}
+.hA .sub{font-size:1.12rem; color:var(--forest2); max-width:44ch; margin-top:16px}
+.hA .cta{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:24px}
+.hA .meta{font-family:var(--mono); font-size:.76rem; color:var(--muted); margin-top:16px}
+/* before/after slider */
+.ba{position:relative; border:var(--bw) solid var(--forest); border-radius:var(--r-lg); box-shadow:var(--shadow); overflow:hidden; height:360px; background:var(--paper2); touch-action:none}
+.ba .layer{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:26px}
+.ba .tag{position:absolute; top:14px; font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:4px 9px; border:2px solid var(--forest); border-radius:var(--pill)}
+.ba .after{background:var(--paper2)}
+.ba .tagA{right:14px; background:var(--terra); color:var(--forest)}
+.ba .before{background:#EDEAE0; border-right:var(--bw) solid var(--forest)}
+.ba .tagB{left:14px; background:var(--paper2); color:var(--muted)}
+.ba .divider{position:absolute; top:0; bottom:0; width:var(--bw); background:var(--forest); transform:translateX(-50%)}
+.ba .handle{position:absolute; top:50%; width:44px;height:44px; border:var(--bw) solid var(--forest); border-radius:50%; background:var(--terra); box-shadow:var(--shadow-sm); display:flex; align-items:center; justify-content:center; transform:translate(-50%,-50%); pointer-events:none}
+.ba input[type=range]{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize}
+/* the fake product cards inside */
+.raw{width:230px}
+.raw .t{font-size:14px; color:#8A8073}
+.raw .p{font-weight:800; font-size:22px; color:#6f665a; margin:4px 0}
+.raw .l{font-size:12px; color:#9a9184; line-height:1.7}
+.raw .b{margin-top:14px; height:38px; border-radius:6px; background:#DED8C8; color:#9a9184; display:flex; align-items:center; justify-content:center; font-size:12px}
+.fine{width:230px; background:var(--paper2); border:var(--bw) solid var(--forest); border-radius:var(--r); padding:18px; box-shadow:var(--shadow-sm)}
+.fine .t{font-family:var(--disp); font-weight:700; font-size:14px}
+.fine .p{font-family:var(--disp); font-weight:800; font-size:40px; letter-spacing:-.03em; margin:4px 0}
+.fine .l{font-size:12.5px; color:var(--forest2); line-height:1.6}
+.fine .b{margin-top:14px; height:38px; border-radius:8px; background:var(--terra); color:var(--forest); border:2px solid var(--forest); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; font-weight:700}
+
+/* ============ HERO B — THE INTRO FILM ============ */
+.hB{padding:48px 40px 44px; text-align:center; background:var(--forest); color:var(--paper); position:relative; overflow:hidden}
+.hB::before{content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(237,233,220,.06) 1px, transparent 1px); background-size:18px 18px; opacity:.7}
+.hB > *{position:relative}
+.hB .eyebrow{color:var(--terra)}
+.hB h2{color:var(--paper); font-size:clamp(2.3rem,5vw,4rem); font-weight:800; letter-spacing:-.05em; margin:14px auto 0; max-width:16ch}
+.hB .sub{color:#C4C9BF; max-width:52ch; margin:16px auto 0; font-size:1.1rem}
+.hB .video{max-width:720px; margin:28px auto 0; border:var(--bw) solid var(--paper); border-radius:var(--r-lg); box-shadow:8px 8px 0 var(--terra); background:#0F1D16; aspect-ratio:16/9; position:relative; overflow:hidden; cursor:pointer}
+.hB .poster{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; background:linear-gradient(160deg,#1B3428,#0F1D16)}
+.hB .bigplay{width:76px;height:76px;border:var(--bw) solid var(--paper); border-radius:50%; background:var(--terra); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 8px rgba(232,114,44,.18); transition:transform .2s var(--ease)}
+.hB .video:hover .bigplay{transform:scale(1.07)}
+.hB .vlabel{font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#C4C9BF}
+.hB .dummy{position:absolute; top:12px; left:12px; font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--forest); background:var(--peach); border:2px solid var(--forest); border-radius:var(--pill); padding:3px 9px}
+.hB .cta{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:26px}
+.hB .btn.ghost{background:transparent; color:var(--paper); border-color:var(--paper)}
+.hB .btn.ghost:hover{box-shadow:5px 5px 0 var(--terra)}
+
+/* ============ HERO C — INSIDE THE COCKPIT ============ */
+.hC{padding:42px 40px; display:grid; grid-template-columns:.9fr 1.1fr; gap:36px; align-items:center; background:var(--paper)}
+.hC h2{font-size:clamp(2.2rem,4.3vw,3.3rem); font-weight:800; letter-spacing:-.05em; margin-top:14px}
+.hC .sub{color:var(--forest2); font-size:1.08rem; max-width:40ch; margin-top:14px}
+.hC .cta{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:22px}
+.cockpit{background:var(--cream); border:var(--bw) solid var(--forest); border-radius:var(--r-lg); box-shadow:var(--shadow); padding:16px}
+.cockpit .bar{display:flex; align-items:center; gap:7px; padding:2px 4px 12px}
+.cockpit .bar i{width:11px;height:11px;border-radius:50%;border:2px solid var(--forest); display:inline-block}
+.cockpit .bar i.a{background:var(--terra)} .cockpit .bar i.b{background:var(--lime)} .cockpit .bar i.c{background:var(--sky)}
+.cockpit .bar span{margin-left:auto; font-family:var(--mono); font-size:10px; font-weight:700; color:var(--muted)}
+.mini{background:var(--paper2); border:var(--bw) solid var(--forest); border-radius:var(--r); padding:16px; box-shadow:var(--shadow-sm)}
+.mini .ml{font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-deep)}
+.mini .mq{font-family:var(--disp); font-weight:700; font-size:1.02rem; margin:5px 0 12px}
+.mopt{display:block; width:100%; text-align:left; background:var(--cream); border:2px solid var(--forest); border-radius:var(--r-sm); padding:10px 12px; margin:7px 0; cursor:pointer; font-family:var(--body); font-size:.9rem; color:var(--forest); box-shadow:2px 2px 0 var(--forest); transition:transform .1s var(--ease), box-shadow .1s var(--ease)}
+.mopt:hover{transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--forest)}
+.mopt .k{font-family:var(--mono); font-weight:700; color:var(--terra-deep); margin-right:8px}
+.mopt.correct{background:#DDF0E4; border-color:var(--ok)}
+.mopt.wrong{background:#F7DAD2; border-color:#C8452F}
+.mrev{display:none; margin-top:10px; font-size:.86rem; color:var(--forest2); background:var(--lime); border:2px solid var(--forest); border-radius:var(--r-sm); padding:10px 12px}
+.mrev.show{display:block}
+.woo{margin-top:12px; background:var(--paper2); border:var(--bw) solid var(--forest); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow-sm)}
+.woo .wt{background:var(--forest); color:var(--terra); font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:7px 12px}
+.woo .wb{padding:11px 12px}
+.woo .ww{font-family:var(--mono); font-weight:700; font-size:.98rem; color:var(--forest)}
+.woo .wd{font-size:.82rem; color:var(--muted); margin-top:3px}
+
+/* depth system */
+.depth{padding:44px 0 20px}
+.depth h2{font-size:clamp(1.7rem,3.4vw,2.2rem)}
+.dgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:22px}
+.dcard{background:var(--paper); border:var(--bw) solid var(--forest); border-radius:var(--r); box-shadow:var(--shadow-sm); padding:18px}
+.dcard .di{width:44px;height:44px;border:var(--bw) solid var(--forest); border-radius:var(--r-sm); box-shadow:2px 2px 0 var(--forest); display:flex;align-items:center;justify-content:center; margin-bottom:12px}
+.dcard h4{font-size:1.05rem}
+.dcard p{font-size:.9rem; color:var(--muted); margin:6px 0 0}
+.imgslot{border:var(--bw) dashed var(--terra-deep); border-radius:var(--r); background:repeating-linear-gradient(135deg,var(--wash),var(--wash) 12px,var(--peach) 12px,var(--peach) 24px); display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; min-height:120px}
+.imgslot span{font-family:var(--mono); font-size:11px; font-weight:700; color:var(--terra-deep); max-width:26ch}
+.foot{padding:40px 0 70px; color:var(--muted); font-size:.9rem}
+@media (max-width:860px){ .hA,.hC{grid-template-columns:1fr; padding:28px} .dgrid{grid-template-columns:1fr} .hB{padding:34px 22px} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+
+<div class="wrap sc-head">
+  <span class="eyebrow">Maven · landing hero directions</span>
+  <h1>Three ways to open the page.</h1>
+  <p>All Warm Fusion, all built to sell your depth — not by claiming it, but by letting a visitor feel it. Two of the three are live: drag the slider, click the dilemma. Pick the one that feels like you, and I'll build the full page around it.</p>
+</div>
+
+<!-- ===================== DIRECTION A ===================== -->
+<div class="wrap">
+  <div class="dir-tag"><span class="n">A</span><span class="rec">My recommendation</span></div>
+  <h3 style="font-size:1.3rem">Taste It Live — the interaction is the hero</h3>
+  <p class="dir-note">The visitor drags a real before/after in the first three seconds and <em>feels</em> the difference between "it works" and "it's right." No competitor's landing page lets you taste the teaching. This is the one that says "depth" without a single adjective.</p>
+  <div class="frame">
+    <div class="hA">
+      <div>
+        <span class="pill"><span class="dot"></span>Founding cohort · opens October</span>
+        <h2>Become a builder with a designer's eye.</h2>
+        <p class="sub">No code. No design school. Learn to build real products with AI — and the taste to make them <em>good</em>, not generic.</p>
+        <div class="cta">
+          <a href="#" class="btn">Reserve your seat — ₦20,000</a>
+          <button class="vchip"><span class="play"><svg width="13" height="13" viewBox="0 0 256 256" fill="#14261D"><path d="M228,128a12,12,0,0,1-6,10.39l-144,83.2A12,12,0,0,1,60,211.19V44.81a12,12,0,0,1,18-10.4l144,83.2A12,12,0,0,1,228,128Z"/></svg></span>Watch the 2-min intro</button>
+        </div>
+        <p class="meta">Drag the handle → that gap is the whole course.</p>
+      </div>
+      <div class="ba" id="ba">
+        <div class="layer after"><span class="tag tagA">After · taste pass</span>
+          <div class="fine"><div class="t">Builder</div><div class="p">₦20k</div><div class="l">Full path · Taste Trainer · Founding cohort live</div><div class="b">Own it — one time</div></div>
+        </div>
+        <div class="layer before" id="baBefore"><span class="tag tagB">Before · raw AI</span>
+          <div class="raw"><div class="t">Builder plan</div><div class="p">₦20,000</div><div class="l">- Full path<br>- Taste Trainer included<br>- Founding cohort</div><div class="b">Buy now</div></div>
+        </div>
+        <div class="divider" id="baDiv"></div>
+        <div class="handle" id="baHandle"><svg width="18" height="18" viewBox="0 0 256 256" fill="#14261D"><path d="M136,40V216a8,8,0,0,1-16,0V40a8,8,0,0,1,16,0Zm-53.66,58.34a8,8,0,0,0-11.32,0l-24,24a8,8,0,0,0,0,11.32l24,24a8,8,0,0,0,11.32-11.32L67.31,136H96a8,8,0,0,0,0-16H67.31l15-15a8,8,0,0,0,0-11.32Zm112,24-24-24a8,8,0,0,0-11.32,11.32L188.69,120H160a8,8,0,0,0,0,16h28.69l-15,15a8,8,0,0,0,11.32,11.32l24-24a8,8,0,0,0,0-11.32Z"/></svg></div>
+        <input type="range" id="baRange" min="0" max="100" value="52" aria-label="Drag to compare raw output and taste pass">
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="gap">
+
+<!-- ===================== DIRECTION B ===================== -->
+<div class="wrap" style="margin-top:44px">
+  <div class="dir-tag"><span class="n">B</span></div>
+  <h3 style="font-size:1.3rem">The Intro Film — your conversion video, centre stage</h3>
+  <p class="dir-note">Built around the intro video you're going to record. A confident, cinematic opener on forest ground with a framed player waiting for your hero film. Dark, premium, editorial — the boldest departure from "generic cream."</p>
+  <div class="frame">
+    <div class="hB">
+      <span class="eyebrow">Founding cohort · opens October</span>
+      <h2>The AI builder's course that refuses to look like everyone else's.</h2>
+      <p class="sub">Zero to shipped, with a designer's eye — from someone who actually builds and ships real products.</p>
+      <div class="video" role="button" tabindex="0" aria-label="Play the 2-minute intro (coming soon)">
+        <span class="dummy">Dummy · your hero video drops here</span>
+        <div class="poster">
+          <div class="bigplay"><svg width="26" height="26" viewBox="0 0 256 256" fill="#14261D"><path d="M228,128a12,12,0,0,1-6,10.39l-144,83.2A12,12,0,0,1,60,211.19V44.81a12,12,0,0,1,18-10.4l144,83.2A12,12,0,0,1,228,128Z"/></svg></div>
+          <span class="vlabel">2-min intro · why this course, why now</span>
+        </div>
+      </div>
+      <div class="cta">
+        <a href="#" class="btn">Reserve your seat — ₦20,000</a>
+        <a href="#" class="btn ghost">See the curriculum</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="gap">
+
+<!-- ===================== DIRECTION C ===================== -->
+<div class="wrap" style="margin-top:44px">
+  <div class="dir-tag"><span class="n">C</span></div>
+  <h3 style="font-size:1.3rem">Inside the Cockpit — the product is the proof</h3>
+  <p class="dir-note">Shows the real learning experience on the right — a live lesson beat and a "Word You'll Own" card peeking out. Try the dilemma: it works. It tells the visitor exactly what they're buying, and that it's already real.</p>
+  <div class="frame">
+    <div class="hC">
+      <div>
+        <span class="pill"><span class="dot"></span>Founding cohort · opens October</span>
+        <h2>Come and see how I actually build.</h2>
+        <p class="sub">Not slides about AI — the real cockpit. Watch, then do, then ship your own thing.</p>
+        <div class="cta">
+          <a href="#" class="btn">Reserve your seat — ₦20,000</a>
+          <button class="vchip"><span class="play"><svg width="13" height="13" viewBox="0 0 256 256" fill="#14261D"><path d="M228,128a12,12,0,0,1-6,10.39l-144,83.2A12,12,0,0,1,60,211.19V44.81a12,12,0,0,1,18-10.4l144,83.2A12,12,0,0,1,228,128Z"/></svg></span>Watch the intro</button>
+        </div>
+      </div>
+      <div class="cockpit">
+        <div class="bar"><i class="a"></i><i class="b"></i><i class="c"></i><span>maven · lesson player</span></div>
+        <div class="mini" id="mini">
+          <div class="ml">Track 1 · Builder Dilemma</div>
+          <div class="mq">You're one screen from done. What does a builder with taste do next?</div>
+          <button class="mopt" data-k="a"><span class="k">A</span>Ship it — it works, polish later.</button>
+          <button class="mopt" data-k="b"><span class="k">B</span>Name the soul first, then direct the machine toward it.</button>
+          <div class="mrev" id="mrev"><b>B.</b> "It works" is the machine's finish line. "It's right" is yours — and it's the whole game.</div>
+        </div>
+        <div class="woo">
+          <div class="wt">Word You'll Own</div>
+          <div class="wb"><span class="ww">Whitespace</span><div class="wd">The room around things — what makes a screen feel calm and expensive instead of cramped.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="gap">
+
+<!-- ===================== DEPTH SYSTEM ===================== -->
+<div class="wrap depth">
+  <span class="eyebrow">Beyond the hero</span>
+  <h2>The depth I'd build across the whole page</h2>
+  <p style="color:var(--muted); max-width:64ch; margin-top:10px">Depth through motion and real interaction — never more clutter. Here's the system, applied top to bottom and reused across the product.</p>
+  <div class="dgrid">
+    <div class="dcard"><div class="di" style="background:var(--sky)"><svg width="22" height="22" viewBox="0 0 256 256" fill="#14261D"><path d="M69.12,94.15,28.5,128l40.62,33.85a8,8,0,1,1-10.24,12.29l-48-40a8,8,0,0,1,0-12.29l48-40a8,8,0,0,1,10.24,12.3Zm176,27.7-48-40a8,8,0,1,0-10.24,12.3L227.5,128l-40.62,33.85a8,8,0,1,0,10.24,12.29l48-40a8,8,0,0,0,0-12.29ZM162.73,32.48a8,8,0,0,0-10.25,4.79l-64,176a8,8,0,0,0,4.79,10.26,8.14,8.14,0,0,0,2.73.48,8,8,0,0,0,7.52-5.27l64-176A8,8,0,0,0,162.73,32.48Z"/></svg></div><h4>Try a real lesson</h4><p>A live Builder Dilemma and the taste slider embedded mid-page — they experience the teaching before they pay.</p></div>
+    <div class="dcard"><div class="di" style="background:var(--lime)"><svg width="22" height="22" viewBox="0 0 256 256" fill="#14261D"><path d="M232.49,215.51,185,168a92.12,92.12,0,1,0-17,17l47.53,47.54a12,12,0,0,0,17-17ZM44,112a68,68,0,1,1,68,68A68.07,68.07,0,0,1,44,112Z"/></svg></div><h4>Spot the slop</h4><p>An interactive "find the flaw" strip that proves the value of a trained eye in ten seconds.</p></div>
+    <div class="dcard"><div class="di" style="background:var(--peach)"><svg width="22" height="22" viewBox="0 0 256 256" fill="#14261D"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></div><h4>Motion on settle</h4><p>Cards lift on hover, the signature button press, gentle reveals as sections arrive — restraint, not confetti.</p></div>
+    <div class="dcard"><div class="di" style="background:var(--pink)"><svg width="22" height="22" viewBox="0 0 256 256" fill="#14261D"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H208V208ZM152,112a12,12,0,1,1,12-12A12,12,0,0,1,152,112Z"/></svg></div><h4>Real imagery</h4><p>Your face, and true screenshots of what you've shipped (Baytul Asmaa) as proof-of-taste — not stock.</p></div>
+    <div class="dcard"><div class="di" style="background:var(--wash)"><svg width="22" height="22" viewBox="0 0 256 256" fill="#14261D"><path d="M164.44,105.34l-48-32A8,8,0,0,0,104,80v64a8,8,0,0,0,12.44,6.66l48-32a8,8,0,0,0,0-13.32ZM216,40H40A16,16,0,0,0,24,56V168a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Z"/></svg></div><h4>The intro film</h4><p>Your conversion video framed as the centrepiece, with a clean dummy until your real cut is ready.</p></div>
+    <div class="dcard"><div class="di" style="background:var(--sky)"><svg width="22" height="22" viewBox="0 0 256 256" fill="#14261D"><path d="M128,24a104,104,0,1,0,104,104A104.11,104.11,0,0,0,128,24Zm-8,48a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,120a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z"/></svg></div><h4>Honest depth</h4><p>The cost table, the 8-module path, the founding offer — the substance a serious buyer scrolls for.</p></div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px">
+    <div class="imgslot"><span>Image slot — your photo at your desk, mid-build (drop in when ready)</span></div>
+    <div class="imgslot"><span>Image slot — real Baytul Asmaa screenshots, your slop→taste proof</span></div>
+  </div>
+</div>
+
+<div class="wrap foot">
+  <span class="mono" style="font-size:12px">Hero directions · draft v1 · Warm Fusion · forest-on-terracotta (AA) · dummy video &amp; image slots marked</span>
+</div>
+
+<script>
+(function(){
+  // Before/After slider (Hero A)
+  var range=document.getElementById('baRange'), before=document.getElementById('baBefore'),
+      div=document.getElementById('baDiv'), handle=document.getElementById('baHandle');
+  function set(v){ before.style.clipPath='inset(0 '+(100-v)+'% 0 0)'; div.style.left=v+'%'; handle.style.left=v+'%'; }
+  if(range){ set(52); range.addEventListener('input',function(){set(Number(this.value));}); }
+  // Mini dilemma (Hero C)
+  var opts=document.querySelectorAll('#mini .mopt'), rev=document.getElementById('mrev'), done=false;
+  opts.forEach(function(o){ o.addEventListener('click',function(){
+    if(done)return; done=true; var k=o.getAttribute('data-k');
+    if(k==='b'){o.classList.add('correct');} else {o.classList.add('wrong'); document.querySelector('#mini .mopt[data-k="b"]').classList.add('correct');}
+    rev.classList.add('show');
+  });});
+})();
+</script>
+</body>
+</html>

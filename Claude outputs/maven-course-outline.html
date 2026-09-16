@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maven — Course Outline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --wf-ground:#F4F0E5; --wf-ground-2:#FBF9F2; --wf-surface:#FFFFFF;
+  --wf-forest:#14261D; --wf-pine:#1B3428;
+  --wf-ink:#14261D; --wf-ink-2:#3D463F; --wf-muted:#5D655E;
+  --wf-ink-inv:#EDE9DC; --wf-ink-inv-2:#C4C9BF;
+  --wf-terra:#E8722C; --wf-terra-deep:#B44E14; --wf-terra-tint:#FBE3D3;
+  --wf-lime:#D6E59A; --wf-sky:#C9E0F2; --wf-pink:#F6D7E8; --wf-peach:#F7DCC4;
+  --wf-border:#14261D; --wf-bw:2.5px; --wf-bw-thin:2px;
+  --wf-shadow:5px 5px 0 var(--wf-border); --wf-shadow-sm:3px 3px 0 var(--wf-border); --wf-shadow-lg:8px 8px 0 var(--wf-border);
+  --wf-r-lg:14px; --wf-r-md:11px; --wf-r-sm:8px; --wf-r-pill:40px;
+  --wf-f-disp:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --wf-f-body:"Instrument Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --wf-f-mono:"Space Mono",ui-monospace,Menlo,monospace;
+  --wf-ease:cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--wf-ground); color:var(--wf-ink); font-family:var(--wf-f-body); font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased}
+.wrap{max-width:880px; margin:0 auto; padding:36px 22px 90px}
+h1,h2,h3{font-family:var(--wf-f-disp); font-weight:700; margin:0; letter-spacing:-0.03em; line-height:1.06; color:var(--wf-forest); text-wrap:balance}
+.disp{font-size:clamp(2.2rem,6vw,3.4rem); letter-spacing:-0.05em}
+.h3{font-size:1.3rem}
+.lead{font-size:1.12rem; color:var(--wf-ink-2); max-width:62ch}
+.label{font-family:var(--wf-f-mono); text-transform:uppercase; font-size:11px; letter-spacing:.09em; font-weight:700; color:var(--wf-terra-deep)}
+.mono{font-family:var(--wf-f-mono)}
+.chip{font-family:var(--wf-f-mono); font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:.03em; padding:5px 11px; border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-sm); color:var(--wf-forest); display:inline-block; background:var(--wf-lime)}
+.chip.sky{background:var(--wf-sky)} .chip.pink{background:var(--wf-pink)} .chip.peach{background:var(--wf-peach)} .chip.terra{background:var(--wf-terra); color:#fff}
+.panel{background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); padding:24px}
+.panel-dark{background:var(--wf-forest); color:var(--wf-ink-inv); border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); padding:24px}
+.panel-dark h1,.panel-dark h2,.panel-dark h3{color:var(--wf-ink-inv)}
+.arc{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+.arc span{font-family:var(--wf-f-mono); font-size:11px; font-weight:700; color:var(--wf-ink-inv-2); background:var(--wf-pine); border:var(--wf-bw-thin) solid var(--wf-border); border-radius:var(--wf-r-pill); padding:5px 11px}
+.mod{background:var(--wf-surface); border:var(--wf-bw) solid var(--wf-border); box-shadow:var(--wf-shadow); border-radius:var(--wf-r-lg); overflow:hidden; margin-bottom:18px}
+.mod-hd{display:flex; gap:16px; align-items:flex-start; padding:20px 22px}
+.mod-n{font-family:var(--wf-f-disp); font-weight:700; font-size:1.5rem; color:#fff; background:var(--wf-forest); border:var(--wf-bw) solid var(--wf-border); border-radius:var(--wf-r-md); width:58px; height:52px; min-width:58px; display:flex; align-items:center; justify-content:center; box-shadow:var(--wf-shadow-sm)}
+.mod.sig .mod-n{background:var(--wf-terra)}
+.mod-t{flex:1}
+.mod-promise{color:var(--wf-ink-2); font-size:.98rem; margin-top:5px; max-width:60ch}
+.mod-body{border-top:var(--wf-bw-thin) solid rgba(20,38,29,.14); padding:16px 22px; background:var(--wf-ground-2)}
+.mod-body ul{margin:0; padding-left:20px; columns:2; column-gap:28px}
+.mod-body li{margin:5px 0; font-size:.93rem; color:var(--wf-ink); break-inside:avoid}
+.deliver{margin-top:12px; font-family:var(--wf-f-mono); font-size:12px; font-weight:700; letter-spacing:.01em; color:var(--wf-terra-deep)}
+.deliver b{color:var(--wf-forest)}
+.thread{display:flex; gap:14px; align-items:flex-start}
+.thread .tile{width:46px;height:46px;min-width:46px;border:var(--wf-bw) solid var(--wf-border);border-radius:var(--wf-r-md);box-shadow:var(--wf-shadow-sm);display:flex;align-items:center;justify-content:center;color:var(--wf-forest)}
+.divider{height:var(--wf-bw); background:var(--wf-border); border:0; margin:34px 0}
+@media (max-width:640px){ .mod-body ul{columns:1} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px">
+    <span class="chip peach">Course outline</span>
+    <span class="chip">Refined from your 8 modules</span>
+    <span class="chip sky">Draft v1</span>
+  </div>
+  <h1 class="disp">The Maven Journey</h1>
+  <p class="lead" style="margin-top:14px">Your structure, refined to standard — the way you'd actually teach it in a room: understand the machine, learn to see, set up, plan, craft with taste, ship it, then go beyond. Nothing filed as "pillars." A journey.</p>
+
+  <div class="panel-dark" style="margin-top:24px">
+    <div class="label" style="color:var(--wf-terra)">How every module runs</div>
+    <p style="color:var(--wf-ink-inv-2); margin:8px 0 0; max-width:64ch; font-size:.97rem">Each module is <strong>Watch</strong> (a short video of me building) → <strong>Do</strong> (the interactive Prompt Builder &amp; hands-on work) → <strong>Belong</strong> (the Arena &amp; live sessions). One real product — your Memory Vault — grows with you across the middle modules, so you're always building something real, never just reading.</p>
+    <div class="arc"><span>Watch</span><span>Do</span><span>Belong</span><span>·</span><span>one build, all the way through</span></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 00 -->
+  <div class="mod">
+    <div class="mod-hd"><div class="mod-n">00</div><div class="mod-t">
+      <div class="chip sky" style="margin-bottom:7px">Welcome</div>
+      <h2 class="h3">Start Here — why you can build now</h2>
+      <p class="mod-promise">Land softly, see the whole map, and make your first tiny thing before the doubt sets in.</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>What Maven is — and the promise: a builder with a designer's eye</li>
+        <li>How you'll learn: Watch → Do → Belong</li>
+        <li>Meet your build: the Memory Vault</li>
+        <li>The one rule everything hangs on: taste is the last mile</li>
+      </ul>
+      <div class="deliver">Sets: <b>the mindset &amp; the map</b></div>
+    </div>
+  </div>
+
+  <!-- 01 -->
+  <div class="mod">
+    <div class="mod-hd"><div class="mod-n">01</div><div class="mod-t">
+      <div class="chip sky" style="margin-bottom:7px">Foundation</div>
+      <h2 class="h3">AI Fluency — think with the machine</h2>
+      <p class="mod-promise">Stop treating AI like a genius and start steering it like the guessing machine it is.</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>The machine is a guessing machine, not a genius</li>
+        <li>Architect, not typist — where your value moves</li>
+        <li>Context is its working memory — feed it on purpose</li>
+        <li>Your first prompts — the seed of the Prompt Builder</li>
+      </ul>
+      <div class="deliver">Delivers: <b>the Think foundation</b></div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="mod">
+    <div class="mod-hd"><div class="mod-n">02</div><div class="mod-t">
+      <div class="chip pink" style="margin-bottom:7px">The eye</div>
+      <h2 class="h3">Design &amp; Its Language — speak like a designer</h2>
+      <p class="mod-promise">Learn the words pros use to name what's right and wrong — the single biggest thing standing between you and slop.</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>Why vocabulary kills slop: "you can't fix what you can't name"</li>
+        <li>The words you'll own: layout, hierarchy, whitespace, type, colour, contrast, motion</li>
+        <li>Reading a screen: what's working, what's slop</li>
+        <li>Your mechanical mirror: catching obvious slop with a checker</li>
+      </ul>
+      <div class="deliver">Delivers: <b>design literacy, by doing</b> — a design school without the design school</div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="mod">
+    <div class="mod-hd"><div class="mod-n">03</div><div class="mod-t">
+      <div class="chip peach" style="margin-bottom:7px">Setup</div>
+      <h2 class="h3">Your Build Studio — set up your tools</h2>
+      <p class="mod-promise">Get your free-first toolkit ready and build one small thing end-to-end, so the tools stop being scary.</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>The free-first stack: Stitch, Claude, Antigravity (Figma &amp; Codex later)</li>
+        <li>What each tool is for — and the honest cost of each</li>
+        <li>Your context kit: feed your design standard in as rules</li>
+        <li>First contact: one tiny build, all the way through</li>
+      </ul>
+      <div class="deliver">Delivers: <b>tool orchestration</b> — the setup wall, removed</div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="mod">
+    <div class="mod-hd"><div class="mod-n">04</div><div class="mod-t">
+      <div class="chip lime" style="margin-bottom:7px">Planning</div>
+      <h2 class="h3">System Thinking — plan before you build</h2>
+      <p class="mod-promise">Slow the start. Break a big idea into parts a machine can build, in the right order.</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>Break an idea into parts (decomposition)</li>
+        <li>The brief before the build — beat the urge to jump</li>
+        <li>Structure &amp; flow, in plain words (information architecture)</li>
+        <li>Think in components, not pages</li>
+      </ul>
+      <div class="deliver">Delivers: <b>the Direct pillar</b> — the architect's habit</div>
+    </div>
+  </div>
+
+  <!-- 05 · SIGNATURE -->
+  <div class="mod sig">
+    <div class="mod-hd"><div class="mod-n">05</div><div class="mod-t">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:7px"><span class="chip terra">The signature module</span></div>
+      <h2 class="h3">Taste &amp; Crafting — make it unmistakably yours</h2>
+      <p class="mod-promise">The heart of Maven. Craft your taste, turn it into a prompt no one else could write, then judge the result like a designer — reject the slop, keep what's right.</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>Craft your taste: choose a design movement, define the soul</li>
+        <li>The Prompt Builder: taste → design standard → prompt (a step above Aura)</li>
+        <li>Run it, then judge it: reject the slop, name it, refine</li>
+        <li>Steal responsibly: draw from influences with integrity, never copy</li>
+      </ul>
+      <div class="deliver">Delivers: <b>the Judge pillar + the Prompt Builder</b> — your originality engine</div>
+    </div>
+  </div>
+
+  <!-- 06 -->
+  <div class="mod">
+    <div class="mod-hd"><div class="mod-n">06</div><div class="mod-t">
+      <div class="chip lime" style="margin-bottom:7px">Ship</div>
+      <h2 class="h3">Go Live — put your idea on the internet</h2>
+      <p class="mod-promise">Hand-held, baby steps, until your product is live at its own address and you can say "I built this."</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>Befriend the terminal: a gentle CLI on-ramp</li>
+        <li>GitHub: save and version your work</li>
+        <li>Deploy to Vercel / Netlify, one step at a time</li>
+        <li>Hosting &amp; a custom domain — your product, your name</li>
+      </ul>
+      <div class="deliver">Delivers: <b>the Ship pillar</b> — held by the hand the whole way</div>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="mod">
+    <div class="mod-hd"><div class="mod-n">07</div><div class="mod-t">
+      <div class="chip pink" style="margin-bottom:7px">Beyond</div>
+      <h2 class="h3">What Next — go wild</h2>
+      <p class="mod-promise">Point everything you've learned at your own idea, with my inspiration and playbook in your pocket.</p>
+    </div></div>
+    <div class="mod-body">
+      <ul>
+        <li>Where I get my ideas — my sources and bookmarks</li>
+        <li>What you can build now — a gallery of what's possible</li>
+        <li>Aim the method at your own idea (your graduation)</li>
+        <li>The Arena &amp; community — keep sharpening your eye</li>
+      </ul>
+      <div class="deliver">Delivers: <b>independence</b> — build and ship, without fear</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="panel">
+    <div class="thread">
+      <div class="tile" style="background:var(--wf-terra-tint)"><svg width="22" height="22" viewBox="0 0 256 256" fill="#B44E14"><path d="M232,64V168a16,16,0,0,1-16,16H155.57l-25.4,31.42a8,8,0,0,1-12.34,0L92.43,184H40a16,16,0,0,1-16-16V64A16,16,0,0,1,40,48H216A16,16,0,0,1,232,64Z"/></svg></div>
+      <div>
+        <div class="label">What I refined, and what I kept</div>
+        <p style="margin:6px 0 0; font-size:.96rem; color:var(--wf-ink-2); max-width:66ch">I kept your eight modules, your order, and your words — "steal responsibly," "go wild," sharing your own bookmarks. I refined each into a standard shape: a one-line promise, the lessons inside, and what it delivers. The competencies we defined now live <em>inside</em> the journey instead of ruling over it — which is exactly why this will be easier to write and record.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+    <span class="chip terra">8 modules · Watch · Do · Belong</span>
+    <span class="mono" style="font-size:12px; color:var(--wf-muted)">Draft v1 — steer any module</span>
+  </div>
+
+</div>
+</body>
+</html>

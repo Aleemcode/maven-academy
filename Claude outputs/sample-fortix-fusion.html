@@ -1,0 +1,1423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maven Builder Academy — Top 1% AI Builder & Designer</title>
+<meta name="description" content="Maven Builder Academy — become a builder with a designer's eye. Master Stitch, Claude, and Antigravity. Founding cohort opens October.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --cream: #F4F0E5;
+  --paper: #FBF8EF;
+  --paper2: #FFFDF7;
+  --forest: #14261D;
+  --forest2: #33473B;
+  --terra: #E8722C;
+  --terra-deep: #B8551A;
+  --muted: #53625A;
+  --hair: #D8D2C2;
+  --wash: #EDE6D6;
+  --sky: #C9E0F2;
+  --lime: #D6E59A;
+  --pink: #F6D7E8;
+  --peach: #F7DCC4;
+  --ok: #2E7D57;
+  --bw: 2.5px;
+  --bw2: 2px;
+  --shadow: 5px 5px 0 var(--forest);
+  --shadow-sm: 3px 3px 0 var(--forest);
+  --shadow-lg: 8px 8px 0 var(--forest);
+  --r: 12px;
+  --r-lg: 16px;
+  --r-sm: 8px;
+  --pill: 40px;
+  --disp: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --body: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: "Space Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.2, .7, .3, 1);
+  --spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*{box-sizing: border-box}
+html{scroll-behavior: smooth}
+
+body{
+  margin: 0;
+  background: var(--cream);
+  color: var(--forest);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
+}
+
+h1,h2,h3,h4{
+  font-family: var(--disp);
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -.03em;
+  line-height: 1.05;
+  color: var(--forest);
+  text-wrap: balance;
+}
+p{margin: 0}
+a{color: var(--terra-deep)}
+img{max-width: 100%}
+
+/* Warm Fusion Strict Guardrails */
+.wrap{max-width: 1040px; margin: 0 auto; padding-inline: 22px}
+.eyebrow{font-family: var(--mono); text-transform: uppercase; font-size: 11px; letter-spacing: .1em; font-weight: 700; color: var(--terra-deep); white-space: nowrap !important}
+.mono{font-family: var(--mono)}
+.sec{padding-block: 60px}
+.divider{height: var(--bw); background: var(--forest); border: 0; margin: 0}
+
+.pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: #FBEEE0;
+  border: var(--bw) solid var(--forest);
+  border-radius: var(--pill);
+  box-shadow: var(--shadow-sm);
+  padding: 6px 15px;
+  font-family: var(--mono);
+  font-size: .74rem;
+  font-weight: 700;
+  color: var(--forest);
+  white-space: nowrap !important;
+}
+.dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--terra);
+  box-shadow: 0 0 0 3px var(--peach);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: .75; }
+}
+
+.chip{
+  font-family: var(--mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .03em;
+  padding: 5px 11px;
+  border: var(--bw2) solid var(--forest);
+  border-radius: var(--r-sm);
+  color: var(--forest);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--lime);
+  white-space: nowrap !important;
+}
+.chip.sky{background: var(--sky)}
+.chip.pink{background: var(--pink)}
+.chip.peach{background: var(--peach)}
+.chip.terra{background: var(--terra); color: var(--forest)}
+
+.btn{
+  font-family: var(--mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-size: .8rem;
+  border: var(--bw) solid var(--forest);
+  border-radius: var(--r);
+  padding: 14px 22px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--terra);
+  color: var(--forest);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  white-space: nowrap !important;
+  transition: transform .14s var(--ease), box-shadow .14s var(--ease);
+}
+.btn:hover{transform: translate(-1px, -1px); box-shadow: var(--shadow)}
+.btn:active{transform: translate(3px, 3px); box-shadow: 0 0 0 var(--forest)}
+.btn.sec{background: var(--paper2); color: var(--forest)}
+.btn:focus-visible{outline: 3px solid var(--terra-deep); outline-offset: 2px}
+
+.card{
+  background: var(--paper);
+  border: var(--bw) solid var(--forest);
+  box-shadow: var(--shadow);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+}
+.card.interactive:hover{
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.panel-dark{
+  background: var(--forest);
+  color: #EDE9DC;
+  border: var(--bw) solid var(--forest);
+  box-shadow: var(--shadow);
+  border-radius: var(--r-lg);
+  padding: 30px;
+}
+.panel-dark h1, .panel-dark h2, .panel-dark h3{color: #EDE9DC}
+
+.center{text-align: center}
+.lead{font-size: 1.1rem; color: var(--muted); max-width: 60ch}
+.g3{display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px}
+.g2{display: grid; grid-template-columns: 1fr 1fr; gap: 16px}
+
+/* FIXED BOTTOM VIEWPORT BLUR (Fortix signature) */
+.bottom-viewport-blur{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  pointer-events: none;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 100%);
+}
+
+/* AI COMPANION "maven" CURSOR FOLLOWER — STRICTLY REMOVED FROM MOBILE */
+#ai-companion{
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 8px;
+  background: var(--paper);
+  color: var(--forest);
+  border: 2px solid var(--forest);
+  border-radius: var(--pill);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transform: translate(-50%, -50%);
+  transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
+  will-change: transform, left, top;
+  opacity: 0;
+}
+#ai-companion svg.emblem{
+  width: 20px;
+  height: 22px;
+  flex-shrink: 0;
+}
+#ai-companion .emblem-body{
+  fill: var(--forest);
+  transition: fill .2s var(--ease);
+}
+#ai-companion .emblem-spark{
+  fill: var(--terra-deep);
+  transition: fill .2s var(--ease);
+}
+/* Solid dark hover inversion */
+#ai-companion.on-solid{
+  background: var(--forest);
+  color: #EDE9DC;
+  border-color: #EDE9DC;
+  box-shadow: 3px 3px 0 var(--terra);
+}
+#ai-companion.on-solid .emblem-body{
+  fill: #FFFFFF;
+}
+#ai-companion.on-solid .emblem-spark{
+  fill: var(--terra);
+}
+
+/* COMPLETE REMOVAL OF COMPANION ON MOBILE VIEWPORTS AND TOUCH DEVICES */
+@media (max-width: 820px), (pointer: coarse), (hover: none){
+  #ai-companion{
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* NAVIGATION */
+.nav{position: sticky; top: 0; z-index: 40; background: rgba(244, 240, 229, .94); backdrop-filter: blur(8px); border-bottom: var(--bw) solid var(--forest)}
+.nav .in{max-width: 1040px; margin: 0 auto; padding: 12px 22px; display: flex; align-items: center; gap: 18px}
+.nav-logo{display: inline-flex; align-items: center; text-decoration: none}
+.nav-logo svg{height: 28px; width: auto; display: block}
+.nav .lk{display: flex; gap: 20px; margin-left: auto; align-items: center}
+.nav .lk a{font-family: var(--mono); font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); text-decoration: none; white-space: nowrap !important}
+.nav .lk a:hover{color: var(--terra-deep)}
+.nav .lk a.btn{color: var(--forest)}
+
+/* CLAUDE BRICK HERO — IDENTICAL STRUCTURE TO SAMPLE 2 BALANCED */
+.hero{
+  position: relative;
+  min-height: 520px;
+  overflow: hidden;
+  border-bottom: var(--bw) solid var(--forest);
+  background: var(--cream);
+}
+#field{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: none;
+  z-index: 1;
+}
+.scrim{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(78% 66% at 24% 46%, rgba(244,240,229,.95) 0%, rgba(244,240,229,.72) 44%, rgba(244,240,229,0) 80%);
+  z-index: 2;
+}
+.hcontent{
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 64px 22px;
+  pointer-events: none;
+  z-index: 3;
+}
+.hcontent > *{pointer-events: auto}
+.hero h1{font-family: var(--disp); font-weight: 800; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: -.05em; line-height: 1.02; margin: 16px 0 0; max-width: 15ch}
+.hero .sub{font-size: 1.14rem; color: var(--forest2); max-width: 44ch; margin-top: 16px}
+.hero .cta{display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 26px}
+.hint{font-family: var(--mono); font-size: .74rem; color: var(--muted)}
+
+/* MARQUEE STRIPE (from Claude Sample 3) */
+.marq{
+  background: var(--forest);
+  border-bottom: var(--bw) solid var(--forest);
+  overflow: hidden;
+  padding: 13px 0;
+  position: relative;
+  z-index: 4;
+}
+.marq .track{
+  display: flex;
+  gap: 32px;
+  white-space: nowrap;
+  animation: marq-scroll 24s linear infinite;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: .82rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.marq .track span{color: #EDE9DC}
+.marq .track b{color: var(--terra); font-weight: 900}
+@keyframes marq-scroll{
+  from{transform: translateX(0)}
+  to{transform: translateX(-33.333%)}
+}
+
+/* LOGISTICS */
+.logi{display: flex; flex-wrap: wrap; border: var(--bw) solid var(--forest); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; background: var(--paper)}
+.logi .it{flex: 1; min-width: 150px; padding: 16px 20px; border-right: var(--bw2) solid var(--hair)}
+.logi .it:last-child{border-right: 0}
+.logi .k{font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--terra-deep)}
+.logi .v{font-family: var(--disp); font-weight: 700; font-size: 1.05rem; margin-top: 3px}
+
+/* BEFORE / AFTER SLIDER */
+.ba{position: relative; border: var(--bw) solid var(--forest); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; height: 320px; background: var(--paper2); touch-action: none; max-width: 520px; margin-inline: auto}
+.ba .layer{position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px}
+.ba .tag{position: absolute; top: 14px; font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 4px 9px; border: var(--bw2) solid var(--forest); border-radius: var(--pill); white-space: nowrap !important}
+.ba .after{background: var(--paper2)}
+.ba .tagA{right: 14px; background: var(--terra); color: var(--forest)}
+.ba .before{background: #EDEAE0; border-right: var(--bw) solid var(--forest)}
+.ba .tagB{left: 14px; background: var(--paper2); color: var(--muted)}
+.ba .divider2{position: absolute; top: 0; bottom: 0; width: var(--bw); background: var(--forest); transform: translateX(-50%)}
+.ba .handle{position: absolute; top: 50%; width: 42px; height: 42px; border: var(--bw) solid var(--forest); border-radius: 50%; background: var(--terra); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; transform: translate(-50%, -50%); pointer-events: none}
+.ba input[type=range]{position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize}
+.raw{width: 210px}
+.raw .t{font-size: 13px; color: #8A8073}
+.raw .p{font-weight: 800; font-size: 22px; color: #6F665A; margin: 4px 0}
+.raw .l{font-size: 11.5px; color: #9A9184; line-height: 1.7}
+.raw .b{margin-top: 12px; height: 36px; border-radius: 6px; background: #DED8C8; color: #9A9184; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--mono); font-weight: 700}
+.fine{width: 210px; background: var(--paper2); border: var(--bw) solid var(--forest); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow-sm)}
+.fine .t{font-family: var(--disp); font-weight: 700; font-size: 14px}
+.fine .p{font-family: var(--disp); font-weight: 800; font-size: 38px; letter-spacing: -.03em; margin: 4px 0}
+.fine .l{font-size: 12px; color: var(--forest2); line-height: 1.6}
+.fine .b{margin-top: 14px; height: 38px; border-radius: 8px; background: var(--terra); color: var(--forest); border: 2px solid var(--forest); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; font-weight: 700}
+
+/* SECTION 3: THE VALUE VAULT (LEAN, KINETIC BENTO FOR ADDITIONAL PERKS) */
+.vault-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 26px;
+}
+.vault-card{
+  background: var(--paper);
+  border: var(--bw) solid var(--forest);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+}
+.vault-card h3{
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+.vault-card .desc{
+  font-size: .92rem;
+  color: var(--muted);
+  margin-top: 6px;
+  max-width: 42ch;
+}
+
+/* Kinetic Widget 1: Skill Runner */
+.runner-box{
+  margin-top: 16px;
+  background: var(--paper2);
+  border: var(--bw2) solid var(--forest);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.runner-active{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--forest);
+}
+.runner-indicator{
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 2.5px rgba(46,125,87,.25);
+  animation: pulse-dot 1.8s infinite;
+}
+
+/* Kinetic Widget 2: Builder Pills */
+.builder-cluster{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.builder-pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--paper2);
+  border: var(--bw2) solid var(--forest);
+  border-radius: var(--pill);
+  font-family: var(--mono);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--forest);
+  text-decoration: none;
+  transition: transform .14s var(--ease), background .14s var(--ease);
+}
+.builder-pill:hover{
+  transform: translate(-1px, -1px);
+  background: var(--lime);
+}
+.builder-avatar{
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: #EDE9DC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* Kinetic Widget 3: Curated Reading List */
+.read-stack{
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.read-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--paper2);
+  border: var(--bw2) solid var(--forest);
+  border-radius: var(--r-sm);
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--forest);
+  transition: transform .14s var(--ease), background .14s var(--ease);
+}
+.read-item:hover{
+  transform: translate(-1px, -1px);
+  background: var(--sky);
+}
+.read-tag{
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--terra-deep);
+  white-space: nowrap !important;
+}
+
+/* Kinetic Widget 4: Token Lab */
+.token-switcher{
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.token-btn{
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border: var(--bw2) solid var(--forest);
+  border-radius: var(--pill);
+  background: var(--paper2);
+  color: var(--forest);
+  cursor: pointer;
+  white-space: nowrap !important;
+  transition: all .14s var(--ease);
+}
+.token-btn.active{
+  background: var(--terra);
+  box-shadow: 2px 2px 0 var(--forest);
+}
+.token-live-preview{
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: var(--bw2) solid var(--forest);
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: .74rem;
+  font-weight: 700;
+  background: var(--paper2);
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+
+/* MODULES */
+.mods{display: grid; gap: 14px}
+.mod{background: var(--paper); border: var(--bw) solid var(--forest); box-shadow: var(--shadow); border-radius: var(--r-lg); overflow: hidden}
+.mod .hd{display: flex; gap: 14px; align-items: center; padding: 16px 20px}
+.mod .n{font-family: var(--mono); font-weight: 700; font-size: .9rem; color: var(--forest); background: var(--terra); border: var(--bw2) solid var(--forest); border-radius: var(--r-sm); width: 46px; height: 40px; min-width: 46px; display: flex; align-items: center; justify-content: center}
+.mod .t{font-family: var(--disp); font-weight: 700; font-size: 1.12rem}
+.mod .d{font-size: .9rem; color: var(--muted); margin-top: 2px}
+.mod .bd{border-top: var(--bw2) solid var(--hair); background: var(--paper2); padding: 14px 20px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px}
+.mod .bd .lab{font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--terra-deep)}
+.mod .bd .val{font-size: .9rem; color: var(--forest2); margin-top: 4px}
+.mod .tools{display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px}
+.mod .tool{font-family: var(--mono); font-size: 10px; font-weight: 700; padding: 3px 8px; border: var(--bw2) solid var(--forest); border-radius: var(--r-sm); background: var(--cream); white-space: nowrap !important}
+
+/* COST */
+.cost{width: 100%; border-collapse: separate; border-spacing: 0; font-size: .95rem}
+.cost th,.cost td{text-align: left; padding: 13px 14px; border-bottom: var(--bw2) solid var(--hair)}
+.cost th{font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--terra-deep)}
+.cost .free{font-family: var(--mono); font-weight: 700; color: var(--ok); font-size: .82rem}
+.cost .later{font-family: var(--mono); color: var(--muted); font-size: .8rem}
+.cost tr:last-child td{border-bottom: 0}
+
+/* PRICING */
+.pricecard{background: var(--paper2); border: var(--bw) solid var(--forest); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); padding: 26px}
+.pricecard .price{font-family: var(--disp); font-weight: 800; font-size: 56px; letter-spacing: -.04em; margin: 8px 0 0}
+.pricecard ul{list-style: none; margin: 16px 0 0; padding: 0}
+.pricecard li{display: flex; gap: 10px; margin: 8px 0; color: var(--forest2); font-size: .95rem; align-items: center}
+.pricecard li svg{min-width: 18px; color: var(--ok); flex-shrink: 0}
+
+/* FAQ */
+.faq details{border: var(--bw2) solid var(--forest); border-radius: var(--r); padding: 2px 16px; margin-bottom: 10px; background: var(--paper)}
+.faq summary{font-family: var(--disp); font-weight: 700; font-size: 1.02rem; cursor: pointer; padding: 14px 0; list-style: none}
+.faq summary::-webkit-details-marker{display: none}
+.faq summary::after{content: "+"; float: right; color: var(--terra-deep); font-family: var(--mono); font-weight: 700}
+.faq details[open] summary::after{content: "–"}
+.faq p{margin: 0 0 14px; color: var(--muted); font-size: .95rem; max-width: 64ch}
+
+/* FOOTER */
+.foot{background: var(--forest); color: #C4C9BF; border-top: var(--bw) solid var(--forest); padding: 48px 0; text-align: center}
+.foot-logo{display: inline-flex; align-items: center; justify-content: center}
+.foot-logo svg{height: 32px; width: auto}
+
+/* END-OF-PAGE BOUNCING REVEAL CARD */
+#bottom-bounce-card{
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 380px;
+  background: var(--paper2);
+  border: var(--bw) solid var(--forest);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 18px 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transform: translateY(180px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .45s cubic-bezier(.175, .885, .32, 1.275), opacity .3s ease;
+}
+#bottom-bounce-card.visible{
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.bounce-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.bounce-close{
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--forest);
+  border-radius: var(--r-sm);
+  transition: background .12s var(--ease);
+}
+.bounce-close:hover{
+  background: var(--wash);
+}
+.bounce-close svg{
+  width: 16px;
+  height: 16px;
+}
+
+/* Progressive Smooth Reveal Transitions */
+.reveal-item{
+  opacity: 1;
+  transform: none;
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.reveal-init{
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@media (max-width: 820px){
+  .g3, .g2, .vault-grid{grid-template-columns: 1fr}
+  .mod .bd{grid-template-columns: 1fr}
+  .nav .lk a:not(:last-child){display: none}
+  #bottom-bounce-card{left: 16px; right: 16px; max-width: none; bottom: 16px}
+}
+@media (prefers-reduced-motion: reduce){
+  #field{cursor: auto}
+  #ai-companion{display: none !important}
+  .dot{animation: none}
+  .marq .track{animation: none}
+  .reveal-item{opacity: 1 !important; transform: none !important; transition: none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- FIXED BOTTOM VIEWPORT BLUR -->
+<div class="bottom-viewport-blur" aria-hidden="true"></div>
+
+<!-- AI COMPANION "maven" (Desktop Only) -->
+<div id="ai-companion" aria-hidden="true">
+  <svg class="emblem" viewBox="0 0 180 193" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="emblem-body" d="M92.5697 25.74L110.382 15.8736L82.9477 0L0 48.0224V144.067L82.9477 192.09L165.895 144.067V81.4634L148.433 91.6791V134L82.9477 171.92V96.0448L17.4627 58.1333V58.0809L82.9477 20.1781L92.5697 25.74Z" fill="#14261D"/>
+    <path class="emblem-spark" d="M139.955 11.5166C140.282 10.6937 140.85 9.98813 141.583 9.49102C142.316 8.99391 143.181 8.72818 144.067 8.72818C144.953 8.72818 145.818 8.99391 146.551 9.49102C147.285 9.98813 147.852 10.6937 148.18 11.5166L150.389 16.8602C154.097 25.8945 161.128 33.1631 170.034 37.1693L176.303 39.9633C177.105 40.3342 177.783 40.9268 178.259 41.671C178.735 42.4152 178.987 43.2799 178.987 44.1631C178.987 45.0463 178.735 45.9111 178.259 46.6553C177.783 47.3995 177.105 47.992 176.303 48.3629L169.667 51.3141C160.983 55.2111 154.074 62.2202 150.301 70.9596L148.145 75.9015C147.809 76.7063 147.243 77.3937 146.517 77.8772C145.792 78.3607 144.939 78.6187 144.067 78.6187C143.195 78.6187 142.343 78.3607 141.617 77.8772C140.892 77.3937 140.325 76.7063 139.99 75.9015L137.842 70.9683C134.067 62.2226 127.151 55.2097 118.458 51.3141L111.822 48.3629C111.018 47.9931 110.337 47.4004 109.86 46.6553C109.382 45.9102 109.129 45.0437 109.129 44.1588C109.129 43.2738 109.382 42.4074 109.86 41.6622C110.337 40.9171 111.018 40.3245 111.822 39.9546L118.091 37.1606C126.999 33.1583 134.033 25.8928 137.746 16.8602L139.955 11.5166Z" fill="#B8551A"/>
+  </svg>
+  <span>maven</span>
+</div>
+
+<!-- NAVIGATION WITH OFFICIAL LOGO -->
+<div class="nav"><div class="in">
+  <a href="#" class="nav-logo" aria-label="Maven Builder Academy Home">
+    <svg viewBox="0 0 719 193" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M92.5697 25.74L110.382 15.8736L82.9477 0L0 48.0224V144.067L82.9477 192.09L165.895 144.067V81.4634L148.433 91.6791V134L82.9477 171.92V96.0448L17.4627 58.1333V58.0809L82.9477 20.1781L92.5697 25.74Z" fill="#14261D"/>
+      <path d="M139.955 11.5166C140.282 10.6937 140.85 9.98813 141.583 9.49102C142.316 8.99391 143.181 8.72818 144.067 8.72818C144.953 8.72818 145.818 8.99391 146.551 9.49102C147.285 9.98813 147.852 10.6937 148.18 11.5166L150.389 16.8602C154.097 25.8945 161.128 33.1631 170.034 37.1693L176.303 39.9633C177.105 40.3342 177.783 40.9268 178.259 41.671C178.735 42.4152 178.987 43.2799 178.987 44.1631C178.987 45.0463 178.735 45.9111 178.259 46.6553C177.783 47.3995 177.105 47.992 176.303 48.3629L169.667 51.3141C160.983 55.2111 154.074 62.2202 150.301 70.9596L148.145 75.9015C147.809 76.7063 147.243 77.3937 146.517 77.8772C145.792 78.3607 144.939 78.6187 144.067 78.6187C143.195 78.6187 142.343 78.3607 141.617 77.8772C140.892 77.3937 140.325 76.7063 139.99 75.9015L137.842 70.9683C134.067 62.2226 127.151 55.2097 118.458 51.3141L111.822 48.3629C111.018 47.9931 110.337 47.4004 109.86 46.6553C109.382 45.9102 109.129 45.0437 109.129 44.1588C109.129 43.2738 109.382 42.4074 109.86 41.6622C110.337 40.9171 111.018 40.3245 111.822 39.9546L118.091 37.1606C126.999 33.1583 134.033 25.8928 137.746 16.8602L139.955 11.5166Z" fill="#B8551A"/>
+      <path d="M205.392 144.318V35.9263H245.3L267.471 112.95H267.8L289.478 35.9263H327.251V144.318H302.616V62.6958H302.288L277.818 144.318H254.497L230.355 62.6958H230.027V144.318H205.392ZM362.604 146.617C358.225 146.617 354.064 145.851 350.123 144.318C346.181 142.785 342.951 140.322 340.433 136.928C337.915 133.424 336.656 128.771 336.656 122.968C336.656 117.603 337.696 113.279 339.776 109.994C341.856 106.6 344.648 103.917 348.152 101.947C351.655 99.8665 355.487 98.3336 359.648 97.3483C363.808 96.2534 367.914 95.3228 371.965 94.5564C377.658 93.4615 381.928 92.5856 384.775 91.9287C387.622 91.2718 389.538 90.5054 390.523 89.6295C391.618 88.7536 392.165 87.5492 392.165 86.0164C392.165 82.8413 390.961 80.4326 388.552 78.7903C386.253 77.148 383.187 76.3268 379.355 76.3268C376.947 76.3268 374.538 76.7648 372.129 77.6407C369.721 78.5166 367.75 80.1041 366.217 82.4033C364.684 84.5931 363.973 87.7682 364.082 91.9287L340.433 90.2864C340.214 83.3887 341.254 77.6954 343.553 73.2065C345.853 68.608 348.973 65.0497 352.914 62.5315C356.965 59.9039 361.345 58.0426 366.053 56.9477C370.87 55.8529 375.633 55.3054 380.341 55.3054C388.99 55.3054 396.107 56.9477 401.691 60.2323C407.275 63.4074 411.38 68.0606 414.008 74.1919C416.745 80.2136 418.114 87.5492 418.114 96.1987V111.636C418.114 115.249 418.114 118.917 418.114 122.64C418.114 126.253 418.114 129.866 418.114 133.479C418.114 137.092 418.114 140.705 418.114 144.318H395.122C395.122 140.376 395.122 136.38 395.122 132.329C395.122 128.278 395.122 124.008 395.122 119.519H394.136C393.698 124.446 392.056 128.99 389.209 133.15C386.472 137.201 382.804 140.486 378.206 143.004C373.717 145.413 368.516 146.617 362.604 146.617ZM373.607 127.238C375.469 127.238 377.439 126.91 379.52 126.253C381.709 125.486 383.735 124.282 385.596 122.64C387.567 120.997 389.154 118.753 390.359 115.906C391.563 112.95 392.165 109.337 392.165 105.067V101.126L396.6 100.633C395.724 102.056 394.246 103.206 392.165 104.082C390.195 104.958 387.95 105.669 385.432 106.217C382.914 106.655 380.341 107.147 377.713 107.695C375.195 108.133 372.841 108.79 370.651 109.665C368.462 110.432 366.655 111.527 365.232 112.95C363.918 114.264 363.261 116.125 363.261 118.534C363.261 121.381 364.246 123.57 366.217 125.103C368.297 126.526 370.761 127.238 373.607 127.238ZM445.31 144.318L419.198 57.6046H447.445L462.39 122.311H463.047L478.649 57.6046H505.254L479.142 144.318H445.31ZM547.954 146.617C539.743 146.617 532.845 145.468 527.261 143.168C521.787 140.76 517.353 137.53 513.958 133.479C510.564 129.318 508.101 124.61 506.568 119.355C505.145 114.1 504.433 108.571 504.433 102.768C504.433 96.5271 505.2 90.5601 506.732 84.8668C508.375 79.1735 510.838 74.1371 514.123 69.7576C517.517 65.2687 521.841 61.7651 527.097 59.2469C532.462 56.6193 538.867 55.3054 546.312 55.3054C553.757 55.3054 560.107 56.6193 565.362 59.2469C570.727 61.7651 574.997 65.3234 578.172 69.9219C581.347 74.5203 583.373 79.8304 584.249 85.8522C585.234 91.8739 585.125 98.3884 583.92 105.396L521.02 106.381V91.9287L563.556 91.1075L560.107 99.4832C560.764 94.4469 560.654 90.2316 559.779 86.8375C559.012 83.334 557.534 80.7063 555.344 78.9545C553.155 77.0932 550.144 76.1626 546.312 76.1626C542.261 76.1626 539.031 77.2027 536.622 79.283C534.213 81.3632 532.516 84.3194 531.531 88.1514C530.546 91.8739 530.053 96.3081 530.053 101.454C530.053 110.322 531.531 116.782 534.487 120.833C537.443 124.884 541.987 126.91 548.118 126.91C550.746 126.91 552.936 126.581 554.687 125.924C556.439 125.267 557.863 124.337 558.957 123.132C560.052 121.819 560.819 120.286 561.257 118.534C561.695 116.673 561.859 114.592 561.749 112.293L586.055 113.607C586.384 117.22 586.001 120.943 584.906 124.775C583.92 128.607 582.004 132.165 579.158 135.45C576.311 138.734 572.315 141.417 567.169 143.497C562.133 145.577 555.728 146.617 547.954 146.617ZM595.262 144.318V95.2133V57.6046H617.762V92.9141H619.076C619.733 84.3741 621.156 77.367 623.346 71.8926C625.536 66.3088 628.656 62.1483 632.707 59.4112C636.758 56.674 641.904 55.3054 648.144 55.3054C657.56 55.3054 664.622 58.4258 669.33 64.6665C674.148 70.9073 676.556 80.2136 676.556 92.5856V144.318H649.951V96.0344C649.951 90.1221 649.02 85.6879 647.159 82.7318C645.407 79.7757 642.561 78.2976 638.619 78.2976C635.335 78.2976 632.433 79.4472 629.915 81.7464C627.397 84.0456 625.426 87.7682 624.003 92.9141C622.579 98.0599 621.868 104.958 621.868 113.607V144.318H595.262Z" fill="#14261D"/>
+      <path d="M701.605 146.453C696.021 146.453 691.806 145.249 688.959 142.84C686.222 140.431 684.854 136.709 684.854 131.672C684.854 126.526 686.222 122.749 688.959 120.34C691.806 117.932 696.021 116.727 701.605 116.727C707.298 116.727 711.568 117.932 714.415 120.34C717.262 122.749 718.685 126.526 718.685 131.672C718.685 141.526 712.992 146.453 701.605 146.453Z" fill="#B8551A"/>
+    </svg>
+  </a>
+  <nav class="lk">
+    <a href="#perks">Perks</a>
+    <a href="#modules">Curriculum</a>
+    <a href="#cost">Honest Cost</a>
+    <a href="#price">Pricing</a>
+    <a href="#join" class="btn" style="padding: 9px 15px; font-size: .72rem">Reserve Seat</a>
+  </nav>
+</div></div>
+
+<!-- CLAUDE BRICK HERO -->
+<section class="hero">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="scrim"></div>
+  <div class="hcontent">
+    <span class="pill"><span class="dot"></span>Founding cohort · opens October</span>
+    <h1>Become a builder with a designer's eye.</h1>
+    <p class="sub">No code. No design school. Move your cursor through the stack — knock it about, watch it settle back into order. That's the promise.</p>
+    <div class="cta">
+      <a href="#join" class="btn">Reserve your seat — ₦20,000</a>
+      <a href="#proof" class="btn sec">See it work</a>
+    </div>
+    <p class="hint" style="margin-top: 14px">the field reacts to your cursor</p>
+  </div>
+</section>
+
+<!-- MARQUEE STRIPE (from Claude Sample 3) -->
+<div class="marq">
+  <div class="track" aria-hidden="true">
+    <span>Ship it live</span><b>·</b><span>A designer's eye</span><b>·</b><span>No design school</span><b>·</b><span>Direct the machine</span><b>·</b><span>Reject the slop</span><b>·</b><span>Craft your taste</span><b>·</b>
+    <span>Ship it live</span><b>·</b><span>A designer's eye</span><b>·</b><span>No design school</span><b>·</b><span>Direct the machine</span><b>·</b><span>Reject the slop</span><b>·</b><span>Craft your taste</span><b>·</b>
+    <span>Ship it live</span><b>·</b><span>A designer's eye</span><b>·</b><span>No design school</span><b>·</b><span>Direct the machine</span><b>·</b><span>Reject the slop</span><b>·</b><span>Craft your taste</span><b>·</b>
+  </div>
+</div>
+
+<!-- LOGISTICS -->
+<div class="wrap" style="padding-block: 32px">
+  <div class="logi reveal-item">
+    <div class="it"><div class="k">Opens</div><div class="v">October 2026</div></div>
+    <div class="it"><div class="k">Format</div><div class="v">Online · self-paced + live</div></div>
+    <div class="it"><div class="k">You build</div><div class="v">A real, shipped product</div></div>
+    <div class="it"><div class="k">Level</div><div class="v">Zero experience OK</div></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PROOF (BEFORE / AFTER TASTE SLIDER) -->
+<div class="wrap sec" id="proof">
+  <div class="center reveal-item">
+    <span class="eyebrow">Taste, made visible</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">&quot;It works&quot; → &quot;it's right&quot;</h2>
+    <p class="lead center" style="margin: 10px auto 0">Drag the handle. The machine gets you the left. Your taste gets you the right — that gap is the whole course.</p>
+  </div>
+  <div class="ba reveal-item" id="ba" style="margin-top: 26px">
+    <div class="layer after">
+      <span class="tag tagA">After · taste pass</span>
+      <div class="fine">
+        <div class="t">Builder</div>
+        <div class="p">₦20k</div>
+        <div class="l">Full path · Taste Trainer · Founding cohort</div>
+        <div class="b">Own it — one time</div>
+      </div>
+    </div>
+    <div class="layer before" id="baBefore">
+      <span class="tag tagB">Before · raw AI</span>
+      <div class="raw">
+        <div class="t">Builder plan</div>
+        <div class="p">₦20,000</div>
+        <div class="l">- Full path<br>- Taste Trainer<br>- Founding cohort</div>
+        <div class="b">Buy now</div>
+      </div>
+    </div>
+    <div class="divider2" id="baDiv"></div>
+    <div class="handle" id="baHandle">
+      <svg width="17" height="17" viewBox="0 0 256 256" fill="#14261D"><path d="M136,40V216a8,8,0,0,1-16,0V40a8,8,0,0,1,16,0Zm-53.66,58.34a8,8,0,0,0-11.32,0l-24,24a8,8,0,0,0,0,11.32l24,24a8,8,0,0,0,11.32-11.32L67.31,136H96a8,8,0,0,0,0-16H67.31l15-15a8,8,0,0,0,0-11.32Zm112,24-24-24a8,8,0,0,0-11.32,11.32L188.69,120H160a8,8,0,0,0,0,16h28.69l-15,15a8,8,0,0,0,11.32,11.32l24-24a8,8,0,0,0,0-11.32Z"/></svg>
+    </div>
+    <input type="range" id="baRange" min="0" max="100" value="52" aria-label="Drag to compare raw output and taste pass">
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 3: THE VALUE VAULT (LEAN, KINETIC PERKS BENTO) -->
+<div class="wrap sec" id="perks">
+  <div class="center reveal-item">
+    <span class="eyebrow">The Value Vault · Exclusive Perks</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">Every unfair advantage, included on day one.</h2>
+    <p class="lead center" style="margin: 10px auto 0">Beyond the core tracks: production-grade skills, curated teardowns, and design systems.</p>
+  </div>
+
+  <div class="vault-grid">
+    <!-- Perk 1: Workflow Skill Vault -->
+    <div class="vault-card interactive reveal-item">
+      <div>
+        <span class="chip sky">Perk 01 · Agent Skills</span>
+        <h3>10+ Standard Workflow Skills</h3>
+        <p class="desc">Tested, reusable skills for Claude &amp; Antigravity. Skip months of trial-and-error prompting.</p>
+      </div>
+      <div class="runner-box">
+        <div class="runner-active">
+          <span class="runner-indicator"></span>
+          <span id="skill-name">stitch-ui-generator</span>
+        </div>
+        <span class="chip lime" style="font-size: 10px; padding: 2px 7px">ACTIVE</span>
+      </div>
+    </div>
+
+    <!-- Perk 2: AI Engineer Portfolios -->
+    <div class="vault-card interactive reveal-item">
+      <div>
+        <span class="chip pink">Perk 02 · Inspiration</span>
+        <h3>Top AI Engineers' Portfolios</h3>
+        <p class="desc">Curated teardowns of world-class AI engineers and design technologists to study and follow.</p>
+      </div>
+      <div class="builder-cluster">
+        <span class="builder-pill"><span class="builder-avatar">RF</span>Rauno Freiberg</span>
+        <span class="builder-pill"><span class="builder-avatar">AK</span>Andrej Karpathy</span>
+        <span class="builder-pill"><span class="builder-avatar">PC</span>Paco Coursey</span>
+        <span class="builder-pill"><span class="builder-avatar">LE</span>Linus Ekenstam</span>
+      </div>
+    </div>
+
+    <!-- Perk 3: Curated Reading List -->
+    <div class="vault-card interactive reveal-item">
+      <div>
+        <span class="chip peach">Perk 03 · Signal Only</span>
+        <h3>Curated AI Reading Vault</h3>
+        <p class="desc">Hand-picked essays on taste, machine directing, and product architecture. Zero marketing hype.</p>
+      </div>
+      <div class="read-stack">
+        <div class="read-item"><span>Zero to One with Google Stitch</span><span class="read-tag">4 min read</span></div>
+        <div class="read-item"><span>The Directing Mindset: Guide, Don't Obey</span><span class="read-tag">6 min read</span></div>
+        <div class="read-item"><span>Why AI Slop Happens &amp; How Taste Prevents It</span><span class="read-tag">5 min read</span></div>
+      </div>
+    </div>
+
+    <!-- Perk 4: Multi-Design System Lab -->
+    <div class="vault-card interactive reveal-item">
+      <div>
+        <span class="chip terra">Perk 04 · Systems</span>
+        <h3>Warm Fusion &amp; Multi-System Kit</h3>
+        <p class="desc">Production tokens, Radix UI semantic variables, and four design system presets ready to deploy.</p>
+      </div>
+      <div>
+        <div class="token-switcher">
+          <button class="token-btn active" data-theme="warm">Warm Fusion</button>
+          <button class="token-btn" data-theme="terminal">Neon Terminal</button>
+          <button class="token-btn" data-theme="swiss">Swiss Mono</button>
+          <button class="token-btn" data-theme="clay">Organic Clay</button>
+        </div>
+        <div class="token-live-preview" id="token-preview">
+          <span>Active Token Preset</span>
+          <span class="mono" id="token-tag" style="color: var(--terra-deep)">#E8722C · TACTILE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- WHO IT'S FOR -->
+<div class="wrap sec">
+  <div class="center reveal-item">
+    <span class="eyebrow">Who it's for</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">If you've ever thought &quot;I could never build that&quot;</h2>
+  </div>
+  <div class="g3" style="margin-top: 26px">
+    <div class="card interactive reveal-item">
+      <span class="chip sky">Total beginners</span>
+      <h3 style="font-size: 1.15rem; margin-top: 10px">Never written a line of code</h3>
+      <p style="color: var(--muted); font-size: .94rem; margin-top: 6px">Good. We start with an idea and a way to build it — not with theory.</p>
+    </div>
+    <div class="card interactive reveal-item">
+      <span class="chip pink">Product folks</span>
+      <h3 style="font-size: 1.15rem; margin-top: 10px">You spec it — now build it</h3>
+      <p style="color: var(--muted); font-size: .94rem; margin-top: 6px">Prototype and ship your idea yourself, with taste, without waiting on a team.</p>
+    </div>
+    <div class="card interactive reveal-item">
+      <span class="chip peach">Developers</span>
+      <h3 style="font-size: 1.15rem; margin-top: 10px">You build — but does it look built?</h3>
+      <p style="color: var(--muted); font-size: .94rem; margin-top: 6px">Borrow a designer's eye so what you ship feels as good as it functions.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- MODULES ENRICHED -->
+<div class="wrap sec" id="modules">
+  <div class="center reveal-item">
+    <span class="eyebrow">The path</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">Eight modules, zero to shipped</h2>
+    <p class="lead center" style="margin: 10px auto 0">Each module: what you'll learn, what you'll build, and the tools you'll use.</p>
+  </div>
+  <div class="mods" style="margin-top: 26px">
+    <div class="mod reveal-item">
+      <div class="hd">
+        <span class="n">01</span>
+        <div>
+          <div class="t">AI Fluency — think with the machine</div>
+          <div class="d">Steer the guessing machine instead of obeying it.</div>
+        </div>
+      </div>
+      <div class="bd">
+        <div>
+          <div class="lab">You'll build</div>
+          <div class="val">Your first working prompts — and the mindset that makes them land.</div>
+        </div>
+        <div>
+          <div class="lab">Tools</div>
+          <div class="tools"><span class="tool">Claude</span><span class="tool">free</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod reveal-item">
+      <div class="hd">
+        <span class="n">02</span>
+        <div>
+          <div class="t">Design &amp; its language — speak like a designer</div>
+          <div class="d">The words that stand between you and slop.</div>
+        </div>
+      </div>
+      <div class="bd">
+        <div>
+          <div class="lab">You'll build</div>
+          <div class="val">A design vocabulary you can point at any screen: hierarchy, whitespace, contrast.</div>
+        </div>
+        <div>
+          <div class="lab">Tools</div>
+          <div class="tools"><span class="tool">impeccable</span><span class="tool">free</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod reveal-item">
+      <div class="hd">
+        <span class="n">03</span>
+        <div>
+          <div class="t">Your build studio — set up your tools</div>
+          <div class="d">Free-first, no setup wall.</div>
+        </div>
+      </div>
+      <div class="bd">
+        <div>
+          <div class="lab">You'll build</div>
+          <div class="val">One tiny thing, end-to-end, so the tools stop being scary.</div>
+        </div>
+        <div>
+          <div class="lab">Tools</div>
+          <div class="tools"><span class="tool">Stitch</span><span class="tool">Claude</span><span class="tool">Antigravity</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod reveal-item">
+      <div class="hd">
+        <span class="n">04</span>
+        <div>
+          <div class="t">System thinking — plan before you build</div>
+          <div class="d">Break an idea into parts a machine can build.</div>
+        </div>
+      </div>
+      <div class="bd">
+        <div>
+          <div class="lab">You'll build</div>
+          <div class="val">The brief &amp; structure for your product — before a line of it exists.</div>
+        </div>
+        <div>
+          <div class="lab">Tools</div>
+          <div class="tools"><span class="tool">Claude</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod reveal-item">
+      <div class="hd">
+        <span class="n">05</span>
+        <div>
+          <div class="t">Taste &amp; crafting — make it unmistakably yours</div>
+          <div class="d">The heart: craft taste, direct the AI, reject the slop.</div>
+        </div>
+      </div>
+      <div class="bd">
+        <div>
+          <div class="lab">You'll build</div>
+          <div class="val">Your product's real look — refined pass by pass with your own eye.</div>
+        </div>
+        <div>
+          <div class="lab">Tools</div>
+          <div class="tools"><span class="tool">Stitch</span><span class="tool">Prompt Builder</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod reveal-item">
+      <div class="hd">
+        <span class="n">06</span>
+        <div>
+          <div class="t">Go live — put your idea on the internet</div>
+          <div class="d">Hand-held to a real address with your name on it.</div>
+        </div>
+      </div>
+      <div class="bd">
+        <div>
+          <div class="lab">You'll build</div>
+          <div class="val">Your product, deployed and live at its own domain.</div>
+        </div>
+        <div>
+          <div class="lab">Tools</div>
+          <div class="tools"><span class="tool">GitHub</span><span class="tool">Vercel</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="center mono" style="font-size: .8rem; color: var(--muted); margin-top: 16px">+ module 00 (welcome) and 07 (go wild — inspiration &amp; playbook)</p>
+</div>
+
+<hr class="divider">
+
+<!-- COST -->
+<div class="wrap sec" id="cost">
+  <div class="g2" style="align-items: start">
+    <div class="reveal-item">
+      <span class="eyebrow">The honest cost</span>
+      <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">Most courses hide this. We don't.</h2>
+      <p class="lead" style="margin-top: 14px">Every tool is free to start, so you can take the whole course and ship real work without paying a naira beyond the course. A paid tier (~$20/mo) only pays for itself later — your choice, and we teach you when it's worth it.</p>
+    </div>
+    <div class="card reveal-item">
+      <table class="cost">
+        <thead><tr><th>Tool</th><th>For</th><th>To start</th></tr></thead>
+        <tbody>
+          <tr><td><b>Google Stitch</b></td><td>Design your screens</td><td><span class="free">Free</span></td></tr>
+          <tr><td><b>Claude</b></td><td>Think, plan, build</td><td><span class="free">Free tier</span> <span class="later">· paid later</span></td></tr>
+          <tr><td><b>Antigravity</b></td><td>Turn it into an app</td><td><span class="free">Free tier</span> <span class="later">· paid later</span></td></tr>
+          <tr><td><b>The course</b></td><td>The eye &amp; the method</td><td><b>₦20,000 once</b></td></tr>
+        </tbody>
+      </table>
+      <p style="color: var(--muted); font-size: .84rem; margin-top: 12px">Tracks 1–3 run entirely on free tiers.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PRICING -->
+<div class="wrap sec" id="price">
+  <div class="g2" style="align-items: center; gap: 26px">
+    <div class="reveal-item">
+      <span class="chip">Founding cohort</span>
+      <h2 style="font-size: clamp(1.7rem, 3.6vw, 2.4rem); margin-top: 12px">One price. Fully loaded.</h2>
+      <p class="lead" style="margin-top: 12px">Reserve now, start Track 1 today, get every track as it lands, and lock the founding price before it rises.</p>
+    </div>
+    <div class="pricecard reveal-item" id="join">
+      <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--terra-deep)">Pay once · yours forever · updates included</div>
+      <div class="price">₦20,000</div>
+      <p class="mono" style="font-size: .8rem; color: var(--muted)">Rises to ₦30,000 at full launch</p>
+      <ul>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
+          All 6 tracks + every future update
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
+          The Taste Trainer + the Arena community
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
+          The Value Vault: 10+ skills, portfolios, and systems
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
+          Live sessions + certificate of completion
+        </li>
+      </ul>
+      <a href="#" class="btn" style="margin-top: 18px; width: 100%; justify-content: center">Reserve my seat — ₦20,000</a>
+      <p class="center mono" style="font-size: .78rem; color: var(--muted); margin-top: 12px">Paystack &amp; card · secured checkout</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<div class="wrap sec faq" style="max-width: 740px">
+  <div class="center reveal-item">
+    <span class="eyebrow">Honest answers</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">The questions you're actually asking</h2>
+  </div>
+  <div style="margin-top: 24px" class="reveal-item">
+    <details open><summary>Do I need to know how to code or design?</summary><p>No — that's the point. You'll learn to direct AI to build, and pick up a designer's eye by doing, not studying.</p></details>
+    <details><summary>Can I afford the tools on top of the course?</summary><p>Yes. Every tool is free to start, and the first three tracks run entirely on free tiers. A paid tier (~$20/mo) only becomes worth it later — your choice.</p></details>
+    <details><summary>Is it live, or self-paced?</summary><p>Both. Videos and the interactive guide are yours any time; live sessions are a bonus, recorded if you can't make it.</p></details>
+    <details><summary>What does &quot;founding cohort&quot; mean?</summary><p>The course is being built now, Track 1 first. Founding members join at ₦20,000, start immediately, and get every track free as it lands. Price rises to ₦30,000 at full launch.</p></details>
+  </div>
+</div>
+
+<div class="wrap" style="padding-bottom: 60px">
+  <div class="panel-dark center reveal-item">
+    <h2 style="font-size: clamp(1.5rem, 3.2vw, 2rem)">A thousand builders. You're one of the first.</h2>
+    <p style="color: #C4C9BF; max-width: 50ch; margin: 14px auto 0">Start Track 1 today, and become someone who can build and ship their own ideas — with taste.</p>
+    <a href="#join" class="btn" style="margin-top: 22px">Reserve my seat — ₦20,000</a>
+  </div>
+</div>
+
+<!-- FOOTER WITH OFFICIAL BRAND LOGO -->
+<div class="foot">
+  <a href="#" class="foot-logo" aria-label="Maven Builder Academy Home">
+    <svg viewBox="0 0 719 193" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M92.5697 25.74L110.382 15.8736L82.9477 0L0 48.0224V144.067L82.9477 192.09L165.895 144.067V81.4634L148.433 91.6791V134L82.9477 171.92V96.0448L17.4627 58.1333V58.0809L82.9477 20.1781L92.5697 25.74Z" fill="#EDE9DC"/>
+      <path d="M139.955 11.5166C140.282 10.6937 140.85 9.98813 141.583 9.49102C142.316 8.99391 143.181 8.72818 144.067 8.72818C144.953 8.72818 145.818 8.99391 146.551 9.49102C147.285 9.98813 147.852 10.6937 148.18 11.5166L150.389 16.8602C154.097 25.8945 161.128 33.1631 170.034 37.1693L176.303 39.9633C177.105 40.3342 177.783 40.9268 178.259 41.671C178.735 42.4152 178.987 43.2799 178.987 44.1631C178.987 45.0463 178.735 45.9111 178.259 46.6553C177.783 47.3995 177.105 47.992 176.303 48.3629L169.667 51.3141C160.983 55.2111 154.074 62.2202 150.301 70.9596L148.145 75.9015C147.809 76.7063 147.243 77.3937 146.517 77.8772C145.792 78.3607 144.939 78.6187 144.067 78.6187C143.195 78.6187 142.343 78.3607 141.617 77.8772C140.892 77.3937 140.325 76.7063 139.99 75.9015L137.842 70.9683C134.067 62.2226 127.151 55.2097 118.458 51.3141L111.822 48.3629C111.018 47.9931 110.337 47.4004 109.86 46.6553C109.382 45.9102 109.129 45.0437 109.129 44.1588C109.129 43.2738 109.382 42.4074 109.86 41.6622C110.337 40.9171 111.018 40.3245 111.822 39.9546L118.091 37.1606C126.999 33.1583 134.033 25.8928 137.746 16.8602L139.955 11.5166Z" fill="#B8551A"/>
+      <path d="M205.392 144.318V35.9263H245.3L267.471 112.95H267.8L289.478 35.9263H327.251V144.318H302.616V62.6958H302.288L277.818 144.318H254.497L230.355 62.6958H230.027V144.318H205.392ZM362.604 146.617C358.225 146.617 354.064 145.851 350.123 144.318C346.181 142.785 342.951 140.322 340.433 136.928C337.915 133.424 336.656 128.771 336.656 122.968C336.656 117.603 337.696 113.279 339.776 109.994C341.856 106.6 344.648 103.917 348.152 101.947C351.655 99.8665 355.487 98.3336 359.648 97.3483C363.808 96.2534 367.914 95.3228 371.965 94.5564C377.658 93.4615 381.928 92.5856 384.775 91.9287C387.622 91.2718 389.538 90.5054 390.523 89.6295C391.618 88.7536 392.165 87.5492 392.165 86.0164C392.165 82.8413 390.961 80.4326 388.552 78.7903C386.253 77.148 383.187 76.3268 379.355 76.3268C376.947 76.3268 374.538 76.7648 372.129 77.6407C369.721 78.5166 367.75 80.1041 366.217 82.4033C364.684 84.5931 363.973 87.7682 364.082 91.9287L340.433 90.2864C340.214 83.3887 341.254 77.6954 343.553 73.2065C345.853 68.608 348.973 65.0497 352.914 62.5315C356.965 59.9039 361.345 58.0426 366.053 56.9477C370.87 55.8529 375.633 55.3054 380.341 55.3054C388.99 55.3054 396.107 56.9477 401.691 60.2323C407.275 63.4074 411.38 68.0606 414.008 74.1919C416.745 80.2136 418.114 87.5492 418.114 96.1987V111.636C418.114 115.249 418.114 118.917 418.114 122.64C418.114 126.253 418.114 129.866 418.114 133.479C418.114 137.092 418.114 140.705 418.114 144.318H395.122C395.122 140.376 395.122 136.38 395.122 132.329C395.122 128.278 395.122 124.008 395.122 119.519H394.136C393.698 124.446 392.056 128.99 389.209 133.15C386.472 137.201 382.804 140.486 378.206 143.004C373.717 145.413 368.516 146.617 362.604 146.617ZM373.607 127.238C375.469 127.238 377.439 126.91 379.52 126.253C381.709 125.486 383.735 124.282 385.596 122.64C387.567 120.997 389.154 118.753 390.359 115.906C391.563 112.95 392.165 109.337 392.165 105.067V101.126L396.6 100.633C395.724 102.056 394.246 103.206 392.165 104.082C390.195 104.958 387.95 105.669 385.432 106.217C382.914 106.655 380.341 107.147 377.713 107.695C375.195 108.133 372.841 108.79 370.651 109.665C368.462 110.432 366.655 111.527 365.232 112.95C363.918 114.264 363.261 116.125 363.261 118.534C363.261 121.381 364.246 123.57 366.217 125.103C368.297 126.526 370.761 127.238 373.607 127.238ZM445.31 144.318L419.198 57.6046H447.445L462.39 122.311H463.047L478.649 57.6046H505.254L479.142 144.318H445.31ZM547.954 146.617C539.743 146.617 532.845 145.468 527.261 143.168C521.787 140.76 517.353 137.53 513.958 133.479C510.564 129.318 508.101 124.61 506.568 119.355C505.145 114.1 504.433 108.571 504.433 102.768C504.433 96.5271 505.2 90.5601 506.732 84.8668C508.375 79.1735 510.838 74.1371 514.123 69.7576C517.517 65.2687 521.841 61.7651 527.097 59.2469C532.462 56.6193 538.867 55.3054 546.312 55.3054C553.757 55.3054 560.107 56.6193 565.362 59.2469C570.727 61.7651 574.997 65.3234 578.172 69.9219C581.347 74.5203 583.373 79.8304 584.249 85.8522C585.234 91.8739 585.125 98.3884 583.92 105.396L521.02 106.381V91.9287L563.556 91.1075L560.107 99.4832C560.764 94.4469 560.654 90.2316 559.779 86.8375C559.012 83.334 557.534 80.7063 555.344 78.9545C553.155 77.0932 550.144 76.1626 546.312 76.1626C542.261 76.1626 539.031 77.2027 536.622 79.283C534.213 81.3632 532.516 84.3194 531.531 88.1514C530.546 91.8739 530.053 96.3081 530.053 101.454C530.053 110.322 531.531 116.782 534.487 120.833C537.443 124.884 541.987 126.91 548.118 126.91C550.746 126.91 552.936 126.581 554.687 125.924C556.439 125.267 557.863 124.337 558.957 123.132C560.052 121.819 560.819 120.286 561.257 118.534C561.695 116.673 561.859 114.592 561.749 112.293L586.055 113.607C586.384 117.22 586.001 120.943 584.906 124.775C583.92 128.607 582.004 132.165 579.158 135.45C576.311 138.734 572.315 141.417 567.169 143.497C562.133 145.577 555.728 146.617 547.954 146.617ZM595.262 144.318V95.2133V57.6046H617.762V92.9141H619.076C619.733 84.3741 621.156 77.367 623.346 71.8926C625.536 66.3088 628.656 62.1483 632.707 59.4112C636.758 56.674 641.904 55.3054 648.144 55.3054C657.56 55.3054 664.622 58.4258 669.33 64.6665C674.148 70.9073 676.556 80.2136 676.556 92.5856V144.318H649.951V96.0344C649.951 90.1221 649.02 85.6879 647.159 82.7318C645.407 79.7757 642.561 78.2976 638.619 78.2976C635.335 78.2976 632.433 79.4472 629.915 81.7464C627.397 84.0456 625.426 87.7682 624.003 92.9141C622.579 98.0599 621.868 104.958 621.868 113.607V144.318H595.262Z" fill="#EDE9DC"/>
+      <path d="M701.605 146.453C696.021 146.453 691.806 145.249 688.959 142.84C686.222 140.431 684.854 136.709 684.854 131.672C684.854 126.526 686.222 122.749 688.959 120.34C691.806 117.932 696.021 116.727 701.605 116.727C707.298 116.727 711.568 117.932 714.415 120.34C717.262 122.749 718.685 126.526 718.685 131.672C718.685 141.526 712.992 146.453 701.605 146.453Z" fill="#B8551A"/>
+    </svg>
+  </a>
+  <p class="mono" style="font-size: .76rem; margin-top: 14px">Become a builder with a designer's eye · A Design Maven Studio product</p>
+</div>
+
+<!-- END-OF-PAGE BOUNCING REVEAL CARD -->
+<div id="bottom-bounce-card" role="dialog" aria-label="Course Invitation">
+  <div class="bounce-header">
+    <span class="chip sky" style="font-size: 10px; padding: 2px 7px">Founding Member Invitation</span>
+    <button class="bounce-close" id="close-bounce" aria-label="Close dialog">
+      <svg viewBox="0 0 256 256" fill="currentColor">
+        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/>
+      </svg>
+    </button>
+  </div>
+  <p style="font-family: var(--disp); font-weight: 700; font-size: 1.05rem; line-height: 1.3">
+    Enroll now and become a super top 1% AI builder — not a regular consumer.
+  </p>
+  <a href="#join" class="btn" style="width: 100%; justify-content: center; font-size: .76rem; padding: 11px 16px">Reserve Seat — ₦20,000</a>
+</div>
+
+<script>
+// ==========================================
+// 1. CLAUDE'S EXACT CANVAS BRICK FIELD (RUNS FIRST & UNCONDITIONALLY)
+// ==========================================
+(function initBrickField(){
+  try {
+    var cv = document.getElementById("field");
+    if(!cv) return;
+    var ctx = cv.getContext("2d");
+    if(!ctx) return;
+
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, bricks = [];
+    var mouse = {x: -9999, y: -9999, active: false};
+    var fills = ["#FBF8EF", "#F1EBDC", "#FBF8EF", "#EDE6D6", "#FBF8EF"];
+    var accents = ["#F7DCC4", "#D6E59A", "#C9E0F2"];
+    var ROWH = 26, GAP = 8, BWMIN = 44;
+
+    function rr(c, x, y, w, h, r){
+      r = Math.min(r, h/2, w/2);
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.arcTo(x + w, y, x + w, y + h, r);
+      c.arcTo(x + w, y + h, x, y + h, r);
+      c.arcTo(x, y + h, x, y, r);
+      c.arcTo(x, y, x + w, y, r);
+      c.closePath();
+    }
+
+    function spark(c, x, y, s, col){
+      c.save();
+      c.translate(x, y);
+      c.fillStyle = col;
+      c.beginPath();
+      for(var i = 0; i < 4; i++){
+        var a = i * Math.PI / 2;
+        c.moveTo(0, 0);
+        c.lineTo(Math.cos(a - .35) * s, Math.sin(a - .35) * s);
+        c.lineTo(Math.cos(a) * s * 2, Math.sin(a) * s * 2);
+        c.lineTo(Math.cos(a + .35) * s, Math.sin(a + .35) * s);
+      }
+      c.closePath();
+      c.fill();
+      c.restore();
+    }
+
+    function build(){
+      var r = cv.getBoundingClientRect();
+      W = r.width || window.innerWidth || 1040;
+      H = r.height || 540;
+      cv.width = W * DPR;
+      cv.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      bricks = [];
+      var pad = 18, y = pad, row = 0;
+      while(y < H - pad){
+        var off = (row % 2 === 0) ? 0 : -(BWMIN * 0.5);
+        var x = pad + off;
+        while(x < W - pad){
+          var w = BWMIN + Math.random() * 22;
+          if(x + w > W - pad) w = (W - pad) - x;
+          if(w < 22){ x += w + GAP; continue; }
+          bricks.push({
+            hx: x, hy: y, x: x, y: y, vx: 0, vy: 0, w: w, h: ROWH,
+            fill: (Math.random() < 0.06) ? accents[(Math.random() * accents.length) | 0] : fills[(Math.random() * fills.length) | 0],
+            ai: Math.random() < 0.05
+          });
+          x += w + GAP;
+        }
+        y += ROWH + GAP;
+        row++;
+      }
+    }
+
+    function draw(){
+      ctx.clearRect(0, 0, W, H);
+      for(var i = 0; i < bricks.length; i++){
+        var b = bricks[i];
+        var ax = (b.hx - b.x) * 0.06;
+        var ay = (b.hy - b.y) * 0.06;
+        if(mouse.active){
+          var cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+          var dx = cx - mouse.x, dy = cy - mouse.y;
+          var d2 = dx * dx + dy * dy, R = 115;
+          if(d2 < R * R){
+            var d = Math.sqrt(d2) || 1;
+            var f = (1 - d / R) * 5;
+            ax += (dx / d) * f;
+            ay += (dy / d) * f;
+          }
+        }
+        b.vx = (b.vx + ax) * 0.86;
+        b.vy = (b.vy + ay) * 0.86;
+        b.x += b.vx;
+        b.y += b.vy;
+        rr(ctx, b.x, b.y, b.w, b.h, 5);
+        ctx.fillStyle = b.fill;
+        ctx.fill();
+        ctx.lineWidth = 1.6;
+        ctx.strokeStyle = "rgba(20,38,29,0.26)";
+        ctx.stroke();
+        if(b.ai) spark(ctx, b.x + b.w / 2, b.y + b.h / 2, 4.2, "rgba(184,85,26,0.5)");
+      }
+      requestAnimationFrame(draw);
+    }
+
+    function mv(e){
+      var r = cv.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+      mouse.active = true;
+    }
+
+    build();
+    if(reduce){
+      ctx.clearRect(0, 0, W, H);
+      for(var i = 0; i < bricks.length; i++){
+        var b = bricks[i];
+        rr(ctx, b.x, b.y, b.w, b.h, 5);
+        ctx.fillStyle = b.fill;
+        ctx.fill();
+        ctx.lineWidth = 1.6;
+        ctx.strokeStyle = "rgba(20,38,29,0.26)";
+        ctx.stroke();
+      }
+    } else {
+      cv.addEventListener("mousemove", mv);
+      cv.addEventListener("mouseleave", function(){ mouse.active = false; });
+      cv.addEventListener("touchmove", function(ev){ if(ev.touches[0]) mv(ev.touches[0]); }, {passive: true});
+      requestAnimationFrame(draw);
+    }
+
+    var rt;
+    window.addEventListener("resize", function(){
+      clearTimeout(rt);
+      rt = setTimeout(function(){ build(); }, 200);
+    });
+  } catch(err) {
+    console.warn("Brick field init error:", err);
+  }
+})();
+
+// ==========================================
+// 2. BEFORE / AFTER COMPARISON SLIDER
+// ==========================================
+(function initSlider(){
+  var range = document.getElementById("baRange");
+  var before = document.getElementById("baBefore");
+  var div = document.getElementById("baDiv");
+  var handle = document.getElementById("baHandle");
+  function setBA(v){
+    if(!before || !div || !handle) return;
+    before.style.clipPath = "inset(0 " + (100 - v) + "% 0 0)";
+    div.style.left = v + "%";
+    handle.style.left = v + "%";
+  }
+  if(range){
+    setBA(52);
+    range.addEventListener("input", function(){ setBA(Number(this.value)); });
+  }
+})();
+
+// ==========================================
+// 3. AI COMPANION "maven" CURSOR FOLLOWER (DESKTOP ONLY)
+// ==========================================
+(function initCompanion(){
+  var companion = document.getElementById("ai-companion");
+  var isMobile = window.matchMedia("(max-width: 820px), (pointer: coarse), (hover: none)").matches || ("ontouchstart" in window);
+  
+  if(!isMobile && companion){
+    var mouseX = -100, mouseY = -100;
+    var curX = -100, curY = -100;
+    var isMoving = false;
+
+    window.addEventListener("mousemove", function(e){
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if(!isMoving){
+        curX = mouseX;
+        curY = mouseY;
+        isMoving = true;
+        companion.style.opacity = "1";
+      }
+
+      var target = document.elementFromPoint(e.clientX, e.clientY);
+      if(target && (target.closest(".panel-dark") || target.closest(".foot") || target.closest(".marq") || target.closest(".btn:not(.sec)"))){
+        companion.classList.add("on-solid");
+      } else {
+        companion.classList.remove("on-solid");
+      }
+    });
+
+    document.addEventListener("mouseleave", function(){
+      companion.style.opacity = "0";
+      isMoving = false;
+    });
+
+    function animCompanion(){
+      if(isMoving){
+        curX += (mouseX - curX) * 0.16;
+        curY += (mouseY - curY) * 0.16;
+        companion.style.left = (curX + 16) + "px";
+        companion.style.top = (curY + 16) + "px";
+      }
+      requestAnimationFrame(animCompanion);
+    }
+    requestAnimationFrame(animCompanion);
+  }
+})();
+
+// ==========================================
+// 4. PROGRESSIVE SMOOTH SCROLL REVEAL (FRAMER-STYLE FLUIDITY)
+// ==========================================
+(function initScrollReveal(){
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce) return;
+
+  var items = document.querySelectorAll(".reveal-item");
+  if("IntersectionObserver" in window){
+    items.forEach(function(el){ el.classList.add("reveal-init"); });
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.remove("reveal-init");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -40px 0px" });
+
+    items.forEach(function(el){ observer.observe(el); });
+  }
+})();
+
+// ==========================================
+// 5. VALUE VAULT INTERACTIVE WIDGETS
+// ==========================================
+(function initVault(){
+  var skillNames = [
+    "stitch-ui-generator",
+    "radix-token-sync",
+    "impeccable-prompter",
+    "antigravity-bridge",
+    "taste-refiner-v2"
+  ];
+  var skillIdx = 0;
+  var skillElem = document.getElementById("skill-name");
+  if(skillElem){
+    skillElem.style.transition = "opacity .16s ease, transform .16s ease";
+    setInterval(function(){
+      skillIdx = (skillIdx + 1) % skillNames.length;
+      skillElem.style.opacity = "0";
+      skillElem.style.transform = "translateY(-4px)";
+      setTimeout(function(){
+        skillElem.textContent = skillNames[skillIdx];
+        skillElem.style.opacity = "1";
+        skillElem.style.transform = "translateY(0)";
+      }, 160);
+    }, 2400);
+  }
+
+  var tokenBtns = document.querySelectorAll(".token-btn");
+  var tokenPreview = document.getElementById("token-preview");
+  var tokenTag = document.getElementById("token-tag");
+  var tokenPresets = {
+    warm: { name: "#E8722C · TACTILE", bg: "#FFFDF7", color: "#14261D", border: "#14261D" },
+    terminal: { name: "#22C55E · MONO", bg: "#0D1410", color: "#86EFAC", border: "#16A34A" },
+    swiss: { name: "#001F51 · SWISS", bg: "#F8F9FA", color: "#001F51", border: "#001F51" },
+    clay: { name: "#B8551A · TERRA", bg: "#FBF5EE", color: "#4A2810", border: "#B8551A" }
+  };
+  tokenBtns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tokenBtns.forEach(function(b){ b.classList.remove("active"); });
+      this.classList.add("active");
+      var t = tokenPresets[this.getAttribute("data-theme")];
+      if(t && tokenPreview && tokenTag){
+        tokenPreview.style.background = t.bg;
+        tokenPreview.style.color = t.color;
+        tokenPreview.style.borderColor = t.border;
+        tokenTag.textContent = t.name;
+        tokenTag.style.color = t.border;
+      }
+    });
+  });
+})();
+
+// ==========================================
+// 6. END-OF-PAGE BOUNCING REVEAL CARD
+// ==========================================
+(function initBounce(){
+  var bounceCard = document.getElementById("bottom-bounce-card");
+  var closeBounce = document.getElementById("close-bounce");
+  var bounceDismissed = false;
+
+  window.addEventListener("scroll", function(){
+    if(bounceDismissed || !bounceCard) return;
+    var totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var scrollPos = window.scrollY || window.pageYOffset;
+    if(totalHeight > 0 && (scrollPos / totalHeight) > 0.72){
+      bounceCard.classList.add("visible");
+    }
+  }, { passive: true });
+
+  if(closeBounce){
+    closeBounce.addEventListener("click", function(){
+      bounceCard.classList.remove("visible");
+      bounceDismissed = true;
+    });
+  }
+})();
+</script>
+</body>
+</html>
