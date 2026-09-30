@@ -373,176 +373,56 @@ img{max-width: 100%}
 .fine .l{font-size: 12px; color: var(--forest2); line-height: 1.6}
 .fine .b{margin-top: 14px; height: 38px; border-radius: 8px; background: var(--terra); color: var(--forest); border: 2px solid var(--forest); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; font-weight: 700}
 
-/* SECTION 3: THE VALUE VAULT (LEAN, KINETIC BENTO FOR ADDITIONAL PERKS) */
-.vault-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 26px;
-}
-.vault-card{
-  background: var(--paper);
-  border: var(--bw) solid var(--forest);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 240px;
-  position: relative;
-  overflow: hidden;
-}
-.vault-card h3{
-  font-size: 1.25rem;
-  margin-top: 10px;
-}
-.vault-card .desc{
-  font-size: .92rem;
-  color: var(--muted);
-  margin-top: 6px;
-  max-width: 42ch;
-}
+/* SECTION 3: THE VAULT — kinetic 3D metric rail that breaks the grid on purpose */
+.vault-wide{max-width: 1240px; margin: 0 auto; padding-inline: 22px}
+.vault-head{display: flex; align-items: flex-end; gap: 22px}
+.vault-head .vh-idx{font-family: var(--mono); font-weight: 700; font-size: clamp(2.8rem, 8vw, 5.2rem); line-height: .72; letter-spacing: -.05em; color: var(--hair)}
+.vault-head .vh-txt{max-width: 42ch}
+.vault-head h2{font-size: clamp(1.7rem, 3.8vw, 2.5rem); margin-top: 6px}
+.vault-hint{font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--terra-deep); display: none}
 
-/* Kinetic Widget 1: Skill Runner */
-.runner-box{
-  margin-top: 16px;
-  background: var(--paper2);
-  border: var(--bw2) solid var(--forest);
-  border-radius: var(--r-sm);
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.runner-active{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: .78rem;
-  font-weight: 700;
-  color: var(--forest);
-}
-.runner-indicator{
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--ok);
-  box-shadow: 0 0 0 2.5px rgba(46,125,87,.25);
-  animation: pulse-dot 1.8s infinite;
-}
+.vault-rail{display: flex; gap: 16px; margin-top: 34px; align-items: flex-start}
+.vcard{flex: 1 1 0; min-width: 0; perspective: 1200px; background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; text-align: left; cursor: pointer}
+.vcard:nth-child(even){margin-top: 32px}
+.vcard:focus-visible{outline: 3px solid var(--terra-deep); outline-offset: 5px; border-radius: var(--r-lg)}
+.vinner{position: relative; width: 100%; min-height: 336px; transition: transform .72s var(--ease); transform-style: preserve-3d}
+.vface{position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; border: var(--bw) solid var(--forest); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden}
+.vcard:hover .vface{box-shadow: var(--shadow-lg)}
 
-/* Kinetic Widget 2: Builder Pills */
-.builder-cluster{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-.builder-pill{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  background: var(--paper2);
-  border: var(--bw2) solid var(--forest);
-  border-radius: var(--pill);
-  font-family: var(--mono);
-  font-size: .72rem;
-  font-weight: 700;
-  color: var(--forest);
-  text-decoration: none;
-  transition: transform .14s var(--ease), background .14s var(--ease);
-}
-.builder-pill:hover{
-  transform: translate(-1px, -1px);
-  background: var(--lime);
-}
-.builder-avatar{
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--forest);
-  color: #EDE9DC;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 700;
-}
+/* FRONT — animated noise-induced gradient wash */
+.vfront{background: var(--paper2)}
+.vfront::before{content: ""; position: absolute; inset: 0; z-index: 0; background-size: 220% 220%; background-position: 0% 0%; animation: vgrad 16s var(--ease) infinite; opacity: .92}
+.vfront::after{content: ""; position: absolute; inset: 0; z-index: 1; opacity: .5; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='vn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23vn)' opacity='0.55'/%3E%3C/svg%3E")}
+.vfront > *{position: relative; z-index: 2}
+.k1 .vfront::before{background-image: linear-gradient(140deg, #F7DCC4, #FDF6EC 55%, #F1C9A2)}
+.k2 .vfront::before{background-image: linear-gradient(140deg, #C9E0F2, #FBFAF4 55%, #DCEAF6)}
+.k3 .vfront::before{background-image: linear-gradient(140deg, #D6E59A, #FBFAF2 55%, #E4EEB5)}
+.k4 .vfront::before{background-image: linear-gradient(140deg, #F6D7E8, #FDF6F2 55%, #F3C9A0)}
+.k5 .vfront{background: var(--forest)}
+.k5 .vfront::before{background-image: linear-gradient(140deg, #33473B, #14261D 60%, #33473B); opacity: .85}
+.k5 .vfront::after{mix-blend-mode: screen; opacity: .28}
 
-/* Kinetic Widget 3: Curated Reading List */
-.read-stack{
-  display: grid;
-  gap: 8px;
-  margin-top: 16px;
-}
-.read-item{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: var(--paper2);
-  border: var(--bw2) solid var(--forest);
-  border-radius: var(--r-sm);
-  font-size: .84rem;
-  font-weight: 600;
-  color: var(--forest);
-  transition: transform .14s var(--ease), background .14s var(--ease);
-}
-.read-item:hover{
-  transform: translate(-1px, -1px);
-  background: var(--sky);
-}
-.read-tag{
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--terra-deep);
-  white-space: nowrap !important;
-}
+/* BACK — the detail, dark by default (terracotta on the "& more" card) */
+.vback{transform: rotateY(180deg); background: var(--forest); color: #EDE9DC; gap: 12px}
+.k5 .vback{background: var(--terra); color: var(--forest)}
 
-/* Kinetic Widget 4: Token Lab */
-.token-switcher{
-  display: flex;
-  gap: 6px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-.token-btn{
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  padding: 4px 9px;
-  border: var(--bw2) solid var(--forest);
-  border-radius: var(--pill);
-  background: var(--paper2);
-  color: var(--forest);
-  cursor: pointer;
-  white-space: nowrap !important;
-  transition: all .14s var(--ease);
-}
-.token-btn.active{
-  background: var(--terra);
-  box-shadow: 2px 2px 0 var(--forest);
-}
-.token-live-preview{
-  margin-top: 10px;
-  padding: 10px 14px;
-  border: var(--bw2) solid var(--forest);
-  border-radius: var(--r-sm);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--mono);
-  font-size: .74rem;
-  font-weight: 700;
-  background: var(--paper2);
-  transition: background .2s var(--ease), color .2s var(--ease);
-}
+.vtag{align-self: flex-start; font-family: var(--mono); font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: .06em; color: var(--forest); background: var(--paper2); border: var(--bw2) solid var(--forest); border-radius: var(--pill); padding: 4px 10px}
+.vtag-lite{color: #EDE9DC; background: transparent; border-color: currentColor}
+.k5 .vfront .vtag-lite{color: #EDE9DC}
+.k5 .vback .vtag{color: var(--forest); background: rgba(255,253,247,.4); border-color: var(--forest)}
+.vmetric{display: flex; flex-direction: column; gap: 2px}
+.vnum{font-family: var(--disp); font-weight: 800; font-size: clamp(2.8rem, 6vw, 3.8rem); line-height: .9; letter-spacing: -.04em; color: var(--forest)}
+.k5 .vnum{color: #EDE9DC}
+.vlabel{font-family: var(--disp); font-weight: 700; font-size: 1.08rem; color: var(--forest2)}
+.k5 .vfront .vlabel{color: #C4C9BF}
+.vflip{font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--terra-deep); align-self: flex-end}
+.k5 .vfront .vflip{color: var(--terra)}
+.vdesc{font-size: .96rem; line-height: 1.5; color: #EDE9DC; margin: 0}
+.k5 .vback .vdesc{color: var(--forest)}
+.vmeta{font-size: 11px; font-weight: 700; color: #E8B08A; word-spacing: .02em; line-height: 1.5}
+.k5 .vback .vmeta{color: var(--terra-deep)}
+
+@keyframes vgrad{0%{background-position: 0% 0%}50%{background-position: 100% 100%}100%{background-position: 0% 0%}}
 
 /* MODULES */
 .mods{display: grid; gap: 14px}
@@ -647,11 +527,31 @@ img{max-width: 100%}
   transform: translateY(20px);
 }
 
+/* DEAL + PORTFOLIO (launch sections) */
+.dealist{list-style: none; margin: 14px 0 0; padding: 0}
+.dealist li{position: relative; padding-left: 22px; margin: 9px 0; font-size: .95rem; color: var(--forest2); line-height: 1.5}
+.dealist li::before{content: ""; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: var(--terra); border: 2px solid var(--forest); border-radius: 2px}
+.pcard{display: flex; flex-direction: column; background: var(--paper); border: var(--bw) solid var(--forest); box-shadow: var(--shadow); border-radius: var(--r-lg); padding: 20px; text-decoration: none; color: inherit; transition: transform .16s var(--ease), box-shadow .16s var(--ease)}
+.pcard:hover{transform: translate(-2px, -2px); box-shadow: var(--shadow-lg)}
+.pcard h3{font-size: 1.15rem; margin: 12px 0 0}
+.pcard p{font-size: .9rem; color: var(--muted); margin: 6px 0 0; flex: 1}
+.pcard .plink{font-family: var(--mono); font-weight: 700; font-size: .72rem; color: var(--terra-deep); margin-top: 14px}
+
 @media (max-width: 820px){
-  .g3, .g2, .vault-grid{grid-template-columns: 1fr}
+  .g3, .g2{grid-template-columns: 1fr}
   .mod .bd{grid-template-columns: 1fr}
   .nav .lk a:not(:last-child){display: none}
   #bottom-bounce-card{left: 16px; right: 16px; max-width: none; bottom: 16px}
+  /* THE VAULT becomes a horizontal snap-scroll rail (Fortix on mobile) */
+  .vault-wide{max-width: none}
+  .vault-head{gap: 12px; align-items: center}
+  .vault-head .vh-idx{font-size: clamp(2.4rem, 14vw, 3.4rem)}
+  .vault-hint{display: block; margin-top: 14px}
+  .vault-rail{overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; margin-inline: -22px; padding: 6px 22px 16px; gap: 14px; scrollbar-width: none}
+  .vault-rail::-webkit-scrollbar{display: none}
+  .vcard{flex: 0 0 80%; scroll-snap-align: center}
+  .vcard:nth-child(even){margin-top: 0}
+  .vinner{min-height: 300px}
 }
 @media (prefers-reduced-motion: reduce){
   #field{cursor: auto}
@@ -660,6 +560,8 @@ img{max-width: 100%}
   .dot{animation: none}
   .marq .track{animation: none}
   .reveal-item{opacity: 1 !important; transform: none !important; transition: none !important}
+  .vinner{transition: none !important}
+  .vfront::before{animation: none !important}
 }
 </style>
 </head>
@@ -695,7 +597,7 @@ img{max-width: 100%}
     <a href="#modules">Curriculum</a>
     <a href="#cost">Honest Cost</a>
     <a href="#price">Pricing</a>
-    <a href="#join" class="btn" style="padding: 9px 15px; font-size: .72rem">Reserve Seat</a>
+    <a href="#price" class="btn" style="padding: 9px 15px; font-size: .72rem">Reserve Seat</a>
   </nav>
 </div></div>
 
@@ -704,14 +606,14 @@ img{max-width: 100%}
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="scrim"></div>
   <div class="hcontent">
-    <span class="pill"><span class="dot"></span>Founding cohort · opens October</span>
-    <h1>Become a builder with a designer's eye.</h1>
-    <p class="sub">No code. No design school. Move your cursor through the stack. Knock it about; watch it settle back into order. That's the promise.</p>
+    <span class="pill"><span class="dot"></span>Founding cohort · 30 seats · starts Oct 24</span>
+    <h1>If you can describe it, you can build it.</h1>
+    <p class="sub">You don't need to be tech-savvy — you need to be curious. I'm a designer who's spent 10+ years shipping real products, and now I build them with AI in days, not months. In 5 live days, I'll show you how to take an idea in your head and ship it for real.</p>
     <div class="cta">
-      <a href="#join" class="btn">Reserve your seat — ₦20,000</a>
-      <a href="#proof" class="btn sec">See it work</a>
+      <a href="https://paystack.shop/pay/mavenba" target="_blank" rel="noopener" class="btn">Reserve your seat — ₦20,000</a>
+      <a href="#portfolio" class="btn sec">See what I've built</a>
     </div>
-    <p class="hint" style="margin-top: 14px">the field reacts to your cursor</p>
+    <p class="hint" style="margin-top: 14px">first founding cohort · the price is low and the room is small</p>
   </div>
 </section>
 
@@ -727,10 +629,92 @@ img{max-width: 100%}
 <!-- LOGISTICS -->
 <div class="wrap" style="padding-block: 32px">
   <div class="logi reveal-item">
-    <div class="it"><div class="k">Opens</div><div class="v">October 2026</div></div>
-    <div class="it"><div class="k">Format</div><div class="v">Online · self-paced + live</div></div>
+    <div class="it"><div class="k">Dates</div><div class="v">Oct 24 – Nov 8</div></div>
+    <div class="it"><div class="k">Format</div><div class="v">6 live sessions · weekends</div></div>
     <div class="it"><div class="k">You build</div><div class="v">A real, shipped product</div></div>
-    <div class="it"><div class="k">Level</div><div class="v">Zero experience OK</div></div>
+    <div class="it"><div class="k">Price</div><div class="v">₦20,000 · 30 seats</div></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- THE DEAL: WHAT YOU BRING / WHAT YOU GET -->
+<div class="wrap sec" id="deal">
+  <div class="center reveal-item">
+    <span class="eyebrow">A fair trade</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">What you bring. What you walk away with.</h2>
+  </div>
+  <div class="g2" style="margin-top: 26px; align-items: start">
+    <div class="card reveal-item">
+      <span class="chip sky">What you bring</span>
+      <ul class="dealist">
+        <li>Your money — one founding price, once.</li>
+        <li>Your laptop.</li>
+        <li>Your time — 5 live days across 3 weekends.</li>
+        <li>Your curiosity — and the pile of ideas you've never shipped.</li>
+      </ul>
+    </div>
+    <div class="card reveal-item">
+      <span class="chip terra">What you walk away with</span>
+      <p style="color: var(--muted); font-size: .92rem; margin: 10px 0 0">For the price of one seat, you borrow what took me a decade to earn:</p>
+      <ul class="dealist">
+        <li>My curious mind — how I break any idea into something a machine can build.</li>
+        <li>10+ years of designing and shipping real products, compressed into 5 days.</li>
+        <li>Real AI depth — directing the machine, not just chatting with a bot.</li>
+        <li>My design taste and direction — so what you ship looks right, not like slop.</li>
+        <li>My taste library — the references and patterns I build from.</li>
+        <li>My Warm Fusion design system — yours to keep and build on.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- MINI PORTFOLIO (PROOF) -->
+<div class="wrap sec" id="portfolio">
+  <div class="center reveal-item">
+    <span class="eyebrow">Proof, not promises</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">I build what I teach.</h2>
+    <p class="lead center" style="margin: 10px auto 0">Real, shipped work — built with the same process you'll learn.</p>
+  </div>
+  <div class="g3" style="margin-top: 26px">
+    <a class="pcard reveal-item" href="https://baytul-asmaa.com" target="_blank" rel="noopener">
+      <span class="chip peach">Personal project</span>
+      <h3>Baytul Asmaa</h3>
+      <p>A Muslim name-meaning &amp; heritage platform — built for my own family first.</p>
+      <span class="plink">baytul-asmaa.com →</span>
+    </a>
+    <a class="pcard reveal-item" href="https://www.amfajtravels.com/" target="_blank" rel="noopener">
+      <span class="chip sky">Client work</span>
+      <h3>AMFAJ Travels</h3>
+      <p>A live site for a Hajj &amp; Umrah agency — real work, for a paying client.</p>
+      <span class="plink">amfajtravels.com →</span>
+    </a>
+    <a class="pcard reveal-item" href="https://warm-fusion.vercel.app/" target="_blank" rel="noopener">
+      <span class="chip lime">Open source</span>
+      <h3>Warm Fusion</h3>
+      <p>My open-source design system — the one every student gets to build on.</p>
+      <span class="plink">warm-fusion.vercel.app →</span>
+    </a>
+    <a class="pcard reveal-item" href="https://brilliantroots-quiz1.vercel.app/" target="_blank" rel="noopener">
+      <span class="chip peach">Built with AI</span>
+      <h3>Interactive Quiz</h3>
+      <p>A fully working quiz app — interactive doesn't mean out of reach.</p>
+      <span class="plink">brilliantroots-quiz1.vercel.app →</span>
+    </a>
+    <a class="pcard reveal-item" href="https://brilliantroots-quiz1.vercel.app/blossom" target="_blank" rel="noopener">
+      <span class="chip sky">Client build</span>
+      <h3>Blossom Quiz</h3>
+      <p>The same method, a different brief — a quiz built for Blossom.</p>
+      <span class="plink">brilliantroots-quiz1.vercel.app/blossom →</span>
+    </a>
+    <a class="pcard reveal-item" href="https://brilliantroots-quiz1.vercel.app/download/" target="_blank" rel="noopener">
+      <span class="chip pink">One-pager</span>
+      <h3>Book Launch Page</h3>
+      <p>A one-page book launch &amp; download — small, fast, and done right.</p>
+      <span class="plink">brilliantroots-quiz1.vercel.app/download →</span>
+    </a>
   </div>
 </div>
 
@@ -773,78 +757,92 @@ img{max-width: 100%}
 <hr class="divider">
 
 <!-- SECTION 3: THE VALUE VAULT (LEAN, KINETIC PERKS BENTO) -->
-<div class="wrap sec" id="perks">
-  <div class="center reveal-item">
-    <span class="eyebrow">The Value Vault · Exclusive Perks</span>
-    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">Every unfair advantage, included on day one.</h2>
-    <p class="lead center" style="margin: 10px auto 0">Beyond the core tracks: production-grade skills, curated teardowns, and design systems.</p>
-  </div>
-
-  <div class="vault-grid">
-    <!-- Perk 1: Workflow Skill Vault -->
-    <div class="vault-card interactive reveal-item">
-      <div>
-        <span class="chip sky">Perk 01 · Agent Skills</span>
-        <h3>10+ Standard Workflow Skills</h3>
-        <p class="desc">Tested, reusable skills for Claude &amp; Antigravity. Skip months of trial-and-error prompting.</p>
-      </div>
-      <div class="runner-box">
-        <div class="runner-active">
-          <span class="runner-indicator"></span>
-          <span id="skill-name">stitch-ui-generator</span>
-        </div>
-        <span class="chip lime" style="font-size: 10px; padding: 2px 7px">ACTIVE</span>
+<div class="sec" id="perks">
+  <div class="vault-wide">
+    <div class="vault-head reveal-item">
+      <span class="vh-idx" aria-hidden="true">03</span>
+      <div class="vh-txt">
+        <span class="eyebrow">The Vault · what's inside</span>
+        <h2>Every unfair advantage, day one.</h2>
       </div>
     </div>
+    <p class="vault-hint" aria-hidden="true">Swipe the rail →</p>
 
-    <!-- Perk 2: AI Engineer Portfolios -->
-    <div class="vault-card interactive reveal-item">
-      <div>
-        <span class="chip pink">Perk 02 · Inspiration</span>
-        <h3>Top AI Engineers' Portfolios</h3>
-        <p class="desc">Curated teardowns of the AI engineers and design technologists actually worth studying, and how they think.</p>
-      </div>
-      <div class="builder-cluster">
-        <span class="builder-pill"><span class="builder-avatar">RF</span>Rauno Freiberg</span>
-        <span class="builder-pill"><span class="builder-avatar">AK</span>Andrej Karpathy</span>
-        <span class="builder-pill"><span class="builder-avatar">PC</span>Paco Coursey</span>
-        <span class="builder-pill"><span class="builder-avatar">LE</span>Linus Ekenstam</span>
-      </div>
-    </div>
-
-    <!-- Perk 3: Curated Reading List -->
-    <div class="vault-card interactive reveal-item">
-      <div>
-        <span class="chip peach">Perk 03 · Signal Only</span>
-        <h3>Curated AI Reading Vault</h3>
-        <p class="desc">Hand-picked essays on taste, machine directing, and product architecture. Zero marketing hype.</p>
-      </div>
-      <div class="read-stack">
-        <div class="read-item"><span>Zero to One with Google Stitch</span><span class="read-tag">4 min read</span></div>
-        <div class="read-item"><span>The Directing Mindset: Guide, Don't Obey</span><span class="read-tag">6 min read</span></div>
-        <div class="read-item"><span>Why AI Slop Happens &amp; How Taste Prevents It</span><span class="read-tag">5 min read</span></div>
-      </div>
-    </div>
-
-    <!-- Perk 4: Multi-Design System Lab -->
-    <div class="vault-card interactive reveal-item">
-      <div>
-        <span class="chip terra">Perk 04 · Systems</span>
-        <h3>Warm Fusion &amp; Multi-System Kit</h3>
-        <p class="desc">Production tokens, Radix UI semantic variables, and four design system presets ready to deploy.</p>
-      </div>
-      <div>
-        <div class="token-switcher">
-          <button class="token-btn active" data-theme="warm">Warm Fusion</button>
-          <button class="token-btn" data-theme="terminal">Neon Terminal</button>
-          <button class="token-btn" data-theme="swiss">Swiss Mono</button>
-          <button class="token-btn" data-theme="clay">Organic Clay</button>
+    <div class="vault-rail">
+      <button class="vcard k1" type="button" aria-label="Perk: 10 plus standard workflow skills. Activate to read the detail.">
+        <div class="vinner">
+          <div class="vface vfront">
+            <span class="vtag">Agent skills</span>
+            <div class="vmetric"><span class="vnum">10+</span><span class="vlabel">Workflow skills</span></div>
+            <span class="vflip mono" aria-hidden="true">flip ⟳</span>
+          </div>
+          <div class="vface vback">
+            <span class="vtag vtag-lite">Agent skills</span>
+            <p class="vdesc">Tested, reusable skills you drop straight into Claude and Antigravity. Months of trial-and-error, already done.</p>
+            <span class="vmeta mono">stitch-ui · radix-sync · taste-refiner</span>
+          </div>
         </div>
-        <div class="token-live-preview" id="token-preview">
-          <span>Active Token Preset</span>
-          <span class="mono" id="token-tag" style="color: var(--terra-deep)">#E8722C · TACTILE</span>
+      </button>
+
+      <button class="vcard k2" type="button" aria-label="Perk: 20 plus engineer portfolios. Activate to read the detail.">
+        <div class="vinner">
+          <div class="vface vfront">
+            <span class="vtag">Inspiration</span>
+            <div class="vmetric"><span class="vnum">20+</span><span class="vlabel">Engineer portfolios</span></div>
+            <span class="vflip mono" aria-hidden="true">flip ⟳</span>
+          </div>
+          <div class="vface vback">
+            <span class="vtag vtag-lite">Inspiration</span>
+            <p class="vdesc">Teardowns of the builders worth following, and how they actually think.</p>
+            <span class="vmeta mono">Rauno · Karpathy · Coursey · Ekenstam</span>
+          </div>
         </div>
-      </div>
+      </button>
+
+      <button class="vcard k3" type="button" aria-label="Perk: zero marketing hype, a curated reading vault. Activate to read the detail.">
+        <div class="vinner">
+          <div class="vface vfront">
+            <span class="vtag">Reading vault</span>
+            <div class="vmetric"><span class="vnum">0</span><span class="vlabel">Marketing hype</span></div>
+            <span class="vflip mono" aria-hidden="true">flip ⟳</span>
+          </div>
+          <div class="vface vback">
+            <span class="vtag vtag-lite">Reading vault</span>
+            <p class="vdesc">Hand-picked essays on taste, directing the machine, and product architecture. Signal only.</p>
+            <span class="vmeta mono">Fresh reads, added weekly</span>
+          </div>
+        </div>
+      </button>
+
+      <button class="vcard k4" type="button" aria-label="Perk: 4 design system presets. Activate to read the detail.">
+        <div class="vinner">
+          <div class="vface vfront">
+            <span class="vtag">Design systems</span>
+            <div class="vmetric"><span class="vnum">4</span><span class="vlabel">System presets</span></div>
+            <span class="vflip mono" aria-hidden="true">flip ⟳</span>
+          </div>
+          <div class="vface vback">
+            <span class="vtag vtag-lite">Design systems</span>
+            <p class="vdesc">Warm Fusion + three more, with production tokens ready to deploy.</p>
+            <span class="vmeta mono">Warm Fusion · Neon Terminal · Swiss Mono · Organic Clay</span>
+          </div>
+        </div>
+      </button>
+
+      <button class="vcard k5" type="button" aria-label="Perk: and more, added as the cohort grows. Activate to read the detail.">
+        <div class="vinner">
+          <div class="vface vfront">
+            <span class="vtag vtag-lite">Growing</span>
+            <div class="vmetric"><span class="vnum">＋</span><span class="vlabel">Added as we grow</span></div>
+            <span class="vflip mono" aria-hidden="true">flip ⟳</span>
+          </div>
+          <div class="vface vback">
+            <span class="vtag">Growing</span>
+            <p class="vdesc">New skills, reads, and systems land as the cohort grows. Founding members get all of it.</p>
+            <span class="vmeta mono">Yours, forever</span>
+          </div>
+        </div>
+      </button>
     </div>
   </div>
 </div>
@@ -881,132 +879,91 @@ img{max-width: 100%}
 <!-- MODULES ENRICHED -->
 <div class="wrap sec" id="modules">
   <div class="center reveal-item">
-    <span class="eyebrow">The path</span>
-    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">Eight modules, zero to shipped</h2>
-    <p class="lead center" style="margin: 10px auto 0">Each module: what you'll learn, what you'll build, and the tools you'll use.</p>
+    <span class="eyebrow">The 5 days · 6 live sessions</span>
+    <h2 style="font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin-top: 8px">From an idea to a shipped product</h2>
+    <p class="lead center" style="margin: 10px auto 0">Six live sessions across three weekends. Every session, you build — and leave with something real.</p>
   </div>
   <div class="mods" style="margin-top: 26px">
     <div class="mod reveal-item">
       <div class="hd">
         <span class="n">01</span>
         <div>
-          <div class="t">AI Fluency: think with the machine</div>
-          <div class="d">Steer the guessing machine instead of obeying it.</div>
+          <div class="t">AI Fluency</div>
+          <div class="d">Sat · Oct 24 — direct the machine instead of obeying it.</div>
         </div>
       </div>
       <div class="bd">
-        <div>
-          <div class="lab">You'll build</div>
-          <div class="val">Your first working prompts, and the mindset that makes them land.</div>
-        </div>
-        <div>
-          <div class="lab">Tools</div>
-          <div class="tools"><span class="tool">Claude</span><span class="tool">free</span></div>
-        </div>
+        <div><div class="lab">You leave with</div><div class="val">Your first real, directed build — and the mindset that makes AI listen.</div></div>
+        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Claude</span><span class="tool">AI Studio</span></div></div>
       </div>
     </div>
-
     <div class="mod reveal-item">
       <div class="hd">
         <span class="n">02</span>
         <div>
-          <div class="t">Design &amp; its language: speak like a designer</div>
-          <div class="d">The words that stand between you and slop.</div>
+          <div class="t">Design Language &amp; System Thinking</div>
+          <div class="d">Sun · Oct 25 — break an idea into a system, then design it with taste.</div>
         </div>
       </div>
       <div class="bd">
-        <div>
-          <div class="lab">You'll build</div>
-          <div class="val">A design vocabulary you can point at any screen: hierarchy, whitespace, contrast.</div>
-        </div>
-        <div>
-          <div class="lab">Tools</div>
-          <div class="tools"><span class="tool">impeccable</span><span class="tool">free</span></div>
-        </div>
+        <div><div class="lab">You leave with</div><div class="val">Your product's system and its first designed screens.</div></div>
+        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Stitch</span><span class="tool">Warm Fusion</span></div></div>
       </div>
     </div>
-
     <div class="mod reveal-item">
       <div class="hd">
         <span class="n">03</span>
         <div>
-          <div class="t">Your build studio: set up your tools</div>
-          <div class="d">Free-first, no setup wall.</div>
+          <div class="t">Build It</div>
+          <div class="d">Fri · Oct 30 — turn the design into a working build, step by step.</div>
         </div>
       </div>
       <div class="bd">
-        <div>
-          <div class="lab">You'll build</div>
-          <div class="val">One tiny thing, end-to-end, so the tools stop being scary.</div>
-        </div>
-        <div>
-          <div class="lab">Tools</div>
-          <div class="tools"><span class="tool">Stitch</span><span class="tool">Claude</span><span class="tool">Antigravity</span></div>
-        </div>
+        <div><div class="lab">You leave with</div><div class="val">A working prototype of your own idea.</div></div>
+        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Antigravity</span><span class="tool">Claude</span></div></div>
       </div>
     </div>
-
     <div class="mod reveal-item">
       <div class="hd">
         <span class="n">04</span>
         <div>
-          <div class="t">System thinking: plan before you build</div>
-          <div class="d">Break an idea into parts a machine can build.</div>
+          <div class="t">Ship It</div>
+          <div class="d">Sun · Nov 1 — put it live on the internet, for real.</div>
         </div>
       </div>
       <div class="bd">
-        <div>
-          <div class="lab">You'll build</div>
-          <div class="val">The brief &amp; structure for your product, before a line of it exists.</div>
-        </div>
-        <div>
-          <div class="lab">Tools</div>
-          <div class="tools"><span class="tool">Claude</span></div>
-        </div>
+        <div><div class="lab">You leave with</div><div class="val">A real, live URL you can share.</div></div>
+        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Antigravity</span><span class="tool">Vercel</span></div></div>
       </div>
     </div>
-
     <div class="mod reveal-item">
       <div class="hd">
         <span class="n">05</span>
         <div>
-          <div class="t">Taste &amp; crafting: make it unmistakably yours</div>
-          <div class="d">The heart: craft taste, direct the AI, reject the slop.</div>
+          <div class="t">Refine It</div>
+          <div class="d">Sat · Nov 7 — the taste pass: make it something you'd put your name on.</div>
         </div>
       </div>
       <div class="bd">
-        <div>
-          <div class="lab">You'll build</div>
-          <div class="val">Your product's real look, refined pass by pass with your own eye.</div>
-        </div>
-        <div>
-          <div class="lab">Tools</div>
-          <div class="tools"><span class="tool">Stitch</span><span class="tool">Prompt Builder</span></div>
-        </div>
+        <div><div class="lab">You leave with</div><div class="val">A polished product — the gap between "it works" and "it's right".</div></div>
+        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Taste Trainer</span></div></div>
       </div>
     </div>
-
     <div class="mod reveal-item">
       <div class="hd">
         <span class="n">06</span>
         <div>
-          <div class="t">Go live: put your idea on the internet</div>
-          <div class="d">Hand-held to a real address with your name on it.</div>
+          <div class="t">Demo Day</div>
+          <div class="d">Sun · Nov 8 — present what you shipped, get feedback, plan what's next.</div>
         </div>
       </div>
       <div class="bd">
-        <div>
-          <div class="lab">You'll build</div>
-          <div class="val">Your product, deployed and live at its own domain.</div>
-        </div>
-        <div>
-          <div class="lab">Tools</div>
-          <div class="tools"><span class="tool">GitHub</span><span class="tool">Vercel</span></div>
-        </div>
+        <div><div class="lab">You leave with</div><div class="val">Your build, shown — and your 1-month mentorship begins.</div></div>
+        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Mentorship</span></div></div>
       </div>
     </div>
   </div>
-  <p class="center mono" style="font-size: .8rem; color: var(--muted); margin-top: 16px">+ module 00 (welcome) and 07 (go wild — inspiration &amp; playbook)</p>
+  <p class="center mono" style="font-size: .8rem; color: var(--muted); margin-top: 16px">Sessions run 3–4 hours each · every session recorded, yours to keep.</p>
 </div>
 
 <hr class="divider">
@@ -1029,7 +986,7 @@ img{max-width: 100%}
           <tr><td><b>The course</b></td><td>The eye &amp; the method</td><td><b>₦20,000 once</b></td></tr>
         </tbody>
       </table>
-      <p style="color: var(--muted); font-size: .84rem; margin-top: 12px">Tracks 1–3 run entirely on free tiers.</p>
+      <p style="color: var(--muted); font-size: .84rem; margin-top: 12px">The whole cohort runs on free tiers to start.</p>
     </div>
   </div>
 </div>
@@ -1042,31 +999,31 @@ img{max-width: 100%}
     <div class="reveal-item">
       <span class="chip">Founding cohort</span>
       <h2 style="font-size: clamp(1.7rem, 3.6vw, 2.4rem); margin-top: 12px">One price. Fully loaded.</h2>
-      <p class="lead" style="margin-top: 12px">Reserve now, start Track 1 today, get every track as it lands, and lock the founding price before it rises.</p>
+      <p class="lead" style="margin-top: 12px">Reserve your seat, join the founding cohort, and lock ₦20,000 before it rises. Only 30 seats.</p>
     </div>
     <div class="pricecard reveal-item" id="join">
-      <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--terra-deep)">Pay once · yours forever · updates included</div>
+      <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--terra-deep)">Founding price · one payment · 30 seats</div>
       <div class="price">₦20,000</div>
       <p class="mono" style="font-size: .8rem; color: var(--muted)">Rises to ₦30,000 at full launch</p>
       <ul>
         <li>
           <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
-          All 6 tracks + every future update
+          All 5 live days + Demo Day (6 sessions)
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
-          The Taste Trainer + the Arena community
+          Session recordings — yours to keep, forever
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
-          The Value Vault: 10+ skills, portfolios, and systems
+          My tools: Taste Trainer + Prompt Builder
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
-          Live sessions + certificate of completion
+          Warm Fusion system + 1-month mentorship
         </li>
       </ul>
-      <a href="#" class="btn" style="margin-top: 18px; width: 100%; justify-content: center">Reserve my seat — ₦20,000</a>
+      <a href="https://paystack.shop/pay/mavenba" target="_blank" rel="noopener" class="btn" style="margin-top: 18px; width: 100%; justify-content: center">Reserve my seat — ₦20,000</a>
       <p class="center mono" style="font-size: .78rem; color: var(--muted); margin-top: 12px">Paystack &amp; card · secured checkout</p>
     </div>
   </div>
@@ -1082,17 +1039,17 @@ img{max-width: 100%}
   </div>
   <div style="margin-top: 24px" class="reveal-item">
     <details open><summary>Do I need to know how to code or design?</summary><p>No. That's the point. You'll learn to direct AI to build, and pick up a designer's eye by doing, not studying.</p></details>
-    <details><summary>Can I afford the tools on top of the course?</summary><p>Yes. Every tool is free to start, and the first three tracks run entirely on free tiers. A paid tier (~$20/mo) only becomes worth it later; your choice.</p></details>
-    <details><summary>Is it live, or self-paced?</summary><p>Both. Videos and the interactive guide are yours any time; live sessions are a bonus, recorded if you can't make it.</p></details>
-    <details><summary>What does &quot;founding cohort&quot; mean?</summary><p>The course is being built now, Track 1 first. Founding members join at ₦20,000, start immediately, and get every track free as it lands. Price rises to ₦30,000 at full launch.</p></details>
+    <details><summary>Can I afford the tools on top of the course?</summary><p>Yes. Every tool — Stitch, AI Studio, Claude, Antigravity — is free to start, and the whole cohort runs on free tiers. A paid tier (~$20/mo) only becomes worth it later; your choice.</p></details>
+    <details><summary>Is it live, or self-paced?</summary><p>It's live. Six sessions across three weekends (Oct 24 – Nov 8), 3–4 hours each. Every session is recorded, so you keep the replays.</p></details>
+    <details><summary>What does &quot;founding cohort&quot; mean?</summary><p>The first cohort, capped at 30 seats at ₦20,000. You get all 5 days live, the recordings, my tools and design system, and a month of mentorship after. The price rises for the next cohort.</p></details>
   </div>
 </div>
 
 <div class="wrap" style="padding-bottom: 60px">
   <div class="panel-dark center reveal-item">
-    <h2 style="font-size: clamp(1.5rem, 3.2vw, 2rem)">A thousand builders. You're one of the first.</h2>
-    <p style="color: #C4C9BF; max-width: 50ch; margin: 14px auto 0">Start Track 1 today, and become someone who can build and ship their own ideas, with taste.</p>
-    <a href="#join" class="btn" style="margin-top: 22px">Reserve my seat — ₦20,000</a>
+    <h2 style="font-size: clamp(1.5rem, 3.2vw, 2rem)">Thirty seats. You could have one.</h2>
+    <p style="color: #C4C9BF; max-width: 50ch; margin: 14px auto 0">Join the founding cohort, build something real in 5 live days, and walk away with it shipped — with taste.</p>
+    <a href="https://paystack.shop/pay/mavenba" target="_blank" rel="noopener" class="btn" style="margin-top: 22px">Reserve my seat — ₦20,000</a>
   </div>
 </div>
 
@@ -1122,7 +1079,7 @@ img{max-width: 100%}
   <p style="font-family: var(--disp); font-weight: 700; font-size: 1.05rem; line-height: 1.3">
     Enroll now and become a super top 1% AI builder — not a regular consumer.
   </p>
-  <a href="#join" class="btn" style="width: 100%; justify-content: center; font-size: .76rem; padding: 11px 16px">Reserve Seat — ₦20,000</a>
+  <a href="https://paystack.shop/pay/mavenba" target="_blank" rel="noopener" class="btn" style="width: 100%; justify-content: center; font-size: .76rem; padding: 11px 16px">Reserve Seat — ₦20,000</a>
 </div>
 
 <script>
@@ -1461,53 +1418,38 @@ img{max-width: 100%}
 // ==========================================
 // 5. VALUE VAULT INTERACTIVE WIDGETS
 // ==========================================
+// ==========================================
+// 5. THE VAULT — 3D flip / 360° metric cards (hover spins a full turn; tap flips)
+// ==========================================
 (function initVault(){
-  var skillNames = [
-    "stitch-ui-generator",
-    "radix-token-sync",
-    "impeccable-prompter",
-    "antigravity-bridge",
-    "taste-refiner-v2"
-  ];
-  var skillIdx = 0;
-  var skillElem = document.getElementById("skill-name");
-  if(skillElem){
-    skillElem.style.transition = "opacity .16s ease, transform .16s ease";
-    setInterval(function(){
-      skillIdx = (skillIdx + 1) % skillNames.length;
-      skillElem.style.opacity = "0";
-      skillElem.style.transform = "translateY(-4px)";
-      setTimeout(function(){
-        skillElem.textContent = skillNames[skillIdx];
-        skillElem.style.opacity = "1";
-        skillElem.style.transform = "translateY(0)";
-      }, 160);
-    }, 2400);
-  }
-
-  var tokenBtns = document.querySelectorAll(".token-btn");
-  var tokenPreview = document.getElementById("token-preview");
-  var tokenTag = document.getElementById("token-tag");
-  var tokenPresets = {
-    warm: { name: "#E8722C · TACTILE", bg: "#FFFDF7", color: "#14261D", border: "#14261D" },
-    terminal: { name: "#22C55E · MONO", bg: "#0D1410", color: "#86EFAC", border: "#16A34A" },
-    swiss: { name: "#001F51 · SWISS", bg: "#F8F9FA", color: "#001F51", border: "#001F51" },
-    clay: { name: "#B8551A · TERRA", bg: "#FBF5EE", color: "#4A2810", border: "#B8551A" }
-  };
-  tokenBtns.forEach(function(btn){
-    btn.addEventListener("click", function(){
-      tokenBtns.forEach(function(b){ b.classList.remove("active"); });
-      this.classList.add("active");
-      var t = tokenPresets[this.getAttribute("data-theme")];
-      if(t && tokenPreview && tokenTag){
-        tokenPreview.style.background = t.bg;
-        tokenPreview.style.color = t.color;
-        tokenPreview.style.borderColor = t.border;
-        tokenTag.textContent = t.name;
-        tokenTag.style.color = t.border;
+  try {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    var cards = document.querySelectorAll(".vcard");
+    cards.forEach(function(card){
+      var inner = card.querySelector(".vinner");
+      if(!inner) return;
+      var deg = 0;
+      function set(next){
+        deg = next;
+        inner.style.transform = "rotateY(" + deg + "deg)";
+        var backShown = Math.abs(Math.round(deg / 180)) % 2 === 1;
+        card.setAttribute("aria-pressed", backShown ? "true" : "false");
+      }
+      card.setAttribute("aria-pressed", "false");
+      if(canHover && !reduce){
+        // enter spins to the back; leave completes the full 360 back to the metric
+        card.addEventListener("mouseenter", function(){ set(deg + 180); });
+        card.addEventListener("mouseleave", function(){ set(deg + 180); });
+        // keyboard focus mirrors hover so the back is reachable without a mouse
+        card.addEventListener("focus", function(){ set(deg + 180); });
+        card.addEventListener("blur", function(){ set(deg + 180); });
+      } else {
+        // touch / no-hover / reduced-motion: click or Enter/Space flips 180
+        card.addEventListener("click", function(){ set(deg + 180); });
       }
     });
-  });
+  } catch(e){ /* cards stay on their metric face */ }
 })();
 
 // ==========================================
@@ -1537,3 +1479,5 @@ img{max-width: 100%}
 </script>
 </body>
 </html>
+
+
