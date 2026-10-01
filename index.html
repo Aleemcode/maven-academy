@@ -536,6 +536,11 @@ img{max-width: 100%}
 .pcard h3{font-size: 1.15rem; margin: 12px 0 0}
 .pcard p{font-size: .9rem; color: var(--muted); margin: 6px 0 0; flex: 1}
 .pcard .plink{font-family: var(--mono); font-weight: 700; font-size: .72rem; color: var(--terra-deep); margin-top: 14px}
+.fpills{display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px}
+.fpill{border-top: var(--bw2) solid rgba(237,233,220,.25); padding-top: 12px}
+.fpill .k{display: block; font-family: var(--mono); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--terra)}
+.fpill .v{display: block; color: #C4C9BF; font-size: .9rem; margin-top: 6px; line-height: 1.5}
+@media (max-width: 820px){.fpills{grid-template-columns: 1fr}}
 
 @media (max-width: 820px){
   .g3, .g2{grid-template-columns: 1fr}
@@ -946,6 +951,22 @@ img{max-width: 100%}
 
 <hr class="divider">
 
+<!-- FLUENCY: AI-fluent, not AI-dependent -->
+<div class="wrap sec" id="fluency">
+  <div class="panel-dark reveal-item" style="padding: 40px">
+    <span class="eyebrow" style="color: var(--terra)">Fluency, not dependency</span>
+    <h2 style="font-size: clamp(1.6rem, 3.6vw, 2.3rem); margin-top: 10px; max-width: 20ch">You'll leave thinking sharper, not softer.</h2>
+    <p style="color: #C4C9BF; max-width: 62ch; margin-top: 14px; font-size: 1.05rem">There's a crowd that believes AI is here to do your thinking for you and dull your mind. You'll leave on the other side of it. Here you learn how to <em>learn</em> with AI — to question it, direct it, and judge what it gives you. The machine does the lifting; you keep the thinking, the taste, and the final call. You walk out genuinely AI-fluent, and more curious than when you came in.</p>
+    <div class="fpills">
+      <div class="fpill"><span class="k">Direct, don't obey</span><span class="v">You steer the machine. It never steers you.</span></div>
+      <div class="fpill"><span class="k">Question, don't swallow</span><span class="v">You learn to see what's wrong, and fix it.</span></div>
+      <div class="fpill"><span class="k">Curiosity, amplified</span><span class="v">The more you build, the more you want to.</span></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
 <!-- COST -->
 <div class="wrap sec" id="cost">
   <div class="g2" style="align-items: start">
@@ -1017,6 +1038,7 @@ img{max-width: 100%}
     <details open><summary>Do I need to know how to code or design?</summary><p>No. That's the point. You'll learn to direct AI to build, and pick up a designer's eye by doing, not studying.</p></details>
     <details><summary>Can I afford the tools on top of the course?</summary><p>Yes. Every tool we use is free to start, and the whole cohort runs on free tiers. A paid tier only becomes worth it later; your choice, and I'll tell you when.</p></details>
     <details><summary>Is it live, or self-paced?</summary><p>It's live. Six sessions across three weekends (Oct 24 – Nov 8), 3–4 hours each. Every session is recorded, so you keep the replays.</p></details>
+    <details><summary>Won't leaning on AI make me lazy?</summary><p>The opposite. You learn to direct and question AI, not just accept what it gives you — which sharpens your judgment and your curiosity. You leave thinking better, not less, and genuinely AI-fluent.</p></details>
     <details><summary>What does &quot;founding cohort&quot; mean?</summary><p>The first cohort, capped at 30 seats at ₦20,000. You get all 5 days live, the recordings, my tools and design system, and a month of mentorship after. The price rises for the next cohort.</p></details>
   </div>
 </div>
