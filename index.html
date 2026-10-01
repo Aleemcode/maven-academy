@@ -345,9 +345,9 @@ img{max-width: 100%}
 }
 
 /* LOGISTICS */
-.logi{display: flex; flex-wrap: wrap; border: var(--bw) solid var(--forest); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; background: var(--paper)}
-.logi .it{flex: 1; min-width: 150px; padding: 16px 20px; border-right: var(--bw2) solid var(--hair)}
-.logi .it:last-child{border-right: 0}
+.logi{display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--bw2); background: var(--hair); border: var(--bw) solid var(--forest); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden}
+.logi .it{background: var(--paper); padding: 16px 20px}
+@media (max-width: 900px){.logi{grid-template-columns: repeat(2, 1fr)}}
 .logi .k{font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--terra-deep)}
 .logi .v{font-family: var(--disp); font-weight: 700; font-size: 1.05rem; margin-top: 3px}
 
@@ -547,6 +547,10 @@ img{max-width: 100%}
   .mod .bd{grid-template-columns: 1fr}
   .nav .lk a:not(:last-child){display: none}
   #bottom-bounce-card{left: 16px; right: 16px; max-width: none; bottom: 16px}
+  /* Calm the brick field on phones so it stops fighting the hero copy */
+  #field{opacity: .26}
+  .scrim{background: linear-gradient(180deg, rgba(244,240,229,.9) 0%, rgba(244,240,229,.64) 52%, rgba(244,240,229,.3) 100%)}
+  .pill-more{display: none}
   /* THE VAULT becomes a horizontal snap-scroll rail (Fortix on mobile) */
   .vault-wide{max-width: none}
   .vault-head{gap: 12px; align-items: center}
@@ -611,7 +615,7 @@ img{max-width: 100%}
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="scrim"></div>
   <div class="hcontent">
-    <span class="pill"><span class="dot"></span>Founding cohort · 30 seats · starts Oct 24</span>
+    <span class="pill"><span class="dot"></span>Founding cohort<span class="pill-more"> · 30 seats · starts Oct 24</span></span>
     <h1>If you can describe it, you can build it.</h1>
     <p class="sub">You don't need to be tech-savvy — you need to be curious. I'm a designer who's spent 10+ years shipping real products, and now I build them with AI in days, not months. In 5 live days, I'll show you how to take an idea in your head and ship it for real.</p>
     <div class="cta">
