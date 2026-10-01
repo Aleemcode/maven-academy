@@ -294,6 +294,106 @@ img{max-width: 100%}
   #maven-chat, #maven-launcher, #maven-launcher .ava, .mc-q, .mc-cta{ transition: opacity .2s linear !important; }
 }
 
+/* MAVEN LOADER — Maven bounces in, then drops into the page */
+#maven-loader{
+  position: fixed; inset: 0; z-index: 200; background: var(--cream);
+  display: grid; place-items: center; overflow: hidden;
+  background-image: radial-gradient(120% 90% at 50% 10%, rgba(214,229,154,.35), transparent 60%);
+  animation: loaderAuto .5s var(--ease) 2.6s forwards;  /* safety fade if JS never runs */
+}
+#maven-loader.done{ opacity: 0; visibility: hidden; pointer-events: none; animation: none; transition: opacity .55s var(--ease), visibility .55s; }
+@keyframes loaderAuto{ to{ opacity: 0; visibility: hidden; pointer-events: none; } }
+#maven-loader .ldr-inner{ display: flex; flex-direction: column; align-items: center; gap: 18px; }
+#maven-loader .ldr-maven{ height: 150px; width: auto; filter: drop-shadow(4px 10px 10px rgba(20,38,29,.3)); animation: mavenBounceIn .9s var(--ease) both, mavenBob 2.4s var(--ease) .9s infinite; }
+#maven-loader .ldr-word{ font-family: var(--disp); font-weight: 800; font-size: 2rem; letter-spacing: -.03em; color: var(--forest); opacity: 0; animation: ldrWord .5s var(--ease) .5s forwards; }
+#maven-loader .ldr-word span{ color: var(--terra); }
+#maven-loader .ldr-bar{ width: 132px; height: 6px; border-radius: 10px; background: rgba(20,38,29,.12); overflow: hidden; opacity: 0; animation: ldrWord .4s var(--ease) .7s forwards; }
+#maven-loader .ldr-bar span{ display: block; height: 100%; width: 40%; border-radius: 10px; background: var(--terra); animation: ldrBar 1.7s var(--ease) .9s forwards; }
+@keyframes mavenBounceIn{ 0%{ transform: translateY(-130%) scale(.78); opacity: 0; } 55%{ transform: translateY(6%) scale(1.05); opacity: 1; } 76%{ transform: translateY(-4%) scale(.99); } 100%{ transform: translateY(0) scale(1); opacity: 1; } }
+@keyframes mavenBob{ 0%,100%{ transform: translateY(0) rotate(-1.5deg); } 50%{ transform: translateY(-9px) rotate(1.5deg); } }
+@keyframes ldrWord{ to{ opacity: 1; } }
+@keyframes ldrBar{ 0%{ width: 8%; } 100%{ width: 100%; } }
+
+/* MAVEN GUIDE ATTENTION OVERLAY */
+#maven-guide-scrim{
+  position: fixed; inset: 0; z-index: 88; background: rgba(20,38,29,.40);
+  backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
+  opacity: 0; pointer-events: none; transition: opacity .5s var(--ease);
+}
+#maven-guide-scrim.show{ opacity: 1; pointer-events: auto; }
+
+/* MAVEN FIRST-LANDING INTRO BUBBLE */
+#maven-intro{
+  position: fixed; left: 50%; bottom: 26px; z-index: 97;
+  transform: translateX(-50%) translateY(16px); opacity: 0; pointer-events: none;
+  width: min(420px, calc(100vw - 32px));
+  display: flex; align-items: center; gap: 14px;
+  background: var(--paper); border: var(--bw) solid var(--forest);
+  border-radius: 18px; box-shadow: 6px 6px 0 var(--forest);
+  padding: 14px 18px;
+  transition: opacity .4s var(--ease), transform .4s var(--ease);
+}
+#maven-intro.show{ opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+/* guide mode: JS drives left/top so the bubble rides next to Maven near the cursor */
+#maven-intro.at-cursor{ left: 0; bottom: auto; transform: translateY(14px); }
+#maven-intro.at-cursor.show{ transform: translateY(0); }
+#maven-intro .ava{ width: 46px; height: 46px; border-radius: 50%; background: var(--cream); border: 2.5px solid var(--terra); overflow: hidden; flex: 0 0 auto; display: grid; place-items: center; animation: introAva 2.6s var(--ease) infinite; }
+#maven-intro .ava img{ width: 100%; height: 100%; object-fit: cover; }
+@keyframes introAva{ 0%,100%{ transform: translateY(0) rotate(-2deg); } 50%{ transform: translateY(-3px) rotate(2deg); } }
+#maven-intro .txt{ line-height: 1.3; }
+#maven-intro .txt b{ font-family: var(--disp); font-weight: 800; font-size: .98rem; color: var(--forest); display: block; margin-bottom: 4px; }
+#maven-intro .txt p{ font-size: .82rem; color: var(--muted); margin: 0 0 8px; }
+#maven-intro .gestures{ display: flex; flex-wrap: wrap; gap: 6px; }
+#maven-intro .g{ appearance: none; cursor: pointer; font-family: var(--mono); font-weight: 700; font-size: .62rem; text-transform: uppercase; letter-spacing: .03em; color: var(--forest); background: var(--cream); border: 2px solid var(--forest); border-radius: 20px; padding: 5px 10px; transition: background .14s var(--ease); }
+#maven-intro .g:hover{ background: var(--lime); }
+#maven-intro .g b{ color: var(--terra-deep); }
+#maven-intro .in-x{ position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; background: var(--forest); color: var(--paper); border: 2px solid var(--paper); cursor: pointer; font-size: .9rem; line-height: 1; display: grid; place-items: center; }
+
+/* MAVEN "MEET THE FACILITATOR" MODAL */
+#maven-fac-scrim{
+  position: fixed; inset: 0; z-index: 98; background: rgba(20,38,29,.52);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+}
+#maven-fac-scrim.open{ opacity: 1; pointer-events: auto; }
+#maven-fac{
+  position: fixed; left: 50%; top: 50%; z-index: 99;
+  transform: translate(-50%, -46%) scale(.96); opacity: 0; pointer-events: none;
+  width: min(460px, calc(100vw - 32px)); max-height: min(88vh, 680px); overflow: hidden auto;
+  background: var(--cream); border: var(--bw) solid var(--forest);
+  border-radius: 22px; box-shadow: 8px 8px 0 #070D09;
+  transition: opacity .32s var(--ease), transform .32s var(--ease);
+}
+#maven-fac.open{ opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+.fac-x{ position: absolute; top: 12px; right: 14px; z-index: 2; appearance: none; background: var(--paper); border: 2px solid var(--forest); color: var(--forest); width: 34px; height: 34px; border-radius: 50%; font-size: 1.1rem; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+.fac-x:hover{ background: var(--terra); }
+.fac-portrait{ position: relative; height: 230px; background: radial-gradient(120% 120% at 50% 0%, var(--forest2) 0%, var(--forest) 70%); overflow: hidden; display: grid; place-items: center; }
+.fac-portrait .blob{ position: absolute; width: 150%; height: 150%; left: -25%; top: -25%; opacity: .5; }
+/* animated flow placeholder — swapped for Aleem's image on share */
+.fac-portrait .ph{ position: relative; z-index: 1; width: 128px; height: 128px; border-radius: 50%; background: var(--cream); border: 3px solid var(--terra); display: grid; place-items: center; font-family: var(--disp); font-weight: 800; font-size: 3rem; color: var(--forest); box-shadow: 0 10px 30px rgba(7,13,9,.4); animation: facFloat 5s var(--ease) infinite; }
+.fac-portrait img.fac-photo{ position: relative; z-index: 1; width: auto; height: 190px; border-radius: 14px; object-fit: cover; animation: facFloat 5s var(--ease) infinite; filter: drop-shadow(0 12px 28px rgba(7,13,9,.45)); }
+@keyframes facFloat{ 0%,100%{ transform: translateY(0) scale(1); } 50%{ transform: translateY(-10px) scale(1.015); } }
+.fac-body{ padding: 22px 24px 26px; }
+.fac-body .eyebrow{ color: var(--terra-deep); }
+.fac-body h3{ font-family: var(--disp); font-weight: 800; font-size: 1.5rem; letter-spacing: -.02em; color: var(--forest); margin: 6px 0 2px; }
+.fac-body .role{ font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 14px; }
+.fac-body p{ font-size: .92rem; line-height: 1.55; color: var(--forest2); margin: 0 0 12px; }
+.fac-links-cap{ display: block; font-family: var(--mono); font-size: .64rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 2px 0 9px; }
+.fac-links{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.fac-links a{ display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-weight: 700; font-size: .66rem; text-transform: uppercase; letter-spacing: .03em; color: var(--forest); background: var(--paper); border: 2px solid var(--forest); border-radius: 20px; padding: 7px 10px 7px 13px; text-decoration: none; transition: background .14s var(--ease), transform .14s var(--ease); }
+.fac-links a:hover{ background: var(--peach); transform: translateY(-1px); }
+.fac-links a .ext{ display: grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; background: var(--terra); color: var(--forest); font-size: .68rem; line-height: 1; }
+@media (prefers-reduced-motion: reduce){
+  #maven-intro, #maven-fac, #maven-fac-scrim, #maven-guide-scrim{ transition: opacity .2s linear !important; }
+  #maven-intro .ava, .fac-portrait .ph, .fac-portrait img.fac-photo{ animation: none !important; }
+  #maven-loader{ animation: loaderAuto .3s linear .4s forwards; }
+  #maven-loader .ldr-maven{ animation: none; }
+  #maven-loader .ldr-bar span{ animation: ldrBar .4s linear forwards; }
+}
+@media (max-width: 820px), (pointer: coarse), (hover: none){
+  #maven-intro{ display: none !important; }
+}
+
 /* NAVIGATION */
 .nav{position: sticky; top: 0; z-index: 40; background: rgba(244, 240, 229, .94); backdrop-filter: blur(8px); border-bottom: var(--bw) solid var(--forest)}
 .nav .in{max-width: 1040px; margin: 0 auto; padding: 12px 22px; display: flex; align-items: center; gap: 18px}
@@ -627,6 +727,55 @@ img{max-width: 100%}
   </div>
   <div class="mc-body" id="mc-body"></div>
   <div class="mc-qs" id="mc-qs" aria-label="Pick a question"></div>
+</div>
+
+<!-- MAVEN LOADER -->
+<div id="maven-loader" aria-hidden="true">
+  <div class="ldr-inner">
+    <img class="ldr-maven" alt="" src="">
+    <div class="ldr-word">Maven<span>.</span></div>
+    <div class="ldr-bar"><span></span></div>
+  </div>
+</div>
+
+<!-- MAVEN GUIDE ATTENTION OVERLAY -->
+<div id="maven-guide-scrim" aria-hidden="true"></div>
+
+<!-- MAVEN FIRST-LANDING INTRO / GUIDE -->
+<div id="maven-intro" role="status" aria-live="polite">
+  <span class="ava"><img alt="Maven" src=""></span>
+  <div class="txt">
+    <b>Hi, I'm Maven — your guide here.</b>
+    <p>Click anywhere once and I'll answer the questions people usually ask. Double&#8209;click to meet the facilitator.</p>
+    <div class="gestures">
+      <button class="g" type="button" data-act="chat"><b>Click</b> · ask me</button>
+      <button class="g" type="button" data-act="fac"><b>Double&#8209;click</b> · meet the facilitator</button>
+    </div>
+  </div>
+  <button class="in-x" type="button" aria-label="Dismiss">&times;</button>
+</div>
+
+<!-- MAVEN "MEET THE FACILITATOR" MODAL -->
+<div id="maven-fac-scrim"></div>
+<div id="maven-fac" role="dialog" aria-modal="true" aria-label="Meet the facilitator" aria-hidden="true">
+  <button class="fac-x" type="button" aria-label="Close">&times;</button>
+  <div class="fac-portrait">
+    <svg class="blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path fill="#33473B" d="M44,-58C56,-49,63,-33,66,-16C69,1,67,19,58,33C49,47,33,56,15,62C-3,68,-23,70,-39,62C-55,54,-67,36,-71,17C-75,-3,-71,-24,-60,-38C-49,-52,-31,-59,-13,-62C5,-65,24,-67,44,-58Z" transform="translate(100 100)"><animate attributeName="d" dur="14s" repeatCount="indefinite" values="M44,-58C56,-49,63,-33,66,-16C69,1,67,19,58,33C49,47,33,56,15,62C-3,68,-23,70,-39,62C-55,54,-67,36,-71,17C-75,-3,-71,-24,-60,-38C-49,-52,-31,-59,-13,-62C5,-65,24,-67,44,-58Z;M50,-62C62,-52,67,-33,69,-15C71,3,70,22,61,36C52,50,35,59,17,64C-1,69,-21,70,-38,62C-55,54,-69,37,-73,18C-77,-1,-72,-22,-61,-37C-50,-52,-33,-61,-15,-64C3,-67,25,-72,50,-62Z;M44,-58C56,-49,63,-33,66,-16C69,1,67,19,58,33C49,47,33,56,15,62C-3,68,-23,70,-39,62C-55,54,-67,36,-71,17C-75,-3,-71,-24,-60,-38C-49,-52,-31,-59,-13,-62C5,-65,24,-67,44,-58Z"/></path></svg>
+    <div class="ph">A</div>
+  </div>
+  <div class="fac-body">
+    <span class="eyebrow">Meet the facilitator</span>
+    <h3>Aleem Akinyoola</h3>
+    <div class="role">Designer &amp; Builder · Maven Builder Academy</div>
+    <p>I'm a product designer with over a decade of craft behind me. I design the experience first, then build it with AI — fast, but never sloppy. Taste is the whole point: I refuse first-draft, &ldquo;good-enough&rdquo; output and push until it's something I'd put my name on.</p>
+    <p>For these five days, that's exactly what I'll hand you — not just the tools, but the eye to use them well.</p>
+    <span class="fac-links-cap">Proof — a few things I've shipped:</span>
+    <div class="fac-links">
+      <a href="https://baytul-asmaa.com" target="_blank" rel="noopener">Baytul Asmaa <span class="ext" aria-hidden="true">↗</span></a>
+      <a href="https://warm-fusion.vercel.app" target="_blank" rel="noopener">Warm Fusion <span class="ext" aria-hidden="true">↗</span></a>
+      <a href="#portfolio" data-fac-scroll>See all my work <span class="ext" aria-hidden="true">↓</span></a>
+    </div>
+  </div>
 </div>
 
 
@@ -1467,6 +1616,133 @@ var MavenChat = (function(){
   return { open: open, close: close, isOpen: function(){ return opened; }, dismissed: function(){ return userDismissed; } };
 })();
 
+// ---- Maven "meet the facilitator" modal ----
+var MavenFac = (function(){
+  var scrim = document.getElementById("maven-fac-scrim");
+  var modal = document.getElementById("maven-fac");
+  if(!scrim || !modal) return { open:function(){}, close:function(){}, isOpen:function(){return false;} };
+  var opened = false, lastFocus = null;
+  function open(){
+    if(opened) return; opened = true;
+    lastFocus = document.activeElement;
+    scrim.classList.add("open");
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden","false");
+    var x = modal.querySelector(".fac-x"); if(x) x.focus();
+  }
+  function close(){
+    if(!opened) return; opened = false;
+    scrim.classList.remove("open");
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden","true");
+    try { if(lastFocus && lastFocus.focus) lastFocus.focus(); } catch(e){}
+  }
+  scrim.addEventListener("click", close);
+  modal.querySelector(".fac-x").addEventListener("click", close);
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && opened) close(); });
+  var scrollLink = modal.querySelector("[data-fac-scroll]");
+  if(scrollLink) scrollLink.addEventListener("click", function(e){
+    e.preventDefault(); close();
+    var t = document.getElementById("portfolio");
+    if(t) t.scrollIntoView({ behavior: "smooth" });
+  });
+  return { open: open, close: close, isOpen: function(){ return opened; } };
+})();
+
+// ---- Maven first-landing intro bubble (desktop, once per visitor) ----
+// ---- Maven launch: loader bounce -> reveal -> cursor-anchored guide (every refresh) ----
+(function initLaunch(){
+  var loader = document.getElementById("maven-loader");
+  var scrim  = document.getElementById("maven-guide-scrim");
+  var intro  = document.getElementById("maven-intro");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var isMobile = window.matchMedia("(max-width: 820px), (pointer: coarse), (hover: none)").matches || ("ontouchstart" in window);
+
+  // borrow already-inlined images (no extra bytes)
+  try {
+    var big = document.querySelector("#ai-companion img");
+    var lm = loader && loader.querySelector(".ldr-maven");
+    if(big && lm) lm.src = big.src;
+    var la = document.querySelector("#maven-launcher .ava img");
+    var ia = intro && intro.querySelector(".ava img");
+    if(la && ia) ia.src = la.src;
+  } catch(e){}
+
+  var guideActive = false;
+  function endGuide(){
+    if(!guideActive) return;
+    guideActive = false;
+    if(scrim){ scrim.classList.remove("show"); scrim.setAttribute("aria-hidden", "true"); }
+    if(intro){ intro.classList.remove("show"); }
+    document.removeEventListener("click", onDocClick);
+  }
+  window.MavenGuide = { active: function(){ return guideActive; }, dismiss: endGuide };
+
+  if(intro){
+    intro.querySelectorAll(".g").forEach(function(b){
+      b.addEventListener("click", function(e){
+        e.stopPropagation(); endGuide();
+        if(b.getAttribute("data-act") === "fac") MavenFac.open(); else MavenChat.open();
+      });
+    });
+    var inx = intro.querySelector(".in-x");
+    if(inx) inx.addEventListener("click", function(e){ e.stopPropagation(); endGuide(); });
+  }
+
+  function placeBubble(){
+    if(!intro) return;
+    var pet = window.MavenPet && window.MavenPet.el;
+    var bw = intro.offsetWidth || 380, bh = intro.offsetHeight || 150;
+    var cl = window.innerWidth / 2, ct = window.innerHeight / 2;
+    if(pet){
+      var pl = parseFloat(pet.style.left), pt = parseFloat(pet.style.top);
+      if(!isNaN(pl)) cl = pl;
+      if(!isNaN(pt)) ct = pt;
+    }
+    var x = cl - bw / 2;
+    var y = ct - bh - 96;               // above the mascot
+    if(y < 16) y = ct + 72;             // no room above → sit below
+    x = Math.max(16, Math.min(x, window.innerWidth - bw - 16));
+    y = Math.max(16, Math.min(y, window.innerHeight - bh - 16));
+    intro.style.left = x + "px";
+    intro.style.top  = y + "px";
+  }
+  function trackFrame(){
+    if(!guideActive) return;
+    placeBubble();
+    requestAnimationFrame(trackFrame);
+  }
+  function onDocClick(e){
+    if(!guideActive) return;
+    if(e.target.closest("#maven-intro")) return;   // bubble's own buttons handle themselves
+    endGuide();
+  }
+  function startGuide(){
+    if(isMobile || !intro) return;                 // touch: the Ask Maven launcher covers this
+    var cx = Math.round(window.innerWidth / 2), cy = Math.round(window.innerHeight * 0.52);
+    if(window.MavenPet && window.MavenPet.park) window.MavenPet.park(cx, cy);
+    intro.classList.add("at-cursor");
+    placeBubble();
+    guideActive = true;
+    if(scrim){ scrim.classList.add("show"); scrim.setAttribute("aria-hidden", "false"); }
+    requestAnimationFrame(function(){ intro.classList.add("show"); });
+    trackFrame();
+    setTimeout(function(){ document.addEventListener("click", onDocClick); }, 80);
+  }
+
+  function reveal(){
+    if(loader) loader.classList.add("done");
+    setTimeout(startGuide, reduce ? 150 : 650);
+  }
+
+  var HOLD = reduce ? 400 : (isMobile ? 1400 : 2100);
+  if(document.readyState === "complete" || document.readyState === "interactive"){
+    setTimeout(reveal, HOLD);
+  } else {
+    window.addEventListener("DOMContentLoaded", function(){ setTimeout(reveal, HOLD); });
+  }
+})();
+
 (function initCompanion(){
   var companion = document.getElementById("ai-companion");
   var isMobile = window.matchMedia("(max-width: 820px), (pointer: coarse), (hover: none)").matches || ("ontouchstart" in window);
@@ -1479,9 +1755,21 @@ var MavenChat = (function(){
     var idleTimer = null;
     var IDLE_MS = 15000;
 
+    // let the launch guide park Maven near a point, then hand back to cursor-follow
+    window.MavenPet = {
+      el: companion,
+      park: function(x, y){
+        curX = x - 30; curY = y - 60; mouseX = curX; mouseY = curY; isMoving = true;
+        companion.style.opacity = "1";
+        companion.style.left = (curX + 30) + "px";
+        companion.style.top  = (curY + 60) + "px";
+      }
+    };
+
     function resetIdle(){
       if(idleTimer) clearTimeout(idleTimer);
       idleTimer = setTimeout(function(){
+        if(window.MavenGuide && window.MavenGuide.active()) return;
         // long idle: Maven introduces itself — but never nag after a dismissal
         if(!MavenChat.isOpen() && !MavenChat.dismissed()) MavenChat.open();
       }, IDLE_MS);
@@ -1513,11 +1801,27 @@ var MavenChat = (function(){
       isMoving = false;
     });
 
-    // click on empty (non-interactive) space opens Maven's FAQ
+    // background single-click = ask Maven · double-click = meet the facilitator · click-away closes
+    var clickTimer = null, lastClosed = 0;
+    var IGNORE = "a, button, input, textarea, select, label, summary, details, [role=button], .vcard, #maven-chat, #maven-launcher, #maven-intro, #maven-fac, #maven-fac-scrim, #ai-companion, .nav, iframe";
     document.addEventListener("click", function(e){
-      if(MavenChat.isOpen()) return;
-      if(e.target.closest("a, button, input, textarea, select, label, summary, [role=button], .vcard, #maven-chat, #maven-launcher, #ai-companion, .nav, iframe")) return;
-      MavenChat.open();
+      if(window.MavenGuide && window.MavenGuide.active()) return;  // the guide owns this click
+      if(e.target.closest(IGNORE)) return;
+      // click away closes whatever Maven has open (subtle fade handled by CSS)
+      if(MavenChat.isOpen()){ MavenChat.close(); lastClosed = Date.now(); return; }
+      if(MavenFac.isOpen()){ MavenFac.close(); lastClosed = Date.now(); return; }
+      if(Date.now() - lastClosed < 350) return;                 // no reopen flicker
+      if(window.getSelection && String(window.getSelection())) return;  // leave text selection alone
+      if(clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(function(){ clickTimer = null; MavenChat.open(); }, 260);  // single → chat
+    });
+    document.addEventListener("dblclick", function(e){
+      if(window.MavenGuide && window.MavenGuide.active()) return;
+      if(e.target.closest(IGNORE)) return;
+      if(clickTimer){ clearTimeout(clickTimer); clickTimer = null; }   // cancel the pending single
+      try { if(window.getSelection) window.getSelection().removeAllRanges(); } catch(err){}
+      if(MavenChat.isOpen()) MavenChat.close();
+      MavenFac.open();                                                 // double → meet the facilitator
     });
 
     function animCompanion(){
