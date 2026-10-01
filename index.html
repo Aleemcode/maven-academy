@@ -431,7 +431,7 @@ img{max-width: 100%}
 .mod .n{font-family: var(--mono); font-weight: 700; font-size: .9rem; color: var(--forest); background: var(--terra); border: var(--bw2) solid var(--forest); border-radius: var(--r-sm); width: 46px; height: 40px; min-width: 46px; display: flex; align-items: center; justify-content: center}
 .mod .t{font-family: var(--disp); font-weight: 700; font-size: 1.12rem}
 .mod .d{font-size: .9rem; color: var(--muted); margin-top: 2px}
-.mod .bd{border-top: var(--bw2) solid var(--hair); background: var(--paper2); padding: 14px 20px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px}
+.mod .bd{border-top: var(--bw2) solid var(--hair); background: var(--paper2); padding: 14px 20px; display: grid; grid-template-columns: 1fr; gap: 16px}
 .mod .bd .lab{font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--terra-deep)}
 .mod .bd .val{font-size: .9rem; color: var(--forest2); margin-top: 4px}
 .mod .tools{display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px}
@@ -760,7 +760,6 @@ img{max-width: 100%}
 <div class="sec" id="perks">
   <div class="vault-wide">
     <div class="vault-head reveal-item">
-      <span class="vh-idx" aria-hidden="true">03</span>
       <div class="vh-txt">
         <span class="eyebrow">The Vault · what's inside</span>
         <h2>Every unfair advantage, day one.</h2>
@@ -769,62 +768,47 @@ img{max-width: 100%}
     <p class="vault-hint" aria-hidden="true">Swipe the rail →</p>
 
     <div class="vault-rail">
-      <button class="vcard k1" type="button" aria-label="Perk: 10 plus standard workflow skills. Activate to read the detail.">
+      <button class="vcard k1" type="button" aria-label="Perk: my design bookmarks. Activate to read the detail.">
         <div class="vinner">
           <div class="vface vfront">
-            <span class="vtag">Agent skills</span>
-            <div class="vmetric"><span class="vnum">10+</span><span class="vlabel">Workflow skills</span></div>
+            <span class="vtag">Taste</span>
+            <div class="vmetric"><span class="vnum">Vault</span><span class="vlabel">Design bookmarks</span></div>
             <span class="vflip mono" aria-hidden="true">flip ⟳</span>
           </div>
           <div class="vface vback">
-            <span class="vtag vtag-lite">Agent skills</span>
-            <p class="vdesc">Tested, reusable skills you drop straight into Claude and Antigravity. Months of trial-and-error, already done.</p>
-            <span class="vmeta mono">stitch-ui · radix-sync · taste-refiner</span>
+            <span class="vtag vtag-lite">Taste</span>
+            <p class="vdesc">My bookmarks of inestimable value — design, design experts, the pages and handles worth following, and taste, generally. Where my eye comes from.</p>
+            <span class="vmeta mono">Curated by hand</span>
           </div>
         </div>
       </button>
 
-      <button class="vcard k2" type="button" aria-label="Perk: 20 plus engineer portfolios. Activate to read the detail.">
+      <button class="vcard k2" type="button" aria-label="Perk: 10 plus Design.md files. Activate to read the detail.">
         <div class="vinner">
           <div class="vface vfront">
-            <span class="vtag">Inspiration</span>
-            <div class="vmetric"><span class="vnum">20+</span><span class="vlabel">Engineer portfolios</span></div>
+            <span class="vtag">Systems</span>
+            <div class="vmetric"><span class="vnum">10+</span><span class="vlabel">Design.md files</span></div>
             <span class="vflip mono" aria-hidden="true">flip ⟳</span>
           </div>
           <div class="vface vback">
-            <span class="vtag vtag-lite">Inspiration</span>
-            <p class="vdesc">Teardowns of the builders worth following, and how they actually think.</p>
-            <span class="vmeta mono">Rauno · Karpathy · Coursey · Ekenstam</span>
+            <span class="vtag vtag-lite">Systems</span>
+            <p class="vdesc">Ready-made Design.md files — drop one into a build and your taste is baked in from the very first prompt.</p>
+            <span class="vmeta mono">Yours to reuse</span>
           </div>
         </div>
       </button>
 
-      <button class="vcard k3" type="button" aria-label="Perk: zero marketing hype, a curated reading vault. Activate to read the detail.">
+      <button class="vcard k3" type="button" aria-label="Perk: super skill extractor. Activate to read the detail.">
         <div class="vinner">
           <div class="vface vfront">
-            <span class="vtag">Reading vault</span>
-            <div class="vmetric"><span class="vnum">0</span><span class="vlabel">Marketing hype</span></div>
+            <span class="vtag">Tooling</span>
+            <div class="vmetric"><span class="vnum">1-tap</span><span class="vlabel">Super skill extractor</span></div>
             <span class="vflip mono" aria-hidden="true">flip ⟳</span>
           </div>
           <div class="vface vback">
-            <span class="vtag vtag-lite">Reading vault</span>
-            <p class="vdesc">Hand-picked essays on taste, directing the machine, and product architecture. Signal only.</p>
-            <span class="vmeta mono">Fresh reads, added weekly</span>
-          </div>
-        </div>
-      </button>
-
-      <button class="vcard k4" type="button" aria-label="Perk: 4 design system presets. Activate to read the detail.">
-        <div class="vinner">
-          <div class="vface vfront">
-            <span class="vtag">Design systems</span>
-            <div class="vmetric"><span class="vnum">4</span><span class="vlabel">System presets</span></div>
-            <span class="vflip mono" aria-hidden="true">flip ⟳</span>
-          </div>
-          <div class="vface vback">
-            <span class="vtag vtag-lite">Design systems</span>
-            <p class="vdesc">Warm Fusion + three more, with production tokens ready to deploy.</p>
-            <span class="vmeta mono">Warm Fusion · Neon Terminal · Swiss Mono · Organic Clay</span>
+            <span class="vtag vtag-lite">Tooling</span>
+            <p class="vdesc">Pull the reusable skill out of any workflow, so you grow your own library as you build.</p>
+            <span class="vmeta mono">Build your library</span>
           </div>
         </div>
       </button>
@@ -833,12 +817,12 @@ img{max-width: 100%}
         <div class="vinner">
           <div class="vface vfront">
             <span class="vtag vtag-lite">Growing</span>
-            <div class="vmetric"><span class="vnum">＋</span><span class="vlabel">Added as we grow</span></div>
+            <div class="vmetric"><span class="vnum">＋</span><span class="vlabel">And more</span></div>
             <span class="vflip mono" aria-hidden="true">flip ⟳</span>
           </div>
           <div class="vface vback">
             <span class="vtag">Growing</span>
-            <p class="vdesc">New skills, reads, and systems land as the cohort grows. Founding members get all of it.</p>
+            <p class="vdesc">New bookmarks, files, and tools land as the cohort grows. Founding members get all of it.</p>
             <span class="vmeta mono">Yours, forever</span>
           </div>
         </div>
@@ -894,7 +878,6 @@ img{max-width: 100%}
       </div>
       <div class="bd">
         <div><div class="lab">You leave with</div><div class="val">Your first real, directed build — and the mindset that makes AI listen.</div></div>
-        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Claude</span><span class="tool">AI Studio</span></div></div>
       </div>
     </div>
     <div class="mod reveal-item">
@@ -907,7 +890,6 @@ img{max-width: 100%}
       </div>
       <div class="bd">
         <div><div class="lab">You leave with</div><div class="val">Your product's system and its first designed screens.</div></div>
-        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Stitch</span><span class="tool">Warm Fusion</span></div></div>
       </div>
     </div>
     <div class="mod reveal-item">
@@ -920,7 +902,6 @@ img{max-width: 100%}
       </div>
       <div class="bd">
         <div><div class="lab">You leave with</div><div class="val">A working prototype of your own idea.</div></div>
-        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Antigravity</span><span class="tool">Claude</span></div></div>
       </div>
     </div>
     <div class="mod reveal-item">
@@ -933,7 +914,6 @@ img{max-width: 100%}
       </div>
       <div class="bd">
         <div><div class="lab">You leave with</div><div class="val">A real, live URL you can share.</div></div>
-        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Antigravity</span><span class="tool">Vercel</span></div></div>
       </div>
     </div>
     <div class="mod reveal-item">
@@ -946,7 +926,6 @@ img{max-width: 100%}
       </div>
       <div class="bd">
         <div><div class="lab">You leave with</div><div class="val">A polished product — the gap between "it works" and "it's right".</div></div>
-        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Taste Trainer</span></div></div>
       </div>
     </div>
     <div class="mod reveal-item">
@@ -959,7 +938,6 @@ img{max-width: 100%}
       </div>
       <div class="bd">
         <div><div class="lab">You leave with</div><div class="val">Your build, shown — and your 1-month mentorship begins.</div></div>
-        <div><div class="lab">Tools</div><div class="tools"><span class="tool">Mentorship</span></div></div>
       </div>
     </div>
   </div>
@@ -978,11 +956,9 @@ img{max-width: 100%}
     </div>
     <div class="card reveal-item">
       <table class="cost">
-        <thead><tr><th>Tool</th><th>For</th><th>To start</th></tr></thead>
+        <thead><tr><th>What</th><th>For</th><th>To start</th></tr></thead>
         <tbody>
-          <tr><td><b>Google Stitch</b></td><td>Design your screens</td><td><span class="free">Free</span></td></tr>
-          <tr><td><b>Claude</b></td><td>Think, plan, build</td><td><span class="free">Free tier</span> <span class="later">· paid later</span></td></tr>
-          <tr><td><b>Antigravity</b></td><td>Turn it into an app</td><td><span class="free">Free tier</span> <span class="later">· paid later</span></td></tr>
+          <tr><td><b>Your build tools</b></td><td>Design, plan, build, ship</td><td><span class="free">Free to start</span></td></tr>
           <tr><td><b>The course</b></td><td>The eye &amp; the method</td><td><b>₦20,000 once</b></td></tr>
         </tbody>
       </table>
@@ -1016,7 +992,7 @@ img{max-width: 100%}
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
-          My tools: Taste Trainer + Prompt Builder
+          My design vault: bookmarks, Design.md files &amp; more
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 256 256" fill="#2E7D57"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Z"/></svg>
@@ -1039,7 +1015,7 @@ img{max-width: 100%}
   </div>
   <div style="margin-top: 24px" class="reveal-item">
     <details open><summary>Do I need to know how to code or design?</summary><p>No. That's the point. You'll learn to direct AI to build, and pick up a designer's eye by doing, not studying.</p></details>
-    <details><summary>Can I afford the tools on top of the course?</summary><p>Yes. Every tool — Stitch, AI Studio, Claude, Antigravity — is free to start, and the whole cohort runs on free tiers. A paid tier (~$20/mo) only becomes worth it later; your choice.</p></details>
+    <details><summary>Can I afford the tools on top of the course?</summary><p>Yes. Every tool we use is free to start, and the whole cohort runs on free tiers. A paid tier only becomes worth it later; your choice, and I'll tell you when.</p></details>
     <details><summary>Is it live, or self-paced?</summary><p>It's live. Six sessions across three weekends (Oct 24 – Nov 8), 3–4 hours each. Every session is recorded, so you keep the replays.</p></details>
     <details><summary>What does &quot;founding cohort&quot; mean?</summary><p>The first cohort, capped at 30 seats at ₦20,000. You get all 5 days live, the recordings, my tools and design system, and a month of mentorship after. The price rises for the next cohort.</p></details>
   </div>
@@ -1479,5 +1455,6 @@ img{max-width: 100%}
 </script>
 </body>
 </html>
+
 
 
