@@ -31,6 +31,8 @@
   --shadow: 5px 5px 0 var(--forest);
   --shadow-sm: 3px 3px 0 var(--forest);
   --shadow-lg: 8px 8px 0 var(--forest);
+  --shadow-dark: 5px 5px 0 #070D09;
+  --shadow-dark-lg: 8px 8px 0 #070D09;
   --r: 12px;
   --r-lg: 16px;
   --r-sm: 8px;
@@ -181,7 +183,7 @@ img{max-width: 100%}
   background: var(--forest);
   color: #EDE9DC;
   border: var(--bw) solid var(--forest);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-dark);
   border-radius: var(--r-lg);
   padding: 30px;
 }
@@ -388,6 +390,8 @@ img{max-width: 100%}
 .vinner{position: relative; width: 100%; min-height: 336px; transition: transform .72s var(--ease); transform-style: preserve-3d}
 .vface{position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; border: var(--bw) solid var(--forest); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden}
 .vcard:hover .vface{box-shadow: var(--shadow-lg)}
+.k5 .vface{box-shadow: var(--shadow-dark)}
+.k5:hover .vface{box-shadow: var(--shadow-dark-lg)}
 
 /* FRONT — animated noise-induced gradient wash */
 .vfront{background: var(--paper2)}
