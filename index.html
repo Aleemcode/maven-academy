@@ -699,6 +699,29 @@ img{max-width: 100%}
   .vinner{transition: none !important}
   .vfront::before{animation: none !important}
 }
+
+/* ===== LIVE SEAT COUNTER (real Paystack data via /api/seats; hidden if unavailable) ===== */
+.seatmeter{margin-top:18px;padding:14px 16px 12px;border:var(--bw2) solid var(--forest);border-radius:var(--r);background:var(--paper);text-align:left}
+.seatmeter[hidden]{display:none}
+.sm-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sm-n{font-family:var(--disp);font-weight:800;font-size:2rem;line-height:1;letter-spacing:-.03em;color:var(--forest)}
+.sm-n .sm-cap{color:var(--muted);font-size:1.25rem}
+.sm-l{font-family:var(--mono, "Space Mono", monospace);font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--forest2)}
+.sm-live{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono, "Space Mono", monospace);font-weight:700;font-size:.66rem;letter-spacing:.12em;color:var(--terra-deep)}
+.sm-live i{width:8px;height:8px;border-radius:50%;background:var(--terra);box-shadow:0 0 0 3px rgba(232,114,44,.22);animation:smPulse 1.8s ease-in-out infinite}
+@keyframes smPulse{50%{box-shadow:0 0 0 6px rgba(232,114,44,0)}}
+.sm-bar{display:grid;grid-template-columns:repeat(var(--cap,30),1fr);gap:3px;margin-top:10px}
+.sm-bar span{height:14px;border-radius:3px;border:1.5px solid var(--forest);background:transparent;transition:background .5s ease}
+.sm-bar span.on{background:var(--terra)}
+.sm-note{margin-top:9px;font-size:.86rem;color:var(--forest2);font-weight:600}
+.panel-dark .seatmeter{background:rgba(255,255,255,.04);border-color:rgba(237,233,220,.35);max-width:440px;margin:20px auto 0}
+.panel-dark .sm-n{color:#EDE9DC}.panel-dark .sm-n .sm-cap{color:#A9B2A6}
+.panel-dark .sm-l,.panel-dark .sm-note{color:#C4C9BF}
+.panel-dark .sm-live{color:var(--lime)}
+.panel-dark .sm-bar span{border-color:rgba(237,233,220,.5)}
+.panel-dark .sm-bar span.on{background:var(--terra);border-color:var(--terra)}
+.btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.sm-live i{animation:none}.sm-bar span{transition:none}}
 </style>
 </head>
 <body>
@@ -803,7 +826,7 @@ img{max-width: 100%}
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="scrim"></div>
   <div class="hcontent">
-    <span class="pill"><span class="dot"></span>Founding cohort<span class="pill-more"> · 30 seats · starts Oct 24</span></span>
+    <span class="pill"><span class="dot"></span>Founding cohort<span class="pill-more"> · <span data-seats-short>30 seats</span> · starts Oct 24</span></span>
     <h1>If you can describe it, you can build it.</h1>
     <p class="sub">Yes — you. A website for your business. A tool that kills your busywork. The app you've been imagining. In 5 live days you'll build it for real with AI — no code, no design degree, no tech background. Just your idea and your curiosity.</p>
     <div class="cta">
@@ -1270,6 +1293,11 @@ img{max-width: 100%}
           Warm Fusion system + 1-month mentorship
         </li>
       </ul>
+      <div class="seatmeter" data-seats hidden aria-live="polite">
+        <div class="sm-top"><span class="sm-n"><span data-seats-taken>0</span><span class="sm-cap">/<span data-seats-cap>30</span></span></span><span class="sm-l">seats taken</span><span class="sm-live"><i></i>LIVE</span></div>
+        <div class="sm-bar" data-seats-bar role="img" aria-label="Seats taken"></div>
+        <p class="sm-note" data-seats-note></p>
+      </div>
       <a href="https://paystack.shop/pay/mavenba" target="_blank" rel="noopener" class="btn" style="margin-top: 18px; width: 100%; justify-content: center">Reserve my seat — ₦20,000</a>
       <p class="center mono" style="font-size: .78rem; color: var(--muted); margin-top: 12px">Paystack &amp; card · secured checkout</p>
     </div>
@@ -1297,6 +1325,11 @@ img{max-width: 100%}
   <div class="panel-dark center reveal-item">
     <h2 style="font-size: clamp(1.5rem, 3.2vw, 2rem)">Thirty seats. You could have one.</h2>
     <p style="color: #C4C9BF; max-width: 50ch; margin: 14px auto 0">Join the founding cohort, build something real in 5 live days, and walk away with it shipped — with taste.</p>
+    <div class="seatmeter" data-seats hidden aria-live="polite">
+      <div class="sm-top"><span class="sm-n"><span data-seats-taken>0</span><span class="sm-cap">/<span data-seats-cap>30</span></span></span><span class="sm-l">seats taken</span><span class="sm-live"><i></i>LIVE</span></div>
+      <div class="sm-bar" data-seats-bar role="img" aria-label="Seats taken"></div>
+      <p class="sm-note" data-seats-note></p>
+    </div>
     <a href="https://paystack.shop/pay/mavenba" target="_blank" rel="noopener" class="btn" style="margin-top: 22px">Reserve my seat — ₦20,000</a>
   </div>
 </div>
@@ -1995,6 +2028,33 @@ var MavenFac = (function(){
       bounceDismissed = true;
     });
   }
+})();
+</script>
+<script>
+// LIVE SEAT COUNTER — reads /api/seats (real successful Paystack payments). If it fails, the counter stays hidden.
+(function(){
+  var meters=document.querySelectorAll('[data-seats]'); var shorts=document.querySelectorAll('[data-seats-short]');
+  fetch('/api/seats',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+    if(typeof d.taken!=='number'||typeof d.cap!=='number')return;
+    var note = d.full ? 'This cohort is full. The next one opens soon.'
+      : d.taken===0 ? 'Be the first of ' + d.cap + '.'
+      : d.left<=5 ? 'Only ' + d.left + (d.left===1?' seat':' seats') + ' left at ₦20,000.'
+      : d.left + ' seats left at the founding price.';
+    meters.forEach(function(m){
+      m.querySelector('[data-seats-taken]').textContent=d.taken;
+      m.querySelector('[data-seats-cap]').textContent=d.cap;
+      var bar=m.querySelector('[data-seats-bar]'); bar.style.setProperty('--cap',d.cap); bar.innerHTML='';
+      bar.setAttribute('aria-label', d.taken+' of '+d.cap+' seats taken');
+      for(var i=0;i<d.cap;i++){var c=document.createElement('span'); if(i<d.taken)c.className='on'; bar.appendChild(c);}
+      m.querySelector('[data-seats-note]').textContent=note; m.hidden=false;
+    });
+    shorts.forEach(function(s){ s.textContent = d.full ? 'cohort full' : d.taken+'/'+d.cap+' seats taken'; });
+    if(d.full){
+      document.querySelectorAll('a[href*="paystack.shop/pay/mavenba"]').forEach(function(a){
+        a.removeAttribute('href'); a.setAttribute('aria-disabled','true'); a.textContent='This cohort is full';
+      });
+    }
+  }).catch(function(){});
 })();
 </script>
 </body>

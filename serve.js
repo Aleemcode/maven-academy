@@ -20,6 +20,15 @@ const server = http.createServer((req, res) => {
     reqPath = '/index.html';
   }
 
+  if (reqPath === '/api/seats') {
+    try {
+      return require('./api/seats.js')(req, res);
+    } catch(err) {
+      res.writeHead(503, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'local_handler_error' }));
+    }
+  }
+
   const ROOT_DIR = path.resolve(__dirname);
   let filePath = path.resolve(ROOT_DIR, '.' + reqPath);
 
