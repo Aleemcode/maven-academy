@@ -369,11 +369,11 @@ img{max-width: 100%}
 #maven-fac.open{ opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
 .fac-x{ position: absolute; top: 12px; right: 14px; z-index: 2; appearance: none; background: var(--paper); border: 2px solid var(--forest); color: var(--forest); width: 34px; height: 34px; border-radius: 50%; font-size: 1.1rem; line-height: 1; cursor: pointer; display: grid; place-items: center; }
 .fac-x:hover{ background: var(--terra); }
-.fac-portrait{ position: relative; height: 230px; background: radial-gradient(120% 120% at 50% 0%, var(--forest2) 0%, var(--forest) 70%); overflow: hidden; display: grid; place-items: center; }
+.fac-portrait{ position: relative; height: 252px; background: radial-gradient(120% 120% at 50% 0%, var(--forest2) 0%, var(--forest) 70%); overflow: hidden; display: grid; place-items: center; }
 .fac-portrait .blob{ position: absolute; width: 150%; height: 150%; left: -25%; top: -25%; opacity: .5; }
 /* animated flow placeholder — swapped for Aleem's image on share */
 .fac-portrait .ph{ position: relative; z-index: 1; width: 128px; height: 128px; border-radius: 50%; background: var(--cream); border: 3px solid var(--terra); display: grid; place-items: center; font-family: var(--disp); font-weight: 800; font-size: 3rem; color: var(--forest); box-shadow: 0 10px 30px rgba(7,13,9,.4); animation: facFloat 5s var(--ease) infinite; }
-.fac-portrait img.fac-photo{ position: relative; z-index: 1; width: auto; height: 190px; border-radius: 14px; object-fit: cover; animation: facFloat 5s var(--ease) infinite; filter: drop-shadow(0 12px 28px rgba(7,13,9,.45)); }
+.fac-portrait img.fac-photo{ position: relative; z-index: 1; width: 150px; height: 200px; border-radius: 16px; object-fit: cover; object-position: 50% 12%; border: 3px solid var(--cream); box-shadow: 6px 6px 0 var(--terra), 0 16px 34px rgba(7,13,9,.45); animation: facFloat 5s var(--ease) infinite; }
 @keyframes facFloat{ 0%,100%{ transform: translateY(0) scale(1); } 50%{ transform: translateY(-10px) scale(1.015); } }
 .fac-body{ padding: 22px 24px 26px; }
 .fac-body .eyebrow{ color: var(--terra-deep); }
@@ -795,7 +795,7 @@ img{max-width: 100%}
   <button class="fac-x" type="button" aria-label="Close">&times;</button>
   <div class="fac-portrait">
     <svg class="blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path fill="#33473B" d="M44,-58C56,-49,63,-33,66,-16C69,1,67,19,58,33C49,47,33,56,15,62C-3,68,-23,70,-39,62C-55,54,-67,36,-71,17C-75,-3,-71,-24,-60,-38C-49,-52,-31,-59,-13,-62C5,-65,24,-67,44,-58Z" transform="translate(100 100)"><animate attributeName="d" dur="14s" repeatCount="indefinite" values="M44,-58C56,-49,63,-33,66,-16C69,1,67,19,58,33C49,47,33,56,15,62C-3,68,-23,70,-39,62C-55,54,-67,36,-71,17C-75,-3,-71,-24,-60,-38C-49,-52,-31,-59,-13,-62C5,-65,24,-67,44,-58Z;M50,-62C62,-52,67,-33,69,-15C71,3,70,22,61,36C52,50,35,59,17,64C-1,69,-21,70,-38,62C-55,54,-69,37,-73,18C-77,-1,-72,-22,-61,-37C-50,-52,-33,-61,-15,-64C3,-67,25,-72,50,-62Z;M44,-58C56,-49,63,-33,66,-16C69,1,67,19,58,33C49,47,33,56,15,62C-3,68,-23,70,-39,62C-55,54,-67,36,-71,17C-75,-3,-71,-24,-60,-38C-49,-52,-31,-59,-13,-62C5,-65,24,-67,44,-58Z"/></path></svg>
-    <div class="ph">A</div>
+    <img class="fac-photo" src="/assets/aleem-facilitator.jpg" alt="Aleem Akinyoola, facilitator of Maven Builder Academy" width="150" height="200" loading="lazy" decoding="async">
   </div>
   <div class="fac-body">
     <span class="eyebrow">Meet the facilitator</span>
