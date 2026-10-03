@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Maven Builder Academy — Top 1% AI Builder & Designer</title>
+<script src="/assets/site-config.js"></script>
 <link rel="icon" type="image/svg+xml" href="/assets/brand/maven-mark-dark.svg">
 <meta name="description" content="Maven Builder Academy — become a builder with a designer's eye. Master Stitch, Claude, and Antigravity. Founding cohort opens October.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2091,6 +2092,15 @@ var MavenFac = (function(){
   var meters=document.querySelectorAll('[data-seats]'); var shorts=document.querySelectorAll('[data-seats-short]');
   fetch('/api/seats',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
     if(typeof d.taken!=='number'||typeof d.cap!=='number')return;
+    // Full cohort always locks the Reserve buttons, even while the counter is hidden.
+    if(d.full){
+      document.querySelectorAll('a[href*="paystack.shop/pay/mavenba"]').forEach(function(a){
+        a.removeAttribute('href'); a.setAttribute('aria-disabled','true'); a.textContent='This cohort is full';
+      });
+    }
+    // Only reveal the public counter once enough seats are taken (threshold in /assets/site-config.js).
+    var showFrom = (typeof window.MAVEN_SEATS_SHOW_FROM==='number') ? window.MAVEN_SEATS_SHOW_FROM : 20;
+    if(d.taken < showFrom && !d.full) return;
     var note = d.full ? 'This cohort is full. The next one opens soon.'
       : d.taken===0 ? 'Be the first of ' + d.cap + '.'
       : d.left<=5 ? 'Only ' + d.left + (d.left===1?' seat':' seats') + ' left at ₦20,000.'
@@ -2104,15 +2114,9 @@ var MavenFac = (function(){
       m.querySelector('[data-seats-note]').textContent=note; m.hidden=false;
     });
     shorts.forEach(function(s){ s.textContent = d.full ? 'cohort full' : d.taken+'/'+d.cap+' seats taken'; });
-    if(d.full){
-      document.querySelectorAll('a[href*="paystack.shop/pay/mavenba"]').forEach(function(a){
-        a.removeAttribute('href'); a.setAttribute('aria-disabled','true'); a.textContent='This cohort is full';
-      });
-    }
   }).catch(function(){});
 })();
 </script>
-<script src="/assets/site-config.js"></script>
 <script>
 // WhatsApp links — number lives in /assets/site-config.js
 (function(){
