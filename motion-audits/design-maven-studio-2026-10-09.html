@@ -1,0 +1,1240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maven Academy — Motion Audit · pass 3 · 2026-10-09</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ——— Fixed identity: COOL slate-graphite + chalk (near-achromatic) ——— */
+    --ink:        oklch(0.155 0.006 255);
+    --surface:    oklch(0.195 0.007 255);
+    --surface-2:  oklch(0.235 0.008 255);
+    --paper:      oklch(0.945 0.004 255);
+    --paper-dim:  oklch(0.800 0.006 255);
+    --muted:      oklch(0.680 0.008 255);
+    --faint:      oklch(0.505 0.008 255);
+    --line:       oklch(0.95 0.01 255 / 0.09);
+    --line-strong:oklch(0.95 0.01 255 / 0.16);
+
+    /* ——— Accent (NEUTRAL BY DEFAULT) ———
+       The report has no primary color. --accent aliases the contrast
+       neutral (--paper) so any element that historically wanted a brand
+       splash now reads as quiet chrome. An individual audit can repoint
+       these three to a sampled brand color if appropriate, but the
+       default — and the worked example — keeps the chrome neutral and
+       lets severity be the only color in the report. */
+    --accent:      var(--paper);
+    --accent-soft: var(--paper-dim);
+    --accent-tint: color-mix(in oklch, var(--paper) 12%, transparent);
+
+    /* ——— Severity (FIXED — never adaptive) ——— */
+    --crit:      oklch(0.655 0.185 25);
+    --crit-tint: oklch(0.655 0.185 25 / 0.15);
+    --imp:       oklch(0.805 0.125 78);
+    --imp-tint:  oklch(0.805 0.125 78 / 0.15);
+    --opp:       oklch(0.745 0.135 152);
+    --opp-tint:  oklch(0.745 0.135 152 / 0.15);
+
+    /* ——— Timing-budget ramp (FIXED — diagram + its legend only) ——— */
+    --t-good:  oklch(0.745 0.135 152);  /* instant + responsive */
+    --t-mid:   oklch(0.805 0.125 78);   /* deliberate           */
+    --t-slow:  oklch(0.655 0.185 25);   /* sluggish             */
+
+    /* ——— Verdict (FIXED — lens table) ——— */
+    --strong:  var(--opp);
+    --concern: var(--imp);
+    --problem: var(--crit);
+
+    /* ——— Spacing (4pt scale, semantic) ——— */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:32px; --s7:48px; --s8:64px; --s9:96px;
+
+    --display: "Familjen Grotesk", "Hanken Grotesk", system-ui, sans-serif;
+    --sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  /* ═══════════════ LIGHT-MODE OVERRIDES ═══════════════
+     Activated when the global theme toggle is set to Light. Every token
+     above gets a counterpart here — same hue, mirrored L — so the report
+     reads cleanly on light backgrounds. Hue stays 255 (cool slate) so the
+     identity is the same character, just inverted. */
+  :root:has(#theme-light:checked) {
+    --ink:        oklch(0.985 0.003 255);  /* light page bg */
+    --surface:    oklch(0.965 0.004 255);
+    --surface-2:  oklch(0.940 0.005 255);
+    --paper:      oklch(0.180 0.006 255);  /* dark text */
+    --paper-dim:  oklch(0.330 0.008 255);
+    --muted:      oklch(0.475 0.010 255);
+    --faint:      oklch(0.640 0.009 255);
+    --line:       oklch(0.180 0.010 255 / 0.12);
+    --line-strong:oklch(0.180 0.010 255 / 0.22);
+
+    /* Accent stays aliased to --paper (now the dark ink in light mode),
+       so chrome inverts automatically. No additional override needed. */
+
+    /* Severity: same hues, deeper L for legibility on light bg */
+    --crit:      oklch(0.555 0.195 25);
+    --crit-tint: oklch(0.555 0.195 25 / 0.12);
+    --imp:       oklch(0.580 0.155 78);
+    --imp-tint:  oklch(0.580 0.155 78 / 0.14);
+    --opp:       oklch(0.555 0.140 152);
+    --opp-tint:  oklch(0.555 0.140 152 / 0.13);
+
+    /* Timing ramp follows severity */
+    --t-good: oklch(0.555 0.140 152);
+    --t-mid:  oklch(0.580 0.155 78);
+    --t-slow: oklch(0.555 0.195 25);
+  }
+
+  /* SVG dot label: light text in light-mode (deeper dots), dark text in dark-mode (lighter dots) */
+  :root:has(#theme-light:checked) .tf-dot-text { fill: oklch(0.985 0.003 255); }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--accent-tint); }
+  a { color: var(--accent-soft); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: clamp(40px, 6vw, 72px) clamp(20px, 5vw, 40px) 96px; }
+
+  /* shared micro-label */
+  .mono-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  code { font-family: var(--mono); font-size: 0.86em; color: var(--paper-dim); }
+
+  /* visually-hidden (theme + stage radios) */
+  .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* ───────────── Global theme switch ───────────── */
+  .theme-switch { display: flex; justify-content: flex-end; margin-bottom: var(--s5); }
+  .theme-switch__pill { display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--line-strong); border-radius: 100px; overflow: hidden; }
+  .theme-switch__pill label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding: 6px 14px; cursor: pointer; user-select: none; transition: background 0.15s ease, color 0.15s ease; }
+  #theme-dark:checked  ~ .theme-switch__pill label[for="theme-dark"],
+  #theme-light:checked ~ .theme-switch__pill label[for="theme-light"] { background: var(--accent-tint); color: var(--accent-soft); }
+
+  /* ───────────── Header ───────────── */
+  header.doc { padding-bottom: var(--s7); margin-bottom: var(--s8); border-bottom: 1px solid var(--line); }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); display: inline-flex; align-items: center; gap: var(--s3);
+  }
+  .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--accent); display: inline-block; }
+  h1.title {
+    font-family: var(--display);
+    font-size: clamp(38px, 6vw, 60px);
+    font-weight: 700; letter-spacing: -0.025em; line-height: 1.02;
+    margin: var(--s5) 0 var(--s4); color: var(--paper); max-width: 17ch;
+  }
+  .lede { font-size: clamp(17px, 2.2vw, 19px); color: var(--paper-dim); max-width: 66ch; line-height: 1.6; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: var(--s6); margin-top: var(--s6); }
+  .meta-row .k { display: block; margin-bottom: 4px; }
+  .meta-row .v { font-size: 15px; color: var(--paper); }
+
+  .stats { display: flex; gap: clamp(20px, 4vw, 44px); margin-top: var(--s7); flex-wrap: wrap; }
+  .stat .num { font-family: var(--display); font-size: 40px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat.crit .num { color: var(--crit); }
+  .stat.imp .num  { color: var(--imp); }
+  .stat.opp .num  { color: var(--opp); }
+  .stat .lbl { margin-top: var(--s2); }
+  .stat a { color: inherit; text-decoration: none; }
+  .stat a:hover .num { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; }
+
+  /* ───────────── Section scaffolding ───────────── */
+  section { margin-bottom: var(--s9); }
+  .sec-index { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--accent-soft); }
+  h2.section-title {
+    font-family: var(--display);
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;
+    margin: var(--s2) 0 var(--s4); color: var(--paper);
+  }
+  .section-sub { color: var(--paper-dim); max-width: 74ch; margin: 0 0 var(--s6); }
+  .section-sub em { color: var(--paper); font-style: italic; }
+
+  /* ───────────── Overall assessment ───────────── */
+  .assessment { border-top: 1px solid var(--line); padding-top: var(--s6); }
+  .assessment .mono-label { color: var(--accent-soft); }
+  .assessment p { font-family: var(--display); font-weight: 400; font-size: clamp(20px, 2.8vw, 26px); line-height: 1.42; letter-spacing: -0.01em; color: var(--paper); max-width: 34ch; margin: var(--s4) 0 0; }
+  .assessment p em { font-style: italic; color: var(--accent-soft); }
+
+  /* ───────────── Lens summary table ───────────── */
+  .lens-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); }
+  .lens-table th, .lens-table td { padding: var(--s4) var(--s5); text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .lens-table tr:last-child td { border-bottom: none; }
+  .lens-table thead th { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+  .lens-table tbody tr:hover { background: oklch(0.95 0.01 255 / 0.018); }
+  .lens-name { font-weight: 600; color: var(--paper); width: 28%; }
+  .lens-name .who { display: block; margin-top: 2px; color: var(--muted); font-weight: 400; font-size: 13.5px; }
+  .lens-name .weight { display: inline-block; margin-top: 6px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .lens-read { color: var(--paper-dim); }
+  .lens-read em { color: var(--paper); font-style: italic; }
+  .verdict { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+  .verdict::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .v-strong  { color: var(--strong); }  .v-strong::before  { background: var(--strong); }
+  .v-concern { color: var(--concern); } .v-concern::before { background: var(--concern); }
+  .v-problem { color: var(--problem); } .v-problem::before { background: var(--problem); }
+  .v-mixed   { color: var(--muted); }   .v-mixed::before   { background: var(--muted); }
+
+  /* ───────────── Timing-budget diagram ───────────── */
+  .timing-grid { display: grid; grid-template-columns: 1fr 320px; gap: clamp(28px, 5vw, 56px); align-items: start; }
+  @media (max-width: 860px) { .timing-grid { grid-template-columns: 1fr; } }
+  .timing-figure { width: 100%; height: auto; }
+  .timing-key h4 { margin: 0 0 var(--s4); }
+  .key-list { list-style: none; margin: 0 0 var(--s6); padding: 0; display: grid; gap: 2px; }
+  .key-list li { display: grid; grid-template-columns: 22px 1fr auto; align-items: baseline; gap: var(--s3); padding: var(--s2) 0; border-bottom: 1px solid var(--line); }
+  .key-list li:last-child { border-bottom: none; }
+  .key-list .kn { font-family: var(--mono); font-size: 12px; color: var(--paper); font-variant-numeric: tabular-nums; }
+  .key-list .ka { color: var(--paper-dim); }
+  .key-list .kt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+  .kt.good { color: var(--t-good); }
+  .kt.mid  { color: var(--t-mid); }
+  .kt.slow { color: var(--t-slow); }
+  .kt.none { color: var(--faint); }
+  .zone-defs { display: grid; gap: var(--s3); margin-top: var(--s5); }
+  .zone-def { display: grid; grid-template-columns: 12px 1fr; gap: var(--s3); align-items: start; }
+  .zone-def .dot { width: 11px; height: 11px; border-radius: 50%; margin-top: 6px; }
+  .zone-def .zt { font-weight: 600; color: var(--paper); }
+  .zone-def .zd { font-size: 13.5px; color: var(--muted); }
+  .whats-off { margin-top: var(--s5); padding-top: var(--s5); border-top: 1px solid var(--line); }
+  .whats-off .mono-label { color: var(--accent-soft); }
+  .whats-off p { margin: var(--s2) 0 0; color: var(--paper-dim); font-size: 14px; max-width: 60ch; }
+
+  /* ───────────── Per-lens sections ───────────── */
+  .lens-sec { margin-bottom: var(--s9); padding-top: var(--s6); border-top: 1px solid var(--line); }
+  .lens-sec__head { display: flex; align-items: baseline; gap: var(--s4); flex-wrap: wrap; margin-bottom: var(--s2); }
+  .lens-sec__head h3 { font-family: var(--display); font-size: clamp(22px, 3vw, 28px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin: 0; color: var(--paper); }
+  .lens-sec__weight { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-soft); border: 1px solid var(--line-strong); border-radius: 100px; padding: 4px 10px; }
+  .lens-sec__verdict { margin: 0 0 var(--s6); }
+
+  .lens-block { margin: var(--s6) 0; }
+  .lens-block > .mono-label { display: block; margin-bottom: var(--s4); }
+  .lens-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); max-width: 78ch; }
+  .lens-list li { display: grid; grid-template-columns: 22px 1fr; gap: var(--s2); align-items: start; color: var(--paper-dim); }
+  .lens-list .mk { font-family: var(--mono); font-size: 13px; line-height: 1.5; }
+  .lens-list.good .mk { color: var(--strong); }
+  .lens-list.opp .mk  { color: var(--accent-soft); }
+  .lens-list li em { color: var(--paper); font-style: italic; }
+
+  .lens-take { margin-top: var(--s6); background: var(--surface-2); border-radius: 10px; padding: var(--s5); }
+  .lens-take .mono-label { color: var(--accent-soft); display: block; margin-bottom: var(--s2); }
+  .lens-take p { margin: 0; color: var(--paper); max-width: 70ch; }
+
+  .lens-empty { font-style: italic; color: var(--faint); padding: var(--s3) 0; }
+
+  /* ───────────── Finding rows (prose + live demo card) ───────────── */
+  .findings { display: flex; flex-direction: column; gap: var(--s5); }
+  .finding-row { display: grid; grid-template-columns: 1fr 380px; gap: clamp(24px, 3vw, 36px); align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: clamp(22px, 3vw, 30px); }
+  .finding-row[data-sev="crit"] { border-color: var(--crit-tint); }
+  @media (max-width: 860px) { .finding-row { grid-template-columns: 1fr; } }
+
+  .find-tags { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; margin-bottom: var(--s3); }
+  .severity { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; padding: 4px 9px; border-radius: 100px; }
+  .severity.crit { background: var(--crit-tint); color: var(--crit); }
+  .severity.imp  { background: var(--imp-tint);  color: var(--imp); }
+  .severity.opp  { background: var(--opp-tint);  color: var(--opp); }
+  .lens-chip { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 4px 9px; border: 1px solid var(--line-strong); border-radius: 100px; }
+  .find-title { font-family: var(--display); font-size: clamp(19px, 2.4vw, 23px); font-weight: 600; letter-spacing: -0.015em; line-height: 1.22; margin: 0 0 var(--s4); color: var(--paper); }
+  .find-body { display: grid; gap: var(--s4); }
+  .find-body p { margin: 0; color: var(--paper-dim); }
+  .find-body p em { color: var(--paper); font-style: italic; }
+  .find-body .label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  .fix { background: var(--surface-2); border-radius: 8px; padding: var(--s4) var(--s5); }
+  .fix .label { color: var(--accent-soft); }
+  .fix p { color: var(--paper); }
+  .find-loc { font-size: 13px; }
+
+  /* ───────────── Demo card (the centerpiece) ───────────── */
+  .demo { position: relative; align-self: start; position: sticky; top: var(--s5); }
+  @media (max-width: 860px) { .demo { position: static; } }
+  .demo__bar { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s3); }
+  .demo__meta { min-width: 0; }
+  .demo__title { display: block; font-size: 13.5px; font-weight: 600; color: var(--paper); line-height: 1.3; }
+  .demo__timing { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .demo__controls { display: flex; align-items: center; gap: var(--s3); flex-shrink: 0; }
+  .demo__loop { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+
+  /* segmented Auto/Light/Dark stage toggle (pure CSS).
+     Auto = follow global theme via theme tokens. Light/Dark = locked overrides. */
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 100px; overflow: hidden; }
+  .seg label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 4px 9px; cursor: pointer; user-select: none; transition: background 0.15s ease, color 0.15s ease; }
+  .demo input[id$="-a"]:checked ~ .demo__bar .seg label[for$="-a"],
+  .demo input[id$="-l"]:checked ~ .demo__bar .seg label[for$="-l"],
+  .demo input[id$="-d"]:checked ~ .demo__bar .seg label[for$="-d"] { background: var(--accent-tint); color: var(--accent-soft); }
+
+  .demo__stage {
+    /* AUTO default — stage uses the report's elevated surface, follows theme */
+    --st-bg: var(--surface-2);
+    --st-fg: var(--paper);
+    --st-line: var(--line-strong);
+    --st-dim: color-mix(in oklch, var(--paper) 55%, transparent);
+    background: var(--st-bg); color: var(--st-fg);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: var(--s6) var(--s5); min-height: 168px;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  /* Locked Light: hardcoded light, regardless of report theme */
+  .demo input[id$="-l"]:checked ~ .demo__stage {
+    --st-bg: oklch(0.985 0.003 255);
+    --st-fg: oklch(0.180 0.006 255);
+    --st-line: oklch(0.180 0.010 255 / 0.18);
+    --st-dim: oklch(0.180 0.010 255 / 0.45);
+  }
+  /* Locked Dark: hardcoded dark, regardless of report theme */
+  .demo input[id$="-d"]:checked ~ .demo__stage {
+    --st-bg: oklch(0.180 0.006 255);
+    --st-fg: oklch(0.985 0.003 255);
+    --st-line: oklch(0.985 0.010 255 / 0.18);
+    --st-dim: oklch(0.985 0.010 255 / 0.50);
+  }
+
+  /* generic demo primitives, themed by the stage vars
+     (intentionally follow --st-fg/--st-bg, NOT the page accent — so they
+     contrast correctly even when a stage is locked to a different theme
+     than the page). */
+  .ui-btn { display: inline-flex; align-items: center; justify-content: center; padding: 9px 18px; border-radius: 8px; background: var(--st-fg); color: var(--st-bg); font-family: var(--sans); font-size: 13px; font-weight: 600; }
+  .ui-card { background: var(--st-bg); border: 1px solid var(--st-line); border-radius: 10px; padding: 14px 16px; min-width: 180px; box-shadow: 0 8px 24px oklch(0 0 0 / 0.12); }
+  .ui-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--st-fg); }
+  .ui-check { width: 22px; height: 22px; border-radius: 7px; background: var(--st-fg); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ui-check svg { width: 13px; height: 13px; stroke: var(--st-bg); }
+  .ui-num { font-family: var(--display); font-size: 34px; font-weight: 700; color: var(--st-fg); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .ui-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--st-dim); }
+  /* milestone badge + sparks read off stage tokens (--st-fg disc, --st-bg ink),
+     set inline on the elements — same contract as every other stage primitive,
+     never --accent, correct in any locked stage. */
+
+  /* ───────────── Combined recommendations ───────────── */
+  .rec { margin-bottom: var(--s7); }
+  .rec .tier-label { display: flex; align-items: center; gap: var(--s4); margin: 0 0 var(--s4); }
+  .rec .tier-label .mono-label { white-space: nowrap; }
+  .rec .tier-label .rule { height: 1px; background: var(--line); flex: 1; }
+  .rec .tier-label .count { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .rec.crit .mono-label { color: var(--crit); }
+  .rec.imp  .mono-label { color: var(--imp); }
+  .rec.opp  .mono-label { color: var(--opp); }
+  .rec-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); font-size: 14px; }
+  .rec-table th, .rec-table td { text-align: left; padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); vertical-align: top; }
+  .rec-table tr:last-child td { border-bottom: none; }
+  .rec-table thead th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); font-weight: 500; }
+  .rec-table td:first-child { color: var(--paper); }
+  .rec-table td:nth-child(2) { white-space: nowrap; }
+  .rec-table td { color: var(--paper-dim); }
+
+  /* ───────────── Reference summary (closing) ───────────── */
+  .ref-summary { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: clamp(24px, 4vw, 40px); }
+  .ref-summary .big { font-family: var(--display); font-size: clamp(18px, 2.4vw, 22px); font-weight: 600; letter-spacing: -0.015em; color: var(--paper); margin: var(--s2) 0 0; }
+  .ref-summary .why { color: var(--paper-dim); margin: var(--s3) 0 var(--s6); max-width: 64ch; }
+  .ref-lean { display: grid; gap: var(--s3); margin: 0; padding: 0; list-style: none; }
+  .ref-lean li { display: grid; grid-template-columns: 130px 1fr; gap: var(--s4); padding: var(--s3) 0; border-top: 1px solid var(--line); color: var(--paper-dim); font-size: 14px; }
+  .ref-lean .nm { font-weight: 600; color: var(--paper); }
+
+  footer.doc { margin-top: var(--s8); padding-top: var(--s5); border-top: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--s3); }
+
+  /* ───────────── Narrow screens ───────────── */
+  @media (max-width: 600px) {
+    .lens-table { display: block; padding: var(--s2) var(--s4); }
+    .lens-table thead { display: none; }
+    .lens-table tbody, .lens-table tr, .lens-table td { display: block; }
+    .lens-table tr { padding: var(--s4) 0; border-bottom: 1px solid var(--line); }
+    .lens-table tr:last-child { border-bottom: none; }
+    .lens-table td { padding: 0; border: none; }
+    .lens-table .lens-name { width: auto; margin-bottom: var(--s2); }
+    .lens-table .verdict { margin-bottom: var(--s2); }
+    .ref-lean li { grid-template-columns: 1fr; gap: var(--s1); }
+  }
+
+
+  /* ───────────── Pass-2 status ───────────── */
+  .status { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 4px 9px; border-radius: 100px; border: 1px solid var(--line-strong); color: var(--paper-dim); }
+  .status.done::before { content: "✓ "; color: var(--opp); }
+  .status.open::before { content: "○ "; color: var(--faint); }
+  .status.accepted::before { content: "◐ "; color: var(--imp); }
+  .finding-row[data-status="done"] { border-color: var(--line); }
+  .rec-table tr.done td { color: var(--faint); }
+  .rec-table tr.done td:first-child { text-decoration: line-through; text-decoration-color: var(--faint); color: var(--muted); }
+  .rec-table tr.accepted td:first-child { color: var(--muted); }
+  .pass2 { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: clamp(22px, 3vw, 30px); }
+  .pass2 .lens-list li { grid-template-columns: 22px 1fr; }
+  .stat.done .num { color: var(--paper); }
+
+  /* ───────────── Audit-specific stage primitives ───────────── */
+  .ui-bubble { max-width: 78%; padding: 8px 12px; border-radius: 12px; font-size: 12.5px; line-height: 1.4; border: 1px solid var(--st-line); color: var(--st-fg); background: var(--st-bg); }
+  .ui-bubble.me { margin-left: auto; background: var(--st-fg); color: var(--st-bg); border-color: var(--st-fg); border-bottom-right-radius: 4px; }
+  .ui-bubble.bot { border-bottom-left-radius: 4px; }
+  .ui-line { height: 8px; border-radius: 4px; background: var(--st-line); }
+  .ui-pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 7px; border-radius: 100px; background: var(--st-fg); color: var(--st-bg); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .ui-pill .av { width: 22px; height: 22px; border-radius: 50%; background: var(--st-bg); }
+  .flip-scene { perspective: 900px; width: 170px; height: 120px; }
+  .flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotateY(180deg); }
+  .flip-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 10px; border: 1px solid var(--st-line); padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+  .flip-face.front { background: var(--st-bg); }
+  .flip-face.back { background: var(--st-fg); color: var(--st-bg); transform: rotateY(180deg); font-size: 12px; line-height: 1.4; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lens-table tbody tr, .finding-row { transition: border-color 0.2s ease; }
+
+    /* 01 · reduced-motion fallback — opacity only, 150ms linear */
+    @keyframes m1 {
+      0%   { opacity: 0; }
+      6%   { opacity: 1; }
+      100% { opacity: 1; }
+    }
+    .demo-1__mt { animation: m1 3s linear infinite; }
+
+    /* 02 · FAQ answer reveal — 220ms ease-out (clip + 4px drop) */
+    @keyframes m2 {
+      0%, 12% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(-4px); }
+      22%  { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+      100% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
+    }
+    @keyframes m2icon {
+      0%, 12% { transform: rotate(0deg); }
+      30%, 100% { transform: rotate(135deg); }
+    }
+    .demo-2__mt .ans { animation: m2 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+    .demo-2__mt .ic { display: inline-block; animation: m2icon 3s cubic-bezier(.34,1.42,.52,1) infinite; }
+
+    /* 03 · chat message enter — 200ms, opacity + 6px rise + 4px blur */
+    @keyframes m3 {
+      0%   { opacity: 0; transform: translateY(16px) scale(.86); filter: blur(5px); }
+      18%  { opacity: 1; transform: translateY(0);   filter: blur(0); }
+      100% { opacity: 1; transform: translateY(0);   filter: blur(0); }
+    }
+    @keyframes m3b {
+      0%, 14% { opacity: 0; transform: translateY(16px) scale(.86); filter: blur(5px); }
+      32%  { opacity: 1; transform: translateY(0); filter: blur(0); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    .demo-3__mt .me  { animation: m3 3s cubic-bezier(.34,1.42,.52,1) infinite; transform-origin: bottom right; }
+    .demo-3__mt .bot { animation: m3b 3s cubic-bezier(.34,1.42,.52,1) infinite; transform-origin: bottom left; }
+
+    /* 04 · section-head reveal only — 360ms, 12px rise; body copy stays put */
+    @keyframes m4 {
+      0%   { opacity: 0; transform: translateY(12px); }
+      12%  { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .demo-4__mt .head { animation: m4 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 05 · fast loader handoff — mascot settles 400ms, overlay lifts 300ms */
+    @keyframes m5mascot {
+      0%   { opacity: 0; transform: translateY(-18px); }
+      13%  { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes m5veil {
+      0%, 20% { opacity: 1; }
+      30%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+    .demo-5__mt .veil { animation: m5veil 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+    .demo-5__mt .veil .mascot { animation: m5mascot 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 06 · press-to-flip 180° — 450ms ease-out-quint */
+    @keyframes m6 {
+      0%, 15% { transform: rotateY(0deg); }
+      45%  { transform: rotateY(180deg); }
+      100% { transform: rotateY(180deg); }
+    }
+    .demo-6__mt .flip-inner { animation: m6 3s cubic-bezier(.34,1.42,.52,1) infinite; }
+
+    /* 07 · one-time launcher nudge — 2 × 4px, 500ms total, never opens the panel */
+    @keyframes m7 {
+      0%, 10% { transform: translateY(0); }
+      15%  { transform: translateY(-4px); }
+      20%  { transform: translateY(0); }
+      25%  { transform: translateY(-3px); }
+      30%  { transform: translateY(0); }
+      100% { transform: translateY(0); }
+    }
+    .demo-7__mt .ui-pill { animation: m7 3s cubic-bezier(0.33,1,0.68,1) infinite; }
+
+    /* 08 · prompt card enter — 320ms ease-out-quint, no overshoot */
+    @keyframes m8 {
+      0%   { opacity: 0; transform: translateY(28px); }
+      11%  { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .demo-8__mt { animation: m8 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 09 · single ping on update, then still */
+    @keyframes m9 {
+      0%, 10% { opacity: 0.55; transform: scale(1); }
+      40%  { opacity: 0; transform: scale(2.6); }
+      100% { opacity: 0; transform: scale(2.6); }
+    }
+    .demo-9__mt .ring { animation: m9 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+
+    /* 10 · follower driven by transform (lerp each frame → translate3d) */
+    @keyframes m10 {
+      0%   { transform: translate3d(-80px, 18px, 0); }
+      25%  { transform: translate3d(50px, -16px, 0); }
+      50%  { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(0, 0, 0); }
+    }
+    .demo-10__mt .follower { animation: m10 3s cubic-bezier(0.22,1,0.36,1) infinite; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .demo__loop { display: none; }
+    [class*="__mt"], [class*="__mt"] * { animation: none !important; transition: none !important; }
+  }
+  .demo-5__mt .veil { opacity: 0; }
+  .demo-9__mt .ring { opacity: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="theme-switch" role="radiogroup" aria-label="Report theme">
+    <input class="vh" type="radio" name="theme" id="theme-dark" checked>
+    <input class="vh" type="radio" name="theme" id="theme-light">
+    <div class="theme-switch__pill">
+      <label for="theme-dark">Dark</label>
+      <label for="theme-light">Light</label>
+    </div>
+  </div>
+
+  <header class="doc">
+    <div class="eyebrow">Motion audit · pass 3 · design-motion-principles</div>
+    <h1 class="title">Maven Academy, pass 3: heavier where it's earned, quiet everywhere else</h1>
+    <p class="lede">
+      This audit covers <code>index.html</code> (the landing page) and <code>welcome.html</code> (the page people see after paying).
+      In pass 2 the direction changed to <em>heavier, more physical interactions</em>, so Jhey's playful lens now leads, Jakub keeps it polished, and Emil applies
+      only where motion slows down the path to Reserve. The fixes from pass 1 were built with more weight, and pass 3 closed every remaining finding. Each one below is marked with the pass that resolved it.
+    </p>
+    <div class="meta-row">
+      <div><span class="mono-label k">What it is</span><span class="v">A marketing page for a cohort course: 30 seats at ₦20,000</span></div>
+      <div><span class="mono-label k">Stack</span><span class="v">Static HTML · plain CSS + JS · WebGL + canvas</span></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num">16</div><div class="mono-label lbl">Findings</div></div>
+      <div class="stat done"><a href="#pass3"><div class="num">16</div><div class="mono-label lbl">Resolved / accepted</div></a></div>
+      <div class="stat crit"><a href="#rec-crit"><div class="num">0</div><div class="mono-label lbl">Critical open</div></a></div>
+      <div class="stat imp"><a href="#rec-imp"><div class="num">0</div><div class="mono-label lbl">Important open</div></a></div>
+      <div class="stat opp"><a href="#rec-opp"><div class="num">0</div><div class="mono-label lbl">Opportunities open</div></a></div>
+    </div>
+  </header>
+
+  <section class="assessment">
+    <span class="mono-label">Overall</span>
+    <p>
+      Pass 2 puts the weight where people actually interact. The FAQ, the chat, the Vault cards and the seat bar now move with real mass,
+      and the welcome page finally celebrates the payment. Reduced-motion support is now complete.
+      Pass 3 removed the <em>uninvited</em> motion: the intro plays once per visitor, the chat never opens on its own, the pulses are gone,
+      and the loops sleep when nothing is moving. Weight now only shows up where someone asked for it.
+    </p>
+  </section>
+
+  <section id="pass3">
+    <div class="sec-index">00</div>
+    <h2 class="section-title">What changed in pass 3</h2>
+    <p class="section-sub">The eight findings left open after pass 2 are now built and checked in Chrome (first visit, return visit, chat, FAQ). Every change has a reduced-motion fallback.</p>
+    <div class="pass2">
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span><em>Intro once per visitor (finding 5).</em> The loader and guide play on the first visit only. A tiny inline script in <code>&lt;head&gt;</code> reads <code>maven-intro-seen</code> before first paint, so returning visitors never see a flash of the loader.</span></li>
+        <li><span class="mk">✓</span><span><em>No uninvited chat (finding 7).</em> After 15s idle the launcher nudges once (900ms <code>--heavy</code> double bounce) instead of opening the panel. Clicking the background no longer opens the chat or the facilitator; it only closes whatever is open.</span></li>
+        <li><span class="mk">✓</span><span><em>No endless pulses (finding 9).</em> The hero dot is still. The seat counter's live dot plays one 1.1s ping when the data arrives, then stops.</span></li>
+        <li><span class="mk">✓</span><span><em>Reveal with meaning (finding 4).</em> Down from 37 blocks to 13 section heads plus 5 signature blocks. Heads rise 28px over 900ms with <code>--spring</code>; signature blocks land from 64px with a slight scale and <code>--heavy</code>, so the two read differently.</span></li>
+        <li><span class="mk">✓</span><span><em>Performance (finding 10).</em> The follower and guide bubble move with <code>transform</code> and the <code>translate</code> property, not <code>left/top</code>. The brick field sleeps after about 30 calm frames and wakes on mouse movement. The Vault gradients drift an oversized layer with <code>transform</code> instead of repainting <code>background-position</code>.</span></li>
+        <li><span class="mk">✓</span><span><em>Quieter close.</em> The chat and facilitator modal open with weight (450–500ms <code>--heavy</code>) and close in 180–200ms with a shorter travel.</span></li>
+        <li><span class="mk">✓</span><span><em>Marquee pauses</em> on hover and keyboard focus (WCAG 2.2.2).</span></li>
+        <li><span class="mk">✓</span><span><em>One easing feel.</em> No bare <code>ease</code> is left in <code>index.html</code> or <code>welcome.html</code>.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="pass2">
+    <div class="sec-index">00</div>
+    <h2 class="section-title">What changed in pass 2</h2>
+    <p class="section-sub">Built to the new direction: heavier and more physical, but only on things the visitor triggers or the rare moments that have earned it. Every new animation has a reduced-motion fallback in the same code.</p>
+    <div class="pass2">
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span><em>New easing token.</em> <code>--heavy: cubic-bezier(.34,1.42,.52,1)</code> adds mass and a small overshoot for weighted moments, alongside the existing <code>--ease</code> and <code>--spring</code>. <code>index.html:47</code></span></li>
+        <li><span class="mk">✓</span><span><em>FAQ (finding 2).</em> The answer height animates over 550ms using <code>::details-content</code> and <code>interpolate-size</code>. The answer text drops in and comes into focus, the plus icon turns 135° with an overshoot, and the open card lifts −3px onto its hard shadow.</span></li>
+        <li><span class="mk">✓</span><span><em>Chat (finding 3).</em> A three-dot typing indicator shows for 800ms, then each bubble lands from its own corner (scaling up from .86 and coming into focus) over 550ms with <code>--heavy</code>. The panel smooth-scrolls to the newest message.</span></li>
+        <li><span class="mk">✓</span><span><em>Vault (finding 6).</em> Hover spins are gone. The card now tilts toward the cursor (up to ±12° and ±16°) like a physical object, and click, tap or Enter does a weighted 180° flip over 900ms. Focus alone no longer animates.</span></li>
+        <li><span class="mk">✓</span><span><em>Reduced motion (finding 1).</em> Smooth scrolling, <code>scrollIntoView</code> and the bottom card now respect the preference, along with every new animation.</span></li>
+        <li><span class="mk">✓</span><span><em>Seat bar.</em> When the meter scrolls into view, taken seats drop in one at a time (45ms apart, 600ms each, <code>--heavy</code>).</span></li>
+        <li><span class="mk">✓</span><span><em>Maven reacts to Reserve.</em> Hovering any Reserve button makes the cursor mascot hop with a 700ms tilt.</span></li>
+        <li><span class="mk">✓</span><span><em>welcome.html celebration.</em> Maven drops in from above, 12 sparks burst outward, the card lands with a slight rotation, then the chip, headline, steps and WhatsApp button settle in order over about 2.3s. It plays once on arrival. <code>welcome.html:40</code></span></li>
+        <li><span class="mk">◐</span><span><em>Accepted under the new direction.</em> The bottom card keeps its overshoot (finding 8), since bounce now fits the brief. The scroll reveal was made heavier (40px over 900ms), but it's still the same on all 37 blocks, so finding 4 stays open.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-index">01</div>
+    <h2 class="section-title">How each designer's lens reads the motion</h2>
+    <p class="section-sub">
+      Re-weighted for pass 2: heavier, more physical motion is the brief, so Jhey leads. The page still has one goal (read, trust, Reserve),
+      so Emil still checks anything that moves without the visitor asking.
+    </p>
+    <table class="lens-table">
+      <thead><tr><th>Lens</th><th>Verdict</th><th>One-line read</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="lens-name">Production Polish <span class="who">Jakub Krehel</span><span class="weight">Secondary</span></td>
+          <td><span class="verdict v-mixed">Mixed</span></td>
+          <td class="lens-read">The FAQ and chat are now properly finished. The fade-up is still <em>the same</em> on 37 blocks, and closing still mirrors opening.</td>
+        </tr>
+        <tr>
+          <td class="lens-name">Experimentation &amp; Delight <span class="who">Jhey Tompkins</span><span class="weight">Primary</span></td>
+          <td><span class="verdict v-strong">Strong</span></td>
+          <td class="lens-read">The welcome-page celebration, the tilting Vault cards and Maven hopping at Reserve make the mascot's energy respond to the visitor instead of interrupting them.</td>
+        </tr>
+        <tr>
+          <td class="lens-name">Restraint &amp; Speed <span class="who">Emil Kowalski</span><span class="weight">Selective</span></td>
+          <td><span class="verdict v-problem">Problem</span></td>
+          <td class="lens-read">The hover spins are fixed, but the 2.7s loader on <em>every</em> refresh, the self-opening chat and the loops that never pause remain, and they weigh more now.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="sec-index">02</div>
+    <h2 class="section-title">Where the timings land</h2>
+    <p class="section-sub">
+      Pass 2 deliberately moved the interactions into the slower zones: the FAQ, chat and Vault now take 550–900ms because the brief asks for weight.
+      They're fine there because the visitor triggers each one. The loader (9) is the exception: it's still slow and still unprompted.
+    </p>
+    <div class="timing-grid">
+      <svg class="timing-figure" viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Duration scale from 0 to 600 milliseconds showing where the site's animations fall">
+        <style>
+          .tf-track-stop-good { stop-color: var(--t-good); }
+          .tf-track-stop-mid  { stop-color: var(--t-mid); }
+          .tf-track-stop-slow { stop-color: var(--t-slow); }
+          .tf-track-stroke { stroke: var(--line-strong); }
+          .tf-grid { stroke: var(--line-strong); }
+          .tf-axis { fill: var(--faint); }
+          .tf-freq { fill: var(--muted); }
+          .tf-bracket { stroke: var(--faint); fill: none; }
+          .tf-zone-good { fill: var(--t-good); }
+          .tf-zone-mid  { fill: var(--t-mid); }
+          .tf-zone-slow { fill: var(--t-slow); }
+          .tf-dot-good  { fill: var(--t-good); }
+          .tf-dot-mid   { fill: var(--t-mid); }
+          .tf-dot-slow  { fill: var(--t-slow); }
+          .tf-dot-text  { fill: oklch(0.165 0.006 255); }
+          .tf-missing-ring { stroke: var(--faint); }
+          .tf-missing-text { fill: var(--muted); }
+        </style>
+        <defs>
+          <linearGradient id="track" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   class="tf-track-stop-good" stop-opacity="0.30"/>
+            <stop offset="50%"  class="tf-track-stop-good" stop-opacity="0.22"/>
+            <stop offset="58%"  class="tf-track-stop-mid"  stop-opacity="0.26"/>
+            <stop offset="83%"  class="tf-track-stop-mid"  stop-opacity="0.26"/>
+            <stop offset="90%"  class="tf-track-stop-slow" stop-opacity="0.36"/>
+            <stop offset="100%" class="tf-track-stop-slow" stop-opacity="0.42"/>
+          </linearGradient>
+        </defs>
+        <rect x="40" y="118" width="600" height="58" rx="10" fill="url(#track)" class="tf-track-stroke"/>
+        <g class="tf-grid" stroke-dasharray="2 5">
+          <line x1="140" y1="112" x2="140" y2="182"/>
+          <line x1="340" y1="112" x2="340" y2="182"/>
+          <line x1="540" y1="112" x2="540" y2="182"/>
+        </g>
+        <g font-family="Geist Mono, monospace" font-size="11" class="tf-axis" text-anchor="middle">
+          <text x="40"  y="204">0</text>
+          <text x="140" y="204">100</text>
+          <text x="340" y="204">300</text>
+          <text x="540" y="204">500</text>
+          <text x="636" y="204" text-anchor="end">600ms+</text>
+        </g>
+        <g font-family="Geist Mono, monospace" font-size="9.5" letter-spacing="1.6">
+          <text x="90"  y="106" text-anchor="middle" class="tf-zone-good">INSTANT</text>
+          <text x="240" y="106" text-anchor="middle" class="tf-zone-good">RESPONSIVE</text>
+          <text x="440" y="106" text-anchor="middle" class="tf-zone-mid">DELIBERATE</text>
+          <text x="592" y="106" text-anchor="middle" class="tf-zone-slow">SLUGGISH</text>
+        </g>
+
+        <g font-family="Geist Mono, monospace" font-size="11" font-weight="600" text-anchor="middle">
+          <circle cx="180" cy="147" r="12" class="tf-dot-good"/><text x="180" y="151" class="tf-dot-text">1</text>
+          <circle cx="220" cy="147" r="12" class="tf-dot-good"/><text x="220" y="151" class="tf-dot-text">2</text>
+          <circle cx="320" cy="147" r="12" class="tf-dot-good"/><text x="320" y="151" class="tf-dot-text">3</text>
+          <circle cx="360" cy="147" r="12" class="tf-dot-mid"/><text x="360" y="151" class="tf-dot-text">4</text>
+          <circle cx="440" cy="147" r="12" class="tf-dot-mid"/><text x="440" y="151" class="tf-dot-text">5</text>
+          <circle cx="490" cy="147" r="12" class="tf-dot-mid"/><text x="490" y="151" class="tf-dot-text">6</text>
+          <circle cx="578" cy="132" r="10" class="tf-dot-slow"/><text x="578" y="136" class="tf-dot-text" font-size="10">10</text>
+          <circle cx="578" cy="162" r="10" class="tf-dot-slow"/><text x="578" y="166" class="tf-dot-text" font-size="10">11</text>
+          <circle cx="604" cy="132" r="10" class="tf-dot-slow"/><text x="604" y="136" class="tf-dot-text" font-size="10">7</text>
+          <circle cx="604" cy="162" r="10" class="tf-dot-slow"/><text x="604" y="166" class="tf-dot-text" font-size="10">8</text>
+          <circle cx="632" cy="147" r="10" class="tf-dot-slow"/><text x="632" y="151" class="tf-dot-text" font-size="10">9</text>
+        </g>
+        <path class="tf-bracket" stroke-width="1" d="M578 218 L578 224 L632 224 L632 218 M605 224 L605 230"/>
+        <text x="605" y="244" font-family="Public Sans, sans-serif" font-size="11" text-anchor="middle" class="tf-freq">heavy by design</text>
+      </svg>
+
+      <div class="timing-key">
+        <h4 class="mono-label">The animations</h4>
+        <ol class="key-list">
+          <li><span class="kn">1</span><span class="ka">Button hover / press</span><span class="kt good">140ms</span></li>
+          <li><span class="kn">2</span><span class="ka">Card &amp; launcher hover lift</span><span class="kt good">160–180ms</span></li>
+          <li><span class="kn">3</span><span class="ka">Chat panel open / close</span><span class="kt good">280ms</span></li>
+          <li><span class="kn">4</span><span class="ka">Facilitator modal</span><span class="kt mid">320ms</span></li>
+          <li><span class="kn">5</span><span class="ka">Guide bubble</span><span class="kt mid">400ms</span></li>
+          <li><span class="kn">6</span><span class="ka">Bottom card (overshoots)</span><span class="kt mid">450ms</span></li>
+          <li><span class="kn">7</span><span class="ka">Fade-up on scroll ×37</span><span class="kt slow">900ms</span></li>
+          <li><span class="kn">8</span><span class="ka">Vault card flip (click)</span><span class="kt slow">900ms</span></li>
+          <li><span class="kn">9</span><span class="ka">Loader → page</span><span class="kt slow">~2,650ms</span></li>
+          <li><span class="kn">10</span><span class="ka">FAQ open / close</span><span class="kt slow">550ms</span></li>
+          <li><span class="kn">11</span><span class="ka">Chat message land</span><span class="kt slow">550ms</span></li>
+        </ol>
+        <div class="zone-defs">
+          <div class="zone-def"><span class="dot" style="background:var(--t-good)"></span><div><span class="zt">Instant / Responsive</span> · 0–300ms: <span class="zd">hovers, presses, toggles, small panels.</span></div></div>
+          <div class="zone-def"><span class="dot" style="background:var(--t-mid)"></span><div><span class="zt">Deliberate</span> · 300–500ms: <span class="zd">earned by modals and large surfaces.</span></div></div>
+          <div class="zone-def"><span class="dot" style="background:var(--t-slow)"></span><div><span class="zt">Sluggish</span> · 500ms+: <span class="zd">only for rare, cinematic moments.</span></div></div>
+        </div>
+        <div class="whats-off">
+          <span class="mono-label">What's off</span>
+          <p>The red zone is now intentional: the FAQ (10), chat (11) and Vault flip (8) are slow because the visitor chose to trigger them, and the brief asks for weight. Two don't fit that rule: the loader (9), which runs uninvited on every load, and the fade-up (7), which runs on all 37 blocks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 03 · JHEY (primary) ═══════════ -->
+  <section class="lens-sec">
+    <div class="sec-index">03</div>
+    <div class="lens-sec__head">
+      <h3>Jhey Tompkins — Experimentation &amp; Delight</h3>
+      <span class="lens-sec__weight">Primary lens</span>
+    </div>
+    <p class="lens-sec__verdict"><span class="verdict v-strong">Strong</span></p>
+
+    <div class="lens-block">
+      <span class="mono-label">What's working well</span>
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span>Maven turns to face the way it's moving, based on smoothed horizontal speed with a ±2.2 threshold so it doesn't flicker back and forth. It's a small detail that makes the character feel alive. <code>index.html:1926</code></span></li>
+        <li><span class="mk">✓</span><span>The hero bricks push away from the cursor and spring back (pull 0.06, damping 0.86). It's an interactive texture people want to play with, and under reduced motion it renders as a static frame. <code>index.html:1596</code></span></li>
+        <li><span class="mk">✓</span><span>The loader's bounce-in (an overshoot to 1.05, then a small rebound and settle) is well made. It just needs to happen less often (see finding 5).</span></li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Issues to address</span>
+      <p class="lens-empty">No Jhey-specific issues. All three pass-1 opportunities were built in pass 2 (below).</p>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Opportunities</span>
+      <ul class="lens-list opp">
+        <li><span class="mk">✓</span><span><span class="status done">Resolved</span> <em>welcome.html</em> is the most rewarding moment in the whole journey (someone just paid) and it has no motion apart from a button hover. Add one celebration: Maven bounces in (reuse <code>mavenBounceIn</code>), a few terracotta sparks burst once, and the "You're in" chip pops. It happens once per customer, so delight has truly been earned here. <code>welcome.html:18</code></span></li>
+        <li><span class="mk">✓</span><span><span class="status done">Resolved</span> The seat bar appears already filled. When it first reveals, fill the taken seats one after another from left to right (20–30ms apart, once only). The scarcity becomes something people watch happen, not just read. <code>index.html:2114</code></span></li>
+        <li><span class="mk">✓</span><span><span class="status done">Resolved</span> Have Maven react to the main call to action. When the cursor hovers a Reserve button, the follower could do one small hop or turn toward it. That uses the mascot's personality to point at the conversion, not away from it. <code>index.html:1974</code></span></li>
+      </ul>
+    </div>
+
+    <div class="lens-take">
+      <span class="mono-label">Through Jhey's lens</span>
+      <p>Pass 2 spends the delight in the right places: the payoff after payment, the Reserve button, and objects people touch. Next, try the brick field reacting to Reserve, or a scroll-driven Vault entrance using <code>animation-timeline: view()</code>.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 04 · JAKUB (secondary) ═══════════ -->
+  <section class="lens-sec">
+    <div class="sec-index">04</div>
+    <div class="lens-sec__head">
+      <h3>Jakub Krehel — Production Polish</h3>
+      <span class="lens-sec__weight">Secondary lens</span>
+    </div>
+    <p class="lens-sec__verdict"><span class="verdict v-mixed">Mixed</span></p>
+
+    <div class="lens-block">
+      <span class="mono-label">What's working well</span>
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span>The chat panel scales from <code>.98</code> with <code>transform-origin: bottom right</code>, so it grows out of the launcher button. That's the right origin and the right amount. <code>index.html:266</code></span></li>
+        <li><span class="mk">✓</span><span>The buttons press down into their hard shadow (<code>translate(3px,3px)</code> and the shadow drops to 0) in 140ms. The motion matches the neo-brutalist style instead of falling back on a generic scale. <code>index.html:164</code></span></li>
+        <li><span class="mk">✓</span><span>One shared easing curve (<code>--ease: cubic-bezier(.2,.7,.3,1)</code>) is used almost everywhere, so the whole page moves with one consistent feel. <code>index.html:45</code></span></li>
+        <li><span class="mk">✓</span><span>Most loops are turned off under reduced motion: the marquee, gradients, mascot bob, scroll reveals, cursor follower and paper shader. <code>index.html:695</code></span></li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Issues to address</span>
+      <div class="findings">
+
+        <div class="finding-row" data-sev="crit" data-status="done" id="finding-1">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 2</span><span class="severity crit">Critical</span><span class="lens-chip">Jakub</span><span class="lens-chip">Accessibility</span></div>
+            <h4 class="find-title">Two motions ignore reduced motion: smooth scrolling and the bouncing bottom card</h4>
+            <div class="find-body">
+              <p><span class="label">What</span><code>html{scroll-behavior: smooth}</code> and the facilitator modal's <code>scrollIntoView({behavior:"smooth"})</code> run for everyone. On a 2,000-line page, that's a long glide across the whole page. The bottom card's overshooting slide-up (<code>#bottom-bounce-card</code>) also has no reduced-motion rule.</p>
+              <p><span class="label">Why it matters</span>Long programmatic scrolls and overshooting motion are the kinds of motion that cause dizziness for people with vestibular sensitivity, and those are exactly the users who set the preference. Everything else on the page respects it, so these two gaps stand out.</p>
+              <div class="fix"><p><span class="label">Built in pass 2</span>Done exactly as recommended, plus reduced-motion fallbacks for every new pass-2 animation. Original recommendation: add <code>html{scroll-behavior:auto}</code> and <code>#bottom-bounce-card{transition:opacity .15s linear}</code> inside the existing reduced-motion block. In JS, use <code>behavior: reduce ? "auto" : "smooth"</code>. When motion is reduced, things should just fade in, with no movement.</p></div>
+              <p class="find-loc"><code>index.html:50</code> · <code>index.html:616</code> · <code>index.html:1794</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st1" id="st1-a" checked>
+            <input class="vh" type="radio" name="st1" id="st1-l">
+            <input class="vh" type="radio" name="st1" id="st1-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Reduced-motion fallback: fade only</span><span class="demo__timing">150ms · linear · no translate</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st1-a">Auto</label><label for="st1-l">Light</label><label for="st1-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage" style="align-items:flex-end;">
+              <div class="demo-1__mt" style="width:100%;">
+                <div class="ui-card" style="min-width:0;width:100%;">
+                  <div class="ui-label" style="margin-bottom:8px;">Founding cohort · 30 seats</div>
+                  <div class="ui-row" style="justify-content:space-between;"><span>Ready to build?</span><span class="ui-btn" style="padding:6px 14px;">Reserve</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-sev="imp" data-status="done" id="finding-2">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 2</span><span class="severity imp">Important</span><span class="lens-chip">Jakub</span></div>
+            <h4 class="find-title">FAQ answers snap open, and the previous one snaps shut at the same moment</h4>
+            <div class="find-body">
+              <p><span class="label">What</span>The seven <code>&lt;details&gt;</code> items use the browser's default open and close, which happen instantly. The one-open-at-a-time script closes the previous answer at the same moment the new one opens, so the content below jumps by two answers' worth of height at once.</p>
+              <p><span class="label">Why it matters</span>The FAQ is where hesitant buyers settle their doubts about price, tools and recordings. A layout jump right there makes the visitor lose their place on the page, just when they're deciding.</p>
+              <div class="fix"><p><span class="label">Built in pass 2</span>Heavier version: 550ms <code>--spring</code> height, answer drops 10px and comes into focus, the plus turns 135° with <code>--heavy</code>, and the open card lifts −3px. Original recommendation: use <code>interpolate-size: allow-keywords</code> and transition <code>::details-content</code> (<code>block-size</code> and <code>content-visibility</code>, <code>allow-discrete</code>) over 220ms with <code>--ease</code>. Rotate the <code>+</code> 45° instead of swapping it for a dash. Browsers without support simply snap open as they do now.</p></div>
+              <p class="find-loc"><code>index.html:586</code> · <code>index.html:1991</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st2" id="st2-a" checked>
+            <input class="vh" type="radio" name="st2" id="st2-l">
+            <input class="vh" type="radio" name="st2" id="st2-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Built: weighted accordion + 135° plus</span><span class="demo__timing">550ms · --spring / --heavy</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st2-a">Auto</label><label for="st2-l">Light</label><label for="st2-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-2__mt" style="width:100%;">
+                <div class="ui-card" style="min-width:0;width:100%;">
+                  <div class="ui-row" style="justify-content:space-between;font-weight:600;"><span>Is it live, or self-paced?</span><span class="ic">+</span></div>
+                  <div class="ans" style="margin-top:10px;font-size:12.5px;color:var(--st-dim);line-height:1.5;">It's live. Six sessions across three weekends, every one recorded.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-sev="imp" data-status="done" id="finding-3">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 2</span><span class="severity imp">Important</span><span class="lens-chip">Jakub</span></div>
+            <h4 class="find-title">Chat messages appear with no transition</h4>
+            <div class="find-body">
+              <p><span class="label">What</span><code>addMsg()</code> adds each bubble to the page fully formed. The 240ms pause before Maven "answers" is a nice touch, but the reply then pops in with no entrance, and the list jumps down with <code>scrollTop = scrollHeight</code>.</p>
+              <p><span class="label">Why it matters</span>A chat is a conversation, and the eye follows the newest message. Without an entrance, an answer can land unseen at the bottom of the panel, especially the price answer with its Reserve button.</p>
+              <div class="fix"><p><span class="label">Built in pass 2</span>Heavier version: 800ms typing dots, then bubbles land from their corner (scale .86, 16px, 5px blur) over 550ms with <code>--heavy</code>. Original recommendation: add a class to new bubbles: opacity 0, 6px down and 4px blur, settling to clear over 200ms. Smooth-scroll the panel itself (not the page) to keep the newest message in view.</p></div>
+              <p class="find-loc"><code>index.html:1709</code> · <code>index.html:1725</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st3" id="st3-a" checked>
+            <input class="vh" type="radio" name="st3" id="st3-l">
+            <input class="vh" type="radio" name="st3" id="st3-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Built: bubbles land from their corner</span><span class="demo__timing">550ms · --heavy · scale .86 + blur</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st3-a">Auto</label><label for="st3-l">Light</label><label for="st3-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-3__mt" style="width:100%;display:flex;flex-direction:column;gap:8px;">
+                <div class="ui-bubble me">How much is it?</div>
+                <div class="ui-bubble bot">₦20,000 for the founding cohort. Only 30 seats.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-status="done" data-sev="imp" id="finding-4">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 3</span><span class="severity imp">Important</span><span class="lens-chip">Jakub</span></div>
+            <h4 class="find-title">The same fade-up runs on 37 blocks</h4>
+            <div class="find-body">
+              <p><span class="label">What</span>37 elements share <code>.reveal-item</code>. In pass 2 it was made heavier (40px rise and a slight scale-up over 900ms), but it's still the same on every block. Originally: opacity 0 → 1 with a 20px rise over 500ms. Section headings, body copy, tables and grids all get the identical treatment.</p>
+              <p><span class="label">Why it matters</span>When every block arrives the same way, the motion carries no meaning and starts to feel like a template. On a long page it also delays the copy the visitor is trying to read.</p>
+              <div class="fix"><p><span class="label">Recommended motion</span>Keep the reveal only on section headings and the few signature blocks (the Vault, the price panel). Shorten it to 12px over 360ms. Body copy, tables and the FAQ should simply be there when they scroll into view.</p></div>
+              <div class="fix"><p><span class="label">Built in pass 3</span>Reveal kept only on 13 section heads and 5 signature blocks, with two distinct weights (heads: 28px over 900ms <code>--spring</code>; signature blocks: 64px with a slight scale over 1s <code>--heavy</code>). Body copy, grids and cards are simply there. I kept it heavier than the original 12px/360ms suggestion to fit the brief.</p></div>
+              <p class="find-loc"><code>index.html:650</code> · <code>index.html:2007</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st4" id="st4-a" checked>
+            <input class="vh" type="radio" name="st4" id="st4-l">
+            <input class="vh" type="radio" name="st4" id="st4-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Reveal the heading, not the paragraph</span><span class="demo__timing">360ms · --ease · 12px</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st4-a">Auto</label><label for="st4-l">Light</label><label for="st4-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-4__mt" style="width:100%;">
+                <div class="head" style="font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-0.02em;margin-bottom:12px;">What you'll ship</div>
+                <div class="ui-line" style="width:92%;margin-bottom:7px;"></div>
+                <div class="ui-line" style="width:84%;margin-bottom:7px;"></div>
+                <div class="ui-line" style="width:60%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Opportunities</span>
+      <ul class="lens-list opp">
+        <li><span class="mk">✓</span><span><em>Done in pass 3.</em> The chat and facilitator modal close the same way they open (16px drop and fade, 280–320ms). Closing should be quieter than opening: about 6px over 180ms. <code>index.html:272</code> · <code>index.html:363</code></span></li>
+        <li><span class="mk">✓</span><span><em>Done in pass 3.</em> The 24s marquee loops forever with no way to pause it. Add <code>.marq:hover .track, .marq:focus-within .track{animation-play-state:paused}</code>. This also covers the WCAG 2.2.2 requirement to let people pause moving content. <code>index.html:461</code></span></li>
+      </ul>
+    </div>
+
+    <div class="lens-take">
+      <span class="mono-label">Through Jakub's lens</span>
+      <p>The site is good at motion people barely notice, but that care is spent in the wrong places. Move it from the 37 identical fade-ups to the FAQ and chat, where people actually read, and close the two reduced-motion gaps.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 05 · EMIL (selective) ═══════════ -->
+  <section class="lens-sec">
+    <div class="sec-index">05</div>
+    <div class="lens-sec__head">
+      <h3>Emil Kowalski — Restraint &amp; Speed</h3>
+      <span class="lens-sec__weight">Selective lens</span>
+    </div>
+    <p class="lens-sec__verdict"><span class="verdict v-problem">Problem</span></p>
+
+    <div class="lens-block">
+      <span class="mono-label">What's working well</span>
+      <ul class="lens-list good">
+        <li><span class="mk">✓</span><span>Hover and press feedback stays under 200ms everywhere: buttons 140ms, cards 160–180ms. <code>index.html:164</code></span></li>
+        <li><span class="mk">✓</span><span>The before/after slider updates <code>clip-path</code> directly as you drag, with no transition lag. That's right for something you drag directly. <code>index.html:1672</code></span></li>
+        <li><span class="mk">✓</span><span>The paper shader is skipped on touch and small screens and under reduced motion, renders at half resolution, and stops when the tab is hidden. That's careful GPU budgeting. <code>index.html:1428</code></span></li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Issues to address</span>
+      <div class="findings">
+
+        <div class="finding-row" data-status="done" data-sev="crit" id="finding-5">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 3</span><span class="severity crit">Critical</span><span class="lens-chip">Emil</span><span class="lens-chip">Jakub</span></div>
+            <h4 class="find-title">A full-screen loader and darkened guide overlay block the page on every refresh</h4>
+            <div class="find-body">
+              <p><span class="label">What</span>The loader stays up for 2,100ms on desktop (1,400ms on mobile), fades over 550ms, then 650ms later a dimmed, blurred overlay appears with the guide bubble. The overlay stays until the visitor clicks. The code says it runs on "every refresh", for returning visitors too.</p>
+              <p><span class="label">Why it matters</span>The page is a static file and is ready almost instantly, so the loader isn't waiting for anything. It's about 3 seconds plus a forced click before anyone can read or reach Reserve. Visitors coming back to pay, the people most likely to convert, sit through it every time.</p>
+              <div class="fix"><p><span class="label">Recommended motion</span>Show the full sequence once per visitor (store a flag with <code>localStorage</code>, wrapped in try/catch). After that, let the page appear right away. Even on the first visit, shorten it: Maven settles in 400ms and the loader fades over 300ms, about 0.8s in total. Replace the darkened overlay with a non-blocking bubble.</p></div>
+              <div class="fix"><p><span class="label">Built in pass 3</span>The loader and guide now run once per visitor. A <code>&lt;head&gt;</code> script checks <code>localStorage</code> before first paint and hides the loader for returning visitors; the flag is set when the first full sequence finishes.</p></div>
+              <p class="find-loc"><code>index.html:302</code> · <code>index.html:1867</code> · <code>index.html:1885</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st5" id="st5-a" checked>
+            <input class="vh" type="radio" name="st5" id="st5-l">
+            <input class="vh" type="radio" name="st5" id="st5-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">First-visit only, fast handoff</span><span class="demo__timing">400ms settle + 300ms fade</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st5-a">Auto</label><label for="st5-l">Light</label><label for="st5-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage" style="position:relative;">
+              <div class="demo-5__mt" style="width:100%;">
+                <div style="font-family:var(--display);font-weight:700;font-size:19px;margin-bottom:10px;">Lead the machine.</div>
+                <div class="ui-line" style="width:88%;margin-bottom:7px;"></div>
+                <div class="ui-line" style="width:70%;margin-bottom:14px;"></div>
+                <span class="ui-btn" style="padding:6px 14px;">Reserve a seat</span>
+                <div class="veil" style="position:absolute;inset:0;background:var(--st-bg);display:flex;align-items:center;justify-content:center;border-radius:10px;">
+                  <div class="mascot" style="width:44px;height:44px;border-radius:50%;background:var(--st-fg);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-sev="imp" data-status="done" id="finding-6">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 2</span><span class="severity imp">Important</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">Vault cards spin 180° on hover and spin again on leave, and keyboard focus does the same</h4>
+            <div class="find-body">
+              <p><span class="label">What</span><code>mouseenter</code> and <code>mouseleave</code> each add 180° over 720ms, so moving the cursor across the five cards sets off up to ten 3D rotations. <code>focus</code> and <code>blur</code> do the same, so tabbing through the Vault spins every card twice.</p>
+              <p><span class="label">Why it matters</span>A hover should be passive feedback, not a 0.7-second event. Spinning is also a known motion-sickness trigger. Even though reduced motion turns it off, everyone else still gets spins they never asked for, including keyboard users, whose actions shouldn't trigger animation.</p>
+              <div class="fix"><p><span class="label">Built in pass 2</span>Hover tilts the card toward the cursor; click, tap or Enter flips it over 900ms with <code>--heavy</code>; focus alone does nothing. Original recommendation: make the flip something you choose: hover only lifts the card (the existing shadow change), and a click, tap or Enter flips it 180° over 450ms. The same action flips it back. On keyboard focus, show the back with no animation.</p></div>
+              <p class="find-loc"><code>index.html:516</code> · <code>index.html:2051</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st6" id="st6-a" checked>
+            <input class="vh" type="radio" name="st6" id="st6-l">
+            <input class="vh" type="radio" name="st6" id="st6-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Built: weighted click flip</span><span class="demo__timing">900ms · --heavy</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st6-a">Auto</label><label for="st6-l">Light</label><label for="st6-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-6__mt">
+                <div class="flip-scene">
+                  <div class="flip-inner">
+                    <div class="flip-face front"><span class="ui-label">Perk</span><span class="ui-num" style="font-size:30px;">10+</span><span class="ui-label">Design.md files</span></div>
+                    <div class="flip-face back">Battle-tested Design.md files you can drop into any project on day one.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-status="done" data-sev="imp" id="finding-7">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 3</span><span class="severity imp">Important</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">The chat opens by itself: after 15s idle, or on any click on the page background</h4>
+            <div class="find-body">
+              <p><span class="label">What</span>After 15 seconds without input, the chat panel slides open uninvited. Separately, any single click on empty background opens the chat 260ms later, and a double-click opens the facilitator modal.</p>
+              <p><span class="label">Why it matters</span>Fifteen seconds without input usually means someone is <em>reading</em>, and a panel sliding over the copy interrupts them. People also click the background all the time to focus the window or clear a text selection, so the chat pops up when nobody meant to open it. Motion should answer what the visitor did, not ambush them.</p>
+              <div class="fix"><p><span class="label">Recommended motion</span>Remove the background-click and idle auto-open. Instead, after idling, give the "Ask Maven" button a single small two-hop nudge (4px) once per visit. The visitor decides whether to open the chat.</p></div>
+              <div class="fix"><p><span class="label">Built in pass 3</span>Idle no longer opens the chat; the launcher nudges once per visit instead. Background click and double-click no longer open anything; click-away still closes the chat or modal.</p></div>
+              <p class="find-loc"><code>index.html:1903</code> · <code>index.html:1954</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st7" id="st7-a" checked>
+            <input class="vh" type="radio" name="st7" id="st7-l">
+            <input class="vh" type="radio" name="st7" id="st7-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">One-time launcher nudge</span><span class="demo__timing">2 × 4px · 500ms total</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st7-a">Auto</label><label for="st7-l">Light</label><label for="st7-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage" style="justify-content:flex-end;align-items:flex-end;">
+              <div class="demo-7__mt"><span class="ui-pill"><span class="av"></span>Ask Maven</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-sev="imp" id="finding-8">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status accepted">Accepted · new direction</span><span class="severity imp">Important</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">The bottom card bounces in with an overshoot curve</h4>
+            <div class="find-body">
+              <p><span class="label">What</span><code>#bottom-bounce-card</code> slides up 180px using <code>cubic-bezier(.175,.885,.32,1.275)</code>, a curve that overshoots and springs back. Its opacity uses the plain default <code>ease</code> instead of the site's <code>--ease</code>.</p>
+              <p><span class="label">Pass 2</span>Kept as is: overshoot now fits the heavier brief, and its reduced-motion gap is fixed. The note below still applies if you later want this card to feel calmer than the rest of the page.</p>
+              <p><span class="label">Why it matters</span>This card asks people to buy. Bouncing makes it read as a pop-up ad, which works against the trust the page has built by that point. It also appears unprompted, so it should be the calmest motion on the page.</p>
+              <div class="fix"><p><span class="label">Recommended motion</span>Slide up 28px with a fade over 320ms using <code>cubic-bezier(.22,1,.36,1)</code>, with no overshoot. Closing it should be quicker: 180ms, 8px down.</p></div>
+              <p class="find-loc"><code>index.html:616</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st8" id="st8-a" checked>
+            <input class="vh" type="radio" name="st8" id="st8-l">
+            <input class="vh" type="radio" name="st8" id="st8-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Settled card enter</span><span class="demo__timing">320ms · ease-out-quint · no overshoot</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st8-a">Auto</label><label for="st8-l">Light</label><label for="st8-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage" style="align-items:flex-end;">
+              <div class="demo-8__mt" style="width:100%;">
+                <div class="ui-card" style="min-width:0;width:100%;">
+                  <div class="ui-label" style="margin-bottom:8px;">Still thinking?</div>
+                  <div class="ui-row" style="justify-content:space-between;"><span>30 founding seats</span><span class="ui-btn" style="padding:6px 14px;">Reserve</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-status="done" data-sev="imp" id="finding-9">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 3</span><span class="severity imp">Important</span><span class="lens-chip">Emil</span></div>
+            <h4 class="find-title">Two dots pulse forever (the hero badge and the seat counter's "live" dot)</h4>
+            <div class="find-body">
+              <p><span class="label">What</span><code>.dot</code> pulses its size and opacity every 2s, and <code>.sm-live i</code> pulses a glow ring every 1.8s, without end.</p>
+              <p><span class="label">Why it matters</span>A dot that pulses forever is one of the clearest signs of AI-generated UI, and on a hand-made brand like this it looks borrowed. The seat counter's data loads once and never updates, so a pulsing "live" dot also claims a liveness the page doesn't have.</p>
+              <div class="fix"><p><span class="label">Recommended motion</span>Keep both dots still. On the seat counter, play a single ring ping when the data arrives, then stop. Remove the hero dot's pulse; its terracotta color already draws enough attention.</p></div>
+              <div class="fix"><p><span class="label">Built in pass 3</span>Both pulses removed. The seat counter's live dot plays a single 1.1s ring ping when data arrives.</p></div>
+              <p class="find-loc"><code>index.html:118</code> · <code>index.html:714</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st9" id="st9-a" checked>
+            <input class="vh" type="radio" name="st9" id="st9-l">
+            <input class="vh" type="radio" name="st9" id="st9-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">One ping on data, then still</span><span class="demo__timing">900ms · once</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st9-a">Auto</label><label for="st9-l">Light</label><label for="st9-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-9__mt ui-row">
+                <span style="position:relative;width:10px;height:10px;display:inline-block;">
+                  <span class="ring" style="position:absolute;inset:0;border-radius:50%;background:var(--st-fg);"></span>
+                  <span style="position:absolute;inset:0;border-radius:50%;background:var(--st-fg);"></span>
+                </span>
+                <span class="ui-label" style="color:var(--st-fg);">22 / 30 seats taken</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finding-row" data-status="done" data-sev="imp" id="finding-10">
+          <div class="finding-row__prose">
+            <div class="find-tags"><span class="status done">Resolved · pass 3</span><span class="severity imp">Important</span><span class="lens-chip">Emil</span><span class="lens-chip">Performance</span></div>
+            <h4 class="find-title">Animation loops that never pause, and a follower moved by <code>left</code>/<code>top</code></h4>
+            <div class="find-body">
+              <p><span class="label">What</span>The brick-field loop redraws every brick on every frame forever, even after you've scrolled past the hero and the bricks have stopped moving. The cursor follower and guide bubble set <code>style.left/top</code> each frame. Five Vault cards animate <code>background-position</code>, which forces the browser to repaint them on every frame. That's on top of a full-screen WebGL shader and an 80px <code>backdrop-filter</code> strip fixed to the bottom of the screen.</p>
+              <p><span class="label">Pass 2</span>More urgent now. Heavier motion makes dropped frames more noticeable, and the Vault tilt adds 3D transforms while the gradient loops repaint underneath.</p>
+              <p><span class="label">Why it matters</span>On a mid-range laptop all of this adds up to dropped frames and a hot fan while someone is just reading. Moving elements with <code>left/top</code> forces the browser to recalculate layout every frame, while <code>transform</code> is handled cheaply by the graphics card.</p>
+              <div class="fix"><p><span class="label">Recommended motion</span>Move the follower with <code>transform: translate3d(x,y,0)</code>. Stop the brick loop once every brick has settled, and stop it while the hero is off-screen (an <code>IntersectionObserver</code> can detect this). Drift the Vault gradients by moving an oversized <code>::before</code> layer with <code>transform</code> instead of animating <code>background-position</code>.</p></div>
+              <div class="fix"><p><span class="label">Built in pass 3</span>Follower and guide bubble moved to <code>transform</code>/<code>translate</code>; brick loop sleeps once calm and wakes on mouse movement; Vault gradients drift with <code>transform</code> on an oversized layer.</p></div>
+              <p class="find-loc"><code>index.html:1596</code> · <code>index.html:1978</code> · <code>index.html:524</code></p>
+            </div>
+          </div>
+          <div class="demo">
+            <input class="vh" type="radio" name="st10" id="st10-a" checked>
+            <input class="vh" type="radio" name="st10" id="st10-l">
+            <input class="vh" type="radio" name="st10" id="st10-d">
+            <div class="demo__bar">
+              <div class="demo__meta"><span class="demo__title">Follower on transform, not left/top</span><span class="demo__timing">lerp 0.13 → translate3d</span></div>
+              <div class="demo__controls">
+                <div class="seg"><label for="st10-a">Auto</label><label for="st10-l">Light</label><label for="st10-d">Dark</label></div>
+                <span class="demo__loop">↻</span>
+              </div>
+            </div>
+            <div class="demo__stage">
+              <div class="demo-10__mt">
+                <div class="follower" style="width:38px;height:38px;border-radius:50%;background:var(--st-fg);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Opportunities</span>
+      <ul class="lens-list opp">
+        <li><span class="mk">✓</span><span><em>Done in pass 3.</em> A few transitions still use the plain default <code>ease</code>: the bottom card's opacity, <code>.sm-bar span</code>, the <code>.bounce-close</code> background, and the button on <code>welcome.html</code>. Switch them to <code>var(--ease)</code> so everything moves with the same feel. (The <code>welcome.html</code> button is done in pass 2.) <code>index.html:717</code></span></li>
+      </ul>
+    </div>
+
+    <div class="lens-take">
+      <span class="mono-label">Through Emil's lens</span>
+      <p>Before animating anything, ask whether the visitor asked for it. The loader, the overlay, the hover spins and the self-opening chat all move without being asked. Make them respond to what the visitor does and the page will feel twice as fast without losing its character.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 06 · RECOMMENDATIONS ═══════════ -->
+  <section>
+    <div class="sec-index">06</div>
+    <h2 class="section-title">The order I'd fix them in</h2>
+    <p class="section-sub">
+      Ordered by what visitors feel: <em>critical</em> (gets in the way of every visit or excludes motion-sensitive users), then <em>important</em> (real friction or a missed payoff), then <em>opportunity</em> (could enhance).
+    </p>
+
+    <div class="rec crit" id="rec-crit">
+      <div class="tier-label"><span class="mono-label">Critical · must fix</span><span class="rule"></span><span class="count">2 done</span></div>
+      <table class="rec-table">
+        <thead><tr><th>Issue</th><th>File</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr class="done"><td>Loader and darkened guide overlay block the page on every refresh</td><td><code>index.html:1885</code></td><td>Show once per visitor; ~0.8s handoff; a bubble that doesn't block the page</td></tr>
+          <tr class="done"><td>Smooth scroll and the bottom card's bounce ignore reduced motion</td><td><code>index.html:50</code></td><td>Add both to the reduced-motion block; fall back to fade only</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rec imp" id="rec-imp">
+      <div class="tier-label"><span class="mono-label">Important · should fix</span><span class="rule"></span><span class="count">7 done · 1 accepted</span></div>
+      <table class="rec-table">
+        <thead><tr><th>Issue</th><th>File</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr class="done"><td>Chat opens by itself (15s idle and background click)</td><td><code>index.html:1903</code></td><td>Remove; nudge the launcher once instead</td></tr>
+          <tr class="done"><td>Vault cards spin on hover and on keyboard focus</td><td><code>index.html:2051</code></td><td>Click to flip 180° over 450ms; hover only lifts</td></tr>
+          <tr class="done"><td>FAQ answers snap open and shut</td><td><code>index.html:586</code></td><td>Animate <code>::details-content</code> height over 220ms; rotate the + icon</td></tr>
+          <tr class="done"><td>Chat messages appear with no transition</td><td><code>index.html:1709</code></td><td>200ms fade, 6px rise and blur on new bubbles</td></tr>
+          <tr class="accepted"><td>Bottom card overshoots</td><td><code>index.html:616</code></td><td>Accepted for pass 2: bounce fits the heavier brief</td></tr>
+          <tr class="done"><td>Two dots pulse forever</td><td><code>index.html:118</code></td><td>Keep still; one ping when seat data arrives</td></tr>
+          <tr class="done"><td>Same fade-up on 37 blocks</td><td><code>index.html:650</code></td><td>Headings and signature blocks only; 12px over 360ms</td></tr>
+          <tr class="done"><td>Loops never pause; follower moved by left/top <em>(higher priority now)</em></td><td><code>index.html:1596</code></td><td>Move with transform; pause loops off-screen; drift gradients with transform</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rec opp" id="rec-opp">
+      <div class="tier-label"><span class="mono-label">Opportunities · could enhance</span><span class="rule"></span><span class="count">6 done</span></div>
+      <table class="rec-table">
+        <thead><tr><th>Enhancement</th><th>Where</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr class="done"><td>Celebrate after payment on the welcome page</td><td><code>welcome.html:18</code></td><td>Delight at the moment that has truly earned it</td></tr>
+          <tr class="done"><td>Fill the seat bar one seat at a time on reveal</td><td><code>index.html:2114</code></td><td>Scarcity people watch happen</td></tr>
+          <tr class="done"><td>Maven reacts to hovering a Reserve button</td><td><code>index.html:1974</code></td><td>Mascot points toward the conversion</td></tr>
+          <tr class="done"><td>Quieter close for chat and modal</td><td><code>index.html:272</code></td><td>Calmer close, the panel gets out of the way faster</td></tr>
+          <tr class="done"><td>Pause the marquee on hover and focus</td><td><code>index.html:461</code></td><td>Meets WCAG 2.2.2</td></tr>
+          <tr class="done"><td>Use <code>--ease</code> instead of the default <code>ease</code></td><td><code>index.html:717</code></td><td>One consistent feel across the page</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="margin-bottom: var(--s6);">
+    <div class="sec-index">07</div>
+    <h2 class="section-title">Which lens carried this audit</h2>
+    <div class="ref-summary">
+      <span class="mono-label">Referenced most</span>
+      <p class="big">Jhey Tompkins — Experimentation &amp; Delight</p>
+      <p class="why">The pass-2 brief (heavier, more physical motion) made Jhey's lens the driver of what was built: the celebration, the tilt and the hop. Jakub made sure the new motion has proper entrances and reduced-motion fallbacks. Emil's question, whether the visitor asked for this, still accounts for every remaining open finding.</p>
+      <ul class="ref-lean">
+        <li><span class="nm">Lean Emil</span><span>Remove the loader for returning visitors, the hover spins and the idle chat entirely; let only the buttons, panels and FAQ move.</span></li>
+        <li><span class="nm">Lean Jakub</span><span>Remove the uniform fade-ups, add transitions to the FAQ and chat, and make every close quieter than its open.</span></li>
+        <li><span class="nm">Lean Jhey</span><span>Keep the mascot on the landing page but make it react to the visitor, and put real effort into the welcome-page celebration.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="doc">
+    <span>Maven Academy motion audit · pass 3 · design-motion-principles · 2026-10-09</span>
+    <span>Pass 3 · 16 findings · 15 resolved · 1 accepted · 0 open</span>
+  </footer>
+
+</div>
+</body>
+</html>
