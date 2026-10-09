@@ -2014,6 +2014,14 @@ var MavenFac = (function(){
       if(MavenChat.isOpen()) MavenChat.close();
       else if(MavenFac.isOpen()) MavenFac.close();
     });
+    // background double-click = meet the facilitator (a deliberate gesture, so it may open something)
+    document.addEventListener("dblclick", function(e){
+      if(window.MavenGuide && window.MavenGuide.active()) return;
+      if(e.target.closest(IGNORE)) return;
+      try { if(window.getSelection) window.getSelection().removeAllRanges(); } catch(err){}
+      if(MavenChat.isOpen()) MavenChat.close();
+      MavenFac.open();
+    });
 
     // Maven hops toward the main call to action
     document.querySelectorAll('a.btn[href*="paystack.shop/pay/mavenba"]').forEach(function(a){
