@@ -3,7 +3,6 @@ window.GROUPS=[['mindset','Mindset'],['foundations','Foundations'],['surface','S
 const BOX=(c)=>`<div style="background:#fff;border:2px solid #14261D;border-radius:14px;padding:16px;width:200px">${c}</div>`;
 const BAR=(w,h=8,c='#14261D',s='')=>`<div style="height:${h}px;width:${w}px;background:${c};border-radius:4px;${s}"></div>`;
 const SRC={
- rui:['Refactoring UI (Wathan & Schoger)','https://refactoringui.com'],
  pt:['Practical Typography (Butterick)','https://practicaltypography.com'],
  laws:['Laws of UX (Yablonski)','https://lawsofux.com'],
  m3:['Material Design 3','https://m3.material.io'],

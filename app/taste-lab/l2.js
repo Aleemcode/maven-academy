@@ -21,7 +21,7 @@ window.LESSONS.push(
  prompt:{lazy:'Add some spacing.',directed:'Use an 8px spacing scale only (4, 8, 12, 16, 24, 32, 48). box-sizing: border-box everywhere. Cards: 20px padding, 2px border. Gap inside a group 4px, between groups 16px, between cards 24px. Comfortable density.'},
  check:['All spacing comes from one scale.','Inside-group space < between-group space.','border-box is used everywhere.','No content touches its container’s edge.','Buttons have about 2:1 horizontal-to-vertical padding.'],
  brief:['Spacing: {{unit}} base scale only; box-sizing: border-box. Cards {{pad}} padding with {{border}} border, {{margin}} apart. Inside a group {{tight}}, between groups {{gap}}. {{density}} density.'],
- sources:[SRC.rui,SRC.m3,SRC.webdev]},
+ sources:[SRC.m3,SRC.webdev]},
 {slug:'layout',group:'foundations',title:'Layout & grid',tagline:'Structure you can feel but not see.',
  what:'Layout is where things sit on the screen and how they line up. A <b>grid</b> (columns with gutters) gives every element an edge to align to. Alignment is invisible when done well and painful when done badly.',
  why:'AI stacks everything in a centred column or scatters cards at random widths. Without a grid, elements almost line up, which looks worse than not lining up at all. A grid makes many decisions for you and makes screens feel stable.',
@@ -42,7 +42,7 @@ window.LESSONS.push(
  prompt:{lazy:'Make a nice layout.',directed:'12-column grid, 24px gutters, max content width 1200px, left-aligned. Hero is a split layout: words in 7 columns, visual in 5. Features in a bento grid. Mobile first: collapse to 4 columns on phones.'},
  check:['There is a defined grid.','Edges align to shared lines.','Content has a max width.','The phone layout was designed, not squashed.'],
  brief:['Layout: {{cols}} grid, {{gutter}} gutters, max width {{max}}. {{align}} composition. Main pattern: {{pattern}}. Mobile first.'],
- sources:[SRC.m3,SRC.rui,SRC.webdev]},
+ sources:[SRC.m3,SRC.webdev]},
 {slug:'hierarchy',group:'foundations',title:'Hierarchy',tagline:'Tell the eye what to read first.',
  what:'Hierarchy is the order in which someone notices things. You control it with <b>size, weight, colour, contrast, position and space</b>. Every screen should have one obvious first thing, a clear second thing, and quiet everything else.',
  why:'AI gives everything equal emphasis: same size, same weight, three bold buttons. When everything shouts, people freeze or miss the one action that matters. Strong hierarchy is how a screen gets understood in two seconds.',
@@ -62,5 +62,5 @@ window.LESSONS.push(
  prompt:{lazy:'Show the invoice details.',directed:'One focal point: the amount, large (32px, extra bold). Context (status, due date) in one muted 13px line above it. One primary button “Send to client”; Download and Share as quiet text links; Delete in red text, separated. Passes the squint test.'},
  check:['There is one obvious focal point.','There is one primary action.','Supporting text is quieter than main text.','Destructive actions are separated and quiet.','It passes the squint test.'],
  brief:['Hierarchy: one focal point per screen, emphasised by {{focus}}. {{actions}} primary action(s) per screen; secondary actions as {{secondary}}. Supporting text at about {{muted}} strength. Destructive actions separated.'],
- sources:[SRC.rui,SRC.nng,SRC.laws]}
+ sources:[SRC.nng,SRC.laws]}
 );

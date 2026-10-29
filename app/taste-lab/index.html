@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script src="/api/lab-boot?app=taste-lab"></script>
+<script src="/app/lab-bridge.js"></script>
+<base href="/app/taste-lab/">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MAB Taste Lab</title>
@@ -46,6 +49,15 @@
   <div style="overflow:auto;padding:20px" id="dBody"></div>
  </div>
 </div>
+<div class="scrim" id="tScrim" role="dialog" aria-modal="true" aria-labelledby="tTitle">
+ <div class="modal tmodal">
+  <div class="m-top"><div><div class="eyebrow" id="tEye">Train your eye</div><h2 id="tTitle">Train your eye</h2></div><button class="x" id="tClose" aria-label="Close">×</button></div>
+  <div class="t-prog"><div class="bar" role="presentation"><i id="tBar"></i></div><span class="mono" id="tCount"></span></div>
+  <div class="t-body" id="tBody"></div>
+  <div class="m-foot t-foot"><span class="count" id="tHint"></span><button class="btn sm pri" id="tNext">Next →</button></div>
+ </div>
+</div>
+<button type="button" class="fab" id="fab" aria-haspopup="dialog"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span class="fab-l">Train your eye</span><span class="fab-c" id="fabC">0/0</span></button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="l0.js"></script>
@@ -56,6 +68,10 @@
 <script src="l5.js"></script>
 <script src="l6.js"></script>
 <script src="l9.js"></script>
+<script src="viz-1.js"></script>
+<script src="viz-2.js"></script>
+<script src="viz-3.js"></script>
+<script src="viz-4.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

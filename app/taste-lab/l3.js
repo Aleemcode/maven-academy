@@ -17,7 +17,7 @@ window.LESSONS.push(
  prompt:{lazy:'Add shadows to make it pop.',directed:'Hard offset shadows only, no blur: cards 2px 2px 0 #14261D, menus 5px 5px 0, modals 9px 9px 0. All cards have a 2.5px #14261D border. Three elevation levels. No glow, no coloured blur.'},
  check:['One shadow language everywhere.','Shadows grow with elevation.','One light source.','No glowing coloured shadows.'],
  brief:['Depth: {{style}} shadows ({{style.s1}} / {{style.s2}} / {{style.s3}} for card / menu / modal), {{edge}} edges, {{levels}} elevation levels max. One light source from above.'],
- sources:[SRC.shadows,SRC.m3,SRC.rui]},
+ sources:[SRC.shadows,SRC.m3]},
 {slug:'shape',group:'surface',title:'Shape & corners',tagline:'Corners carry personality.',
  what:'Shape language is the family of forms a product uses: how round the corners are, whether buttons are pills or rectangles, whether edges are crisp or soft. The rule that separates pros from amateurs is <b>nested radius</b>: inner corners equal outer corners minus the padding.',
  why:'AI mixes radii at random (4px here, 24px there) and nests round cards inside round cards with the same radius, which makes corners look fat. One deliberate shape language makes a product feel like one product.',
@@ -37,7 +37,7 @@ window.LESSONS.push(
  prompt:{lazy:'Make it rounded.',directed:'Shape scale: cards 16px radius, inputs and buttons 6px (16 − 10px card padding), chips pill. Nested elements always use outer radius minus padding. No other radii.'},
  check:['There is one small radius scale.','Nested radius rule is followed.','Paired controls share a radius.','Shape fits the brand personality.'],
  brief:['Shape: {{personality}} feel. Cards {{radius}} radius with {{pad}} padding; nested elements use outer radius minus padding. Buttons: {{button}}.'],
- sources:[SRC.hig,SRC.m3,SRC.rui]},
+ sources:[SRC.hig,SRC.m3]},
 {slug:'background',group:'surface',title:'Backgrounds & texture',tagline:'Mood before a single word is read.',
  what:'The background is the first thing anyone feels. It can be flat, gridded, grainy, glowing, a soft mesh, frosted glass or a photograph. Texture adds richness; too much becomes noise. The background serves the content, never competes with it.',
  why:'AI defaults to either plain white or a loud animated gradient. Neither has character. A considered background (a subtle grid, a little grain, a warm glow) is one of the cheapest ways to look crafted, as long as text stays readable on top.',
@@ -54,5 +54,5 @@ window.LESSONS.push(
  prompt:{lazy:'Make the background interesting.',directed:'Background #F4F0E5 with a subtle 22px grid of 1.5px lines at 8% ink. Content sits on solid #FFFDF7 cards. No animated or rainbow gradients. Over photos, use a dark bottom scrim so text stays at 4.5:1.'},
  check:['The background supports the mood.','Texture is subtle.','Text always has enough contrast.','Busy backgrounds get a surface or scrim.'],
  brief:['Background: {{kind}}. Content on a {{surface}} surface. Texture stays subtle; text always readable.'],
- sources:[SRC.rui,SRC.hig,SRC.webdev]}
+ sources:[SRC.hig,SRC.webdev]}
 );

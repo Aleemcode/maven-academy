@@ -17,7 +17,7 @@ window.LESSONS.push(
  prompt:{lazy:'Make a modern landing page for my app.',directed:'Landing page for market traders in Nigeria. Promise: “Know what sold today, in one tap.” They should feel confident and safe. One primary action: “Record my first sale”. Name the audience in the eyebrow. No gradients, no emoji, no stock photos.'},
  check:['I can say the promise in one sentence.','I named who it is for.','Every element on the screen has a job.','The main task takes three steps or less.','I wrote what this screen is NOT for.'],
  brief:['Feeling: {{mood}}.','Promise: “{{promise}}”.','The main task must take {{steps}} steps or less.'],
- sources:[SRC.laws,SRC.nng,SRC.rui]},
+ sources:[SRC.laws,SRC.nng]},
 {slug:'colour',group:'foundations',title:'Colour',tagline:'One accent. Colours with jobs.',
  what:'Colour taste is giving every colour a <b>role</b>: background, surface, text, muted text, accent, and the status colours (success, warning, danger). Good palettes are mostly quiet neutrals with one confident accent used sparingly.',
  why:'AI defaults to many saturated colours fighting each other, usually purple and blue gradients. When everything is colourful, nothing stands out, so people cannot find the one thing you want them to do. Restraint is what makes your accent powerful.',
@@ -37,7 +37,7 @@ window.LESSONS.push(
  prompt:{lazy:'Use nice colours.',directed:'Palette by role: background #F4F0E5, surface #FFFDF7, text #14261D, muted #4A5A4F, one accent #E8722C with dark text on it. Accent only on the primary action and urgent items (about 10% of the screen). No gradients. All text at least 4.5:1 contrast.'},
  check:['Every colour has a named role.','There is exactly one accent.','The accent marks only action or importance.','All text passes 4.5:1.','Meaning never depends on colour alone.'],
  brief:['Colour: {{base}} neutrals (background {{base.bg}}, surface {{base.surface}}, text {{base.ink}}, muted {{base.muted}}).','One accent {{accent}} with {{onaccent}} on it, used on about {{amount}} of the screen: primary actions and urgent items only.'],
- sources:[SRC.rui,SRC.m3,SRC.wcag]},
+ sources:[SRC.m3,SRC.wcag]},
 {slug:'type',group:'foundations',title:'Typography',tagline:'Most of the interface is text.',
  what:'Typography is choosing typefaces, then sizing and spacing text so it reads easily and shows importance at a glance. A <b>type scale</b> (a fixed set of sizes), a sensible <b>line height</b> and a comfortable <b>line length</b> do most of the work.',
  why:'About 90% of an interface is words. AI picks a safe font, uses random sizes, and sets headings too loose and body text too wide. Good typography is the fastest way to look professional, and the hardest thing to fake.',
@@ -61,5 +61,5 @@ window.LESSONS.push(
  prompt:{lazy:'Use a modern font.',directed:'Headlines in Bricolage Grotesque 800, tracking −0.03em, line height 1.05. Body in Instrument Sans 16px, line height 1.5, max 60 characters per line. Type scale ratio 1.25 from 16px. Sentence case everywhere. Tabular numbers for prices.'},
  check:['One or two typefaces only.','All sizes come from one scale.','Headline leading is tight; body leading is relaxed.','Lines are 45–75 characters.','Prices and tables use tabular numbers.'],
  brief:['Typography: headlines in {{display}}, weight {{weight}}, tracking {{track.v}}, line height about 1.05. Body in {{body}} at {{base}}, line height {{leading}}, max {{measure}} per line.','Type scale ratio {{ratio}} from the body size. Sentence case. Tabular numbers for prices.'],
- sources:[SRC.pt,SRC.rui,SRC.webdev]}
+ sources:[SRC.pt,SRC.webdev]}
 );

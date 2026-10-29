@@ -15,10 +15,10 @@ window.LESSONS.push(
  prompt:{lazy:'Polish it.',directed:'Do a detailing pass: align every left edge, optically centre play icons, nested radius = outer − padding, tabular numbers for all money, one icon set at 2px stroke, text-wrap: balance on headlines, visible focus states, hover and pressed states on every button, and real Nigerian example copy. Then check on a 360px-wide phone.'},
  check:['Every edge aligns.','Optical fixes applied.','Tabular numbers on money.','Balanced headline wraps.','Reviewed on a real phone.'],
  brief:['Detailing pass before shipping. Always enforce: {{enforce}}. Review on: {{review}}.'],
- sources:[SRC.vercel,SRC.rui,SRC.pt]},
+ sources:[SRC.vercel,SRC.pt]},
 {slug:'movements',group:'reference',title:'Design movements',tagline:'Know where looks come from.',type:'reference',
  what:'Every style you admire belongs to a family with a history and a set of rules. Knowing the movements gives you a vocabulary to direct AI (“Swiss grid with a brutalist edge”) and helps you combine influences on purpose instead of by accident.',
  why:'“Make it modern” gets you slop. “Swiss modernism: strict 12-column grid, Inter, one red accent, generous white space” gets you something specific. Movements are shortcuts to hundreds of decisions at once.',
  vocab:[['Swiss / International style','Grids, sans-serif type, asymmetry, clarity (1950s).'],['Bauhaus','Primary colours and pure geometry; function first (1919).'],['Neo-brutalism','Thick borders, hard shadows, loud colour, raw honesty.'],['Glassmorphism','Frosted translucent layers over colour.'],['Neumorphism','Soft extruded plastic look. Pretty, often low contrast.'],['Claymorphism','Puffy, rounded 3D shapes with inner shadows.'],['Editorial','Magazine layouts, elegant serifs, columns.'],['Minimalism','Fewer elements, more space, “less but better”.'],['Skeuomorphism','Imitating real materials (leather, paper).'],['Y2K / retro','Chrome, gradients, pixel type, nostalgia.'],['Dark tech','Near-black, hairlines, glowing accents, precise type.'],['Warm Fusion','Maven’s house style: Swiss structure, brutalist touch, warm cream and forest, one terracotta spark.']],
- sources:[SRC.m3,SRC.hig,SRC.rui]}
+ sources:[SRC.m3,SRC.hig]}
 );

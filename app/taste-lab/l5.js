@@ -17,7 +17,7 @@ window.LESSONS.push(
  prompt:{lazy:'Design a logo for my app.',directed:'Design a simple symbol that works at 16px and in one flat colour. One idea only: a bold geometric K built from thick strokes. No gradients, no text inside the symbol. Provide it on cream, forest and white backgrounds, plus a horizontal lockup with the wordmark in Bricolage Grotesque 800.'},
  check:['Recognisable at 16px.','Works in one flat colour.','One idea.','Tested on light, dark and photo backgrounds.','Clear space defined.'],
  brief:['Logo: {{type}}, {{detail}} complexity, {{colours}} colour(s) max, clear space {{clear}}. Must work at 16px and in one flat colour. No gradients or text inside the symbol.'],
- sources:[SRC.hig,SRC.rui,SRC.nng]},
+ sources:[SRC.hig,SRC.nng]},
 {slug:'voice',group:'identity',title:'Voice & microcopy',tagline:'Words are interface.',
  what:'Microcopy is every small piece of text in a product: buttons, labels, errors, empty states, confirmations. Voice is the consistent personality behind them. Good microcopy is <b>clear first, then human</b>: specific verbs, plain words, and no blame.',
  why:'AI writes “Submit”, “An error occurred”, “Oops!” and marketing fluff like “Revolutionise your workflow”. People do not read interfaces, they scan them. Clear, specific words reduce mistakes and support messages more than any visual polish.',
