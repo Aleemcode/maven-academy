@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
 
   try {
     const refs = new Set();
+    const diag = { success: 0, ngn: 0, belowMin: {}, otherPage: {}, noReferrer: 0, counted: 0 };
     const perPage = 100;
     for (let page = 1; page <= 30; page++) {
       const url = `https://api.paystack.co/transaction?status=success&perPage=${perPage}&page=${page}&from=${encodeURIComponent(opens)}`;
@@ -33,16 +34,21 @@ module.exports = async (req, res) => {
       const j = await r.json();
       const rows = Array.isArray(j.data) ? j.data : [];
       for (const t of rows) {
-        if (t.status !== "success" || t.currency !== "NGN") continue;
-        if (Number(t.amount) < minAmount) continue;
+        if (t.status !== "success") continue;
+        diag.success++;
+        if (t.currency !== "NGN") continue;
+        diag.ngn++;
+        if (Number(t.amount) < minAmount) { const k = String(Number(t.amount) / 100); diag.belowMin[k] = (diag.belowMin[k] || 0) + 1; continue; }
         const meta = t.metadata && typeof t.metadata === "object" ? t.metadata : {};
         const ref = String(meta.referrer || "").toLowerCase();
         const m = ref.match(/\/pay\/([^/?#]+)/);
-        if (m && !slugs.includes(m[1])) continue; // paid on a different payment page
-        refs.add(t.reference);
+        if (!m) diag.noReferrer++;
+        if (m && !slugs.includes(m[1])) { diag.otherPage[m[1]] = (diag.otherPage[m[1]] || 0) + 1; continue; } // paid on a different payment page
+        refs.add(t.reference); diag.counted++;
       }
       if (rows.length < perPage) break;
     }
+    console.log("seats_diag " + JSON.stringify(diag));
     const taken = Math.min(cap, refs.size + offset);
     res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
     res.end(JSON.stringify({ taken, cap, left: Math.max(0, cap - taken), full: taken >= cap, updatedAt: new Date().toISOString() }));
