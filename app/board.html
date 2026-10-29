@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Board · Maven Builder Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/maven-mark-dark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="/app/assets/app.css">
+<style>
+.page.wide{max-width:1640px}
+.bh{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+.hright{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.count{font-family:var(--mono);font-weight:700;font-size:13px;background:var(--forest);color:var(--lime);border-radius:999px;padding:9px 14px}
+.howto{margin:14px 0 6px;font-size:14px;color:var(--muted)}
+.howto b{color:var(--forest)}
+.board{display:grid;grid-template-columns:repeat(6,minmax(220px,1fr));gap:14px;padding:10px 2px 24px;overflow-x:auto;scroll-snap-type:x mandatory}
+.col{scroll-snap-align:start;background:rgba(255,253,247,.55);border:var(--bw) solid var(--forest);border-radius:20px;display:flex;flex-direction:column;min-height:420px}
+.colh{padding:12px 14px;border-bottom:var(--bw) solid var(--forest);border-radius:17px 17px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.colh b{font-family:var(--disp);font-weight:800;font-size:20px}
+.colh span{font-family:var(--mono);font-size:11px;font-weight:700}
+.colh i.n{font-style:normal;font-family:var(--mono);font-weight:700;font-size:12px;background:var(--paper);border:2px solid var(--forest);border-radius:999px;padding:1px 8px;color:var(--forest)}
+.cards{padding:12px;display:flex;flex-direction:column;gap:12px}
+.cards article{background:var(--paper);border:var(--bw) solid var(--forest);border-radius:16px;box-shadow:4px 4px 0 var(--forest);padding:14px;display:flex;flex-direction:column;gap:10px;transition:transform .12s var(--ease),box-shadow .12s var(--ease);animation:rise .35s var(--spring) both}
+.cards article:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--forest)}
+.cards article.mine{box-shadow:4px 4px 0 var(--terra)}
+.cards article.flash{outline:3px dashed var(--terra);outline-offset:4px}
+.cbtn{background:none;border:0;padding:0;display:flex;flex-direction:column;gap:8px;text-align:left;width:100%}
+.cbtn .t{font-family:var(--disp);font-weight:800;font-size:19px;line-height:1.1}
+.cbtn .by{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted)}
+.cbtn .p{font-size:14px;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.move{display:flex;gap:10px;margin-top:2px}
+.move button{width:46px;height:40px;border:var(--bw) solid var(--forest);border-radius:999px;background:var(--paper);box-shadow:3px 3px 0 var(--forest);display:grid;place-items:center;font-size:18px;transition:transform .12s var(--ease),box-shadow .12s var(--ease),background .12s}
+.move button:hover{background:var(--lime);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--forest)}
+.move button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--forest)}
+.move button[disabled]{opacity:.3;cursor:default;box-shadow:none;transform:none;background:var(--paper)}
+article[draggable=true] .cbtn{cursor:grab}
+article.dragging{opacity:.45}
+.col.over{background:rgba(214,229,154,.55);outline:3px dashed var(--forest);outline-offset:-8px}
+.step{display:none}.step.on{display:flex;flex-direction:column;gap:16px;animation:rise .25s var(--ease) both}
+.bar{height:6px;background:#E4DFD0}.bar i{display:block;height:100%;width:25%;background:var(--terra);transition:width .3s var(--spring)}
+.nav{position:sticky;bottom:0;background:var(--paper);display:flex;gap:10px;justify-content:space-between;padding-top:6px}
+.nav .btn{flex:1}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick input{position:absolute;opacity:0;pointer-events:none}
+.pick label{border:2px solid var(--forest);border-radius:999px;padding:7px 13px;font-weight:600;font-size:14px;background:var(--cream);cursor:pointer}
+.pick input:checked+label{background:var(--lime);box-shadow:2px 2px 0 var(--forest)}
+.pick input:focus-visible+label{outline:3px solid #3B82C4;outline-offset:2px}
+.private{border:2px dashed var(--terra-d);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:14px;background:var(--terra-t)}
+.req{color:var(--terra-d)}
+.dd h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-d)}
+.dd p{margin-top:4px}.dd .txt{white-space:pre-wrap}
+.dd .fac{border:2px dashed var(--forest);border-radius:14px;padding:14px;background:var(--cream);display:flex;flex-direction:column;gap:10px}
+.del{align-self:flex-start;border:var(--bw) solid var(--err);color:var(--err);background:var(--paper);border-radius:999px;padding:9px 16px;font-weight:700;box-shadow:3px 3px 0 var(--err)}
+.del.sure{background:var(--err);color:var(--paper)}
+@media (max-width:700px){.board{grid-template-columns:repeat(6,84vw)}.hright{width:100%}.hright .btn{flex:1}}
+</style>
+<script src="/assets/site-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/app/assets/maven.js"></script>
+</head>
+<body>
+<header id="shell"></header>
+<main class="page wide">
+  <div class="bh">
+    <div><span class="kick">Cohort 1 · Demo Day, Sun Nov 8</span><h1 class="hello">Project Board</h1><p class="lead">Every Demo Day project, moving from idea to demo, one session at a time.</p></div>
+    <div class="hright"><span class="count" id="count" aria-live="polite">… projects</span><button class="btn pri" id="addBtn" type="button" hidden><i class="ph ph-plus"></i>Add my project</button><button class="btn" id="editBtn" type="button" hidden><i class="ph ph-pencil-simple"></i>Edit my card</button></div>
+  </div>
+  <p class="howto" id="howto"><b>How it works:</b> drag your card to the next column as you build, or use the arrows on your phone. Only you can move your card.</p>
+  <section class="board" id="board" aria-label="Project board"></section>
+</main>
+
+<dialog class="dlg" id="formDlg" aria-labelledby="fTitle">
+  <div class="dh"><div><span class="stepno" id="stepNo">STEP 1 OF 4</span><h2 id="fTitle">You &amp; your idea</h2></div><button class="x" type="button" data-close aria-label="Close"><i class="ph ph-x"></i></button></div>
+  <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
+  <form class="db" id="form" novalidate>
+    <div class="step on" data-step="1" data-title="You & your idea">
+      <p class="hint">Four short steps. Keep it honest. You can grow it later.</p>
+      <label class="f"><span>Your name <span class="req">*</span></span><input class="in" type="text" name="builder" maxlength="80" autocomplete="name" required></label>
+      <label class="f"><span>Project name <span class="req">*</span></span><small>A working name is fine.</small><input class="in" type="text" name="project_name" maxlength="80" required></label>
+    </div>
+    <div class="step" data-step="2" data-title="The problem">
+      <label class="f"><span>What problem does it solve? <span class="req">*</span></span><small>One or two sentences.</small><textarea class="in" name="problem" maxlength="600" required placeholder="Small farmers can’t find buyers before their produce spoils."></textarea></label>
+      <label class="f"><span>Who is it for? <span class="req">*</span></span><input class="in" type="text" name="audience" maxlength="300" required placeholder="Smallholder farmers in Oyo State"></label>
+      <div class="f"><b>What kind of thing is it?</b>
+        <div class="pick" role="radiogroup" aria-label="Kind of project">
+          <input type="radio" name="kind" id="k1" value="Website"><label for="k1">Website</label>
+          <input type="radio" name="kind" id="k2" value="Web app"><label for="k2">Web app</label>
+          <input type="radio" name="kind" id="k3" value="Mobile app"><label for="k3">Mobile app</label>
+          <input type="radio" name="kind" id="k4" value="Tool"><label for="k4">Tool / calculator</label>
+          <input type="radio" name="kind" id="k5" value="Online store"><label for="k5">Online store</label>
+          <input type="radio" name="kind" id="k6" value="Not sure yet"><label for="k6">Not sure yet</label>
+        </div>
+      </div>
+    </div>
+    <div class="step" data-step="3" data-title="The build">
+      <label class="f">The 3 main things it must do<small>One per line. These become your core journeys.</small><textarea class="in" name="features" maxlength="800" placeholder="Farmer lists produce with a photo&#10;Buyer sees what’s near them&#10;They chat on WhatsApp to agree a price"></textarea></label>
+      <label class="f">What does “done” look like on Demo Day?<textarea class="in" name="done_looks_like" maxlength="600" placeholder="A live link where a farmer can post produce and a buyer can find it."></textarea></label>
+      <label class="f" id="statusField">Where is it now?
+        <select class="in" name="status">
+          <option value="idea">Idea: still just a thought</option>
+          <option value="system">System: I’ve mapped journeys or wireframes</option>
+          <option value="prototype">Prototype: something works on my screen</option>
+          <option value="live">Live: it has a public link</option>
+        </select>
+      </label>
+      <label class="f">Link <small>Optional: a live page, Figma or anything you have.</small><input class="in" type="url" name="link" maxlength="300" placeholder="https://"></label>
+    </div>
+    <div class="step" data-step="4" data-title="Your help plan">
+      <div class="private">
+        <span class="kick">Only Aleem sees this step</span>
+        <div class="f"><b>How comfortable are you building with AI right now?</b>
+          <div class="pick" role="radiogroup" aria-label="Comfort level">
+            <input type="radio" name="comfort" id="c1" value="Brand new"><label for="c1">Brand new</label>
+            <input type="radio" name="comfort" id="c2" value="Some experience"><label for="c2">Some experience</label>
+            <input type="radio" name="comfort" id="c3" value="Confident"><label for="c3">Confident</label>
+          </div>
+        </div>
+        <label class="f">Where do you most need help?<small>Be specific. This is how your guide gets written.</small><textarea class="in" name="help_needed" maxlength="800" placeholder="I don’t know how to save the farmers’ listings, or how to put it online."></textarea></label>
+      </div>
+    </div>
+    <p class="err" id="ferr" role="alert"></p>
+    <div class="nav">
+      <button class="btn" type="button" id="backBtn"><i class="ph ph-arrow-left"></i>Back</button>
+      <button class="btn pri" type="button" id="nextBtn">Next<i class="ph ph-arrow-right"></i></button>
+      <button class="btn pri" type="submit" id="submitBtn">Put it on the board<i class="ph ph-arrow-right"></i></button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="dlg" id="viewDlg" aria-labelledby="vTitle">
+  <div class="dh"><h2 id="vTitle"></h2><button class="x" type="button" data-close aria-label="Close"><i class="ph ph-x"></i></button></div>
+  <div class="db dd" id="vBody"></div>
+</dialog>
+
+<script>
+(async function(){
+  const { sb, boot, esc, safeUrl, toast } = MAB;
+  const { me } = await boot({ page: "board" });
+  const FAC = me.role === "facilitator";
+  const COLS=[["idea","Idea","S1 · Oct 24","#D6E59A"],["system","System","S2 · Oct 25","#C9E0F2"],["prototype","Prototype","S3 · Oct 30","#F6D7E8"],["live","Live","S4 · Nov 1","#F7DCC4"],["refined","Refined","S5 · Nov 7","#FBE3D3"],["demo","Demo","S6 · Nov 8","#14261D"]];
+  const ORDER = COLS.map(c => c[0]);
+  const COLS_SEL = "id,builder,project_name,problem,audience,done_looks_like,status,created_at,kind,features,link,user_id,presented_at";
+  let items = [], priv = {}, editing = null;
+  const isMine = i => i.user_id && i.user_id === me.user_id;
+  const canMove = i => isMine(i) || FAC;
+  if (FAC) document.getElementById("howto").innerHTML = "<b>Facilitator mode:</b> you can move, open and delete any card. Mark presentations on Demo Day from a card.";
+
+  async function load() {
+    const { data, error } = await sb.from("projects").select(COLS_SEL).order("created_at");
+    if (error) { if (!items.length) document.getElementById("board").innerHTML = '<p class="empty" style="grid-column:1/-1">Couldn’t load the board. Check your connection and refresh.</p>'; return; }
+    items = data; render();
+  }
+  async function loadPrivate() {
+    if (!FAC) return;
+    const { data } = await sb.rpc("facilitator_overview");
+    priv = {}; (data || []).forEach(r => { if (r.project_id) priv[r.project_id] = r; });
+  }
+  function render() {
+    const mine = items.find(isMine);
+    document.getElementById("addBtn").hidden = !!mine;
+    document.getElementById("editBtn").hidden = !mine;
+    document.getElementById("count").textContent = `${items.length} of 30 projects in`;
+    document.getElementById("board").innerHTML = COLS.map(([k, name, when, bg], ci) => {
+      const list = items.filter(i => i.status === k), dark = k === "demo";
+      return `<section class="col" data-col="${k}" aria-label="${name}"><div class="colh" style="background:${bg};${dark ? "color:#F4F0E5" : ""}"><div><b>${name}</b><br><span style="${dark ? "color:#D6E59A" : ""}">${when}</span></div><i class="n">${list.length}</i></div><div class="cards">${list.length ? list.map(i => card(i, ci)).join("") : '<p class="empty">No projects here yet.</p>'}</div></section>`;
+    }).join("");
+  }
+  function card(i, ci) {
+    const m = isMine(i), can = canMove(i);
+    return `<article class="${m ? "mine" : ""}" ${can ? `draggable="true" data-drag="${i.id}"` : ""} id="p-${i.id}"><button class="cbtn" type="button" data-view="${i.id}"><div class="chips">${i.kind ? `<span class="chip">${esc(i.kind)}</span>` : ""}${m ? '<span class="chip terra">Your card</span>' : ""}${i.presented_at ? '<span class="chip dark">Presented</span>' : ""}${FAC && !i.user_id ? '<span class="chip">Unclaimed</span>' : ""}</div><span class="t">${esc(i.project_name)}</span><span class="by">BY ${esc(i.builder).toUpperCase()}</span><span class="p">${esc(i.problem)}</span></button>${can ? `<div class="move"><button type="button" data-move="${i.id}" data-dir="-1" ${ci === 0 ? "disabled" : ""} aria-label="Move back a column"><i class="ph ph-caret-left"></i></button><button type="button" data-move="${i.id}" data-dir="1" ${ci === 5 ? "disabled" : ""} aria-label="Move forward a column"><i class="ph ph-caret-right"></i></button></div>` : ""}</article>`;
+  }
+  function view(id) {
+    const i = items.find(x => x.id === id); if (!i) return;
+    const col = COLS.find(c => c[0] === i.status), link = safeUrl(i.link), p = priv[i.id];
+    document.getElementById("vTitle").textContent = i.project_name;
+    document.getElementById("vBody").innerHTML = `<div class="chips"><span class="chip">${esc(col ? col[1] : i.status)}</span>${i.kind ? `<span class="chip">${esc(i.kind)}</span>` : ""}${i.presented_at ? '<span class="chip dark">Presented</span>' : ""}</div>
+      <div><h3>Builder</h3><p>${esc(i.builder)}</p></div>
+      <div><h3>The problem</h3><p class="txt">${esc(i.problem)}</p></div>
+      <div><h3>Who it’s for</h3><p class="txt">${esc(i.audience)}</p></div>
+      ${i.features ? `<div><h3>Must do</h3><p class="txt">${esc(i.features)}</p></div>` : ""}
+      ${i.done_looks_like ? `<div><h3>Done on Demo Day</h3><p class="txt">${esc(i.done_looks_like)}</p></div>` : ""}
+      ${link ? `<div><h3>Link</h3><p><a href="${esc(link)}" target="_blank" rel="noopener">${esc(link)}</a></p></div>` : ""}
+      ${FAC ? `<div class="fac"><h3>Facilitator</h3>${p ? `<p><b>Comfort:</b> ${esc(p.comfort || "not given")}</p><p class="txt"><b>Needs help with:</b> ${esc(p.help_needed || "not given")}</p><p><b>Email:</b> ${esc(p.email)}</p>` : `<p class="hint">${i.user_id ? "" : "Not claimed by a student account yet."}</p>`}
+        <div class="row" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sm ${i.presented_at ? "" : "pri"}" type="button" data-present="${i.id}" data-on="${i.presented_at ? 0 : 1}" ${i.user_id ? "" : "disabled"}><i class="ph ph-presentation-chart"></i>${i.presented_at ? "Undo presented" : "Mark presented (issues certificate)"}</button></div></div>` : ""}
+      ${isMine(i) ? `<button class="btn" type="button" data-edit><i class="ph ph-pencil-simple"></i>Edit my card</button>` : ""}
+      ${isMine(i) || FAC ? `<button type="button" class="del" data-del="${i.id}">Delete this card</button>` : ""}`;
+    document.getElementById("viewDlg").showModal();
+  }
+  function move(id, dir) { const i = items.find(x => x.id === id); if (!i) return; const next = ORDER[ORDER.indexOf(i.status) + dir]; if (next) setStatus(id, next); }
+  async function setStatus(id, next) {
+    const i = items.find(x => x.id === id); if (!i || i.status === next || !canMove(i)) return;
+    const prev = i.status; i.status = next; render();
+    const { error } = await sb.from("projects").update({ status: next }).eq("id", id);
+    if (error) { i.status = prev; render(); toast("Couldn’t move it. Try again."); return; }
+    toast(`Moved to ${COLS.find(c => c[0] === next)[1]}`);
+  }
+  async function del(btn) {
+    if (!btn.classList.contains("sure")) { btn.classList.add("sure"); btn.textContent = "Tap again to delete for good"; setTimeout(() => { if (btn.isConnected) { btn.classList.remove("sure"); btn.textContent = "Delete this card"; } }, 4000); return; }
+    const id = btn.dataset.del; btn.disabled = true; btn.textContent = "Deleting…";
+    const { error, count } = await sb.from("projects").delete({ count: "exact" }).eq("id", id);
+    if (error || !count) { btn.disabled = false; btn.classList.remove("sure"); btn.textContent = "Delete this card"; toast("Couldn’t delete it. Try again."); return; }
+    items = items.filter(x => x.id !== id); render(); document.getElementById("viewDlg").close(); toast("Card deleted");
+  }
+  async function present(btn) {
+    btn.disabled = true;
+    const { data, error } = await sb.rpc("set_presented", { p_id: btn.dataset.present, p_on: btn.dataset.on === "1" });
+    if (error || !data) { btn.disabled = false; toast("Couldn’t update. Try again."); return; }
+    await load(); await loadPrivate(); view(btn.dataset.present); toast(btn.dataset.on === "1" ? "Marked presented. Certificate issued." : "Presentation undone");
+  }
+
+  document.addEventListener("click", e => {
+    const d = e.target.closest("[data-del]"); if (d) return del(d);
+    const pr = e.target.closest("[data-present]"); if (pr) return present(pr);
+    const ed = e.target.closest("[data-edit]"); if (ed) { document.getElementById("viewDlg").close(); return openForm(true); }
+    const v = e.target.closest("[data-view]"); if (v) return view(v.dataset.view);
+    const mv = e.target.closest("[data-move]"); if (mv && !mv.disabled) return move(mv.dataset.move, +mv.dataset.dir);
+    const c = e.target.closest("[data-close]"); if (c) c.closest("dialog").close();
+  });
+
+  // form (add + edit)
+  let step = 1;
+  const form = document.getElementById("form");
+  function showStep(n) {
+    step = n; document.querySelectorAll(".step").forEach(el => el.classList.toggle("on", +el.dataset.step === n));
+    const cur = document.querySelector(`.step[data-step="${n}"]`);
+    document.getElementById("stepNo").textContent = `STEP ${n} OF 4`;
+    document.getElementById("fTitle").textContent = cur.dataset.title;
+    document.getElementById("barFill").style.width = (n * 25) + "%";
+    document.getElementById("backBtn").style.visibility = n === 1 ? "hidden" : "visible";
+    document.getElementById("nextBtn").style.display = n === 4 ? "none" : "";
+    document.getElementById("submitBtn").style.display = n === 4 ? "" : "none";
+    document.getElementById("ferr").textContent = "";
+    const fs = [...cur.querySelectorAll("input[type=text],textarea")], f = fs.find(x => !x.value.trim()) || fs[0]; if (f) setTimeout(() => f.focus(), 50);
+  }
+  const NEED = { 1: [["builder", "your name"], ["project_name", "a project name"]], 2: [["problem", "the problem"], ["audience", "who it’s for"]], 3: [], 4: [] };
+  function checkStep(n) {
+    const err = document.getElementById("ferr");
+    for (const [k, l] of NEED[n]) if (!(form.elements[k].value || "").trim()) { err.textContent = `Please add ${l}.`; form.elements[k].focus(); return false; }
+    if (n === 3) { const u = (form.elements.link.value || "").trim(); if (u && !safeUrl(u)) { err.textContent = "The link should start with https://"; form.elements.link.focus(); return false; } }
+    return true;
+  }
+  async function openForm(edit) {
+    form.reset(); editing = null;
+    document.getElementById("statusField").hidden = !!edit;
+    if (edit) {
+      const { data } = await sb.rpc("my_project"); const p = (data || [])[0]; if (!p) return;
+      editing = p.id;
+      for (const k of ["builder","project_name","problem","audience","features","done_looks_like","link","help_needed"]) form.elements[k].value = p[k] || "";
+      for (const k of ["kind","comfort"]) { const el = form.querySelector(`input[name="${k}"][value="${CSS.escape(p[k] || "")}"]`); if (el) el.checked = true; }
+      document.getElementById("submitBtn").firstChild.textContent = "Save changes";
+    } else {
+      form.elements.builder.value = me.full_name || "";
+      document.getElementById("submitBtn").firstChild.textContent = "Put it on the board";
+    }
+    showStep(1); document.getElementById("formDlg").showModal();
+  }
+  document.getElementById("nextBtn").onclick = () => { if (checkStep(step)) showStep(step + 1); };
+  document.getElementById("backBtn").onclick = () => showStep(step - 1);
+  form.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT" && step < 4) { e.preventDefault(); document.getElementById("nextBtn").click(); } });
+  document.getElementById("addBtn").onclick = () => openForm(false);
+  document.getElementById("editBtn").onclick = () => openForm(true);
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (step !== 4) return document.getElementById("nextBtn").click();
+    for (const n of [1, 2, 3]) if (!checkStep(n)) { showStep(n); checkStep(n); return; }
+    const v = n => { const el = form.elements[n]; if (el instanceof RadioNodeList) return el.value || null; return (el.value || "").trim() || null; };
+    const body = { builder: v("builder"), project_name: v("project_name"), problem: v("problem"), audience: v("audience"), kind: v("kind"), features: v("features"), done_looks_like: v("done_looks_like"), link: v("link"), comfort: v("comfort"), help_needed: v("help_needed") };
+    const btn = document.getElementById("submitBtn"), err = document.getElementById("ferr");
+    btn.disabled = true; err.textContent = "";
+    const { error } = editing
+      ? await sb.from("projects").update(body).eq("id", editing)
+      : await sb.from("projects").insert({ ...body, status: v("status") || "idea" });
+    btn.disabled = false;
+    if (error) { err.textContent = /duplicate|unique/i.test(error.message) ? "You already have a card on the board. Edit that one instead." : "That didn’t save. Check your connection and try again."; return; }
+    document.getElementById("formDlg").close(); toast(editing ? "Card updated" : "You’re on the board"); await load(); flashMine();
+  });
+
+  function flashMine() { const m = items.find(isMine); if (!m) return; const el = document.getElementById("p-" + m.id); if (!el) return; el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2200); }
+
+  // drag and drop (desktop); phones use the arrows
+  let dragId = null;
+  document.addEventListener("dragstart", e => { const a = e.target.closest && e.target.closest("[data-drag]"); if (!a) return; dragId = a.dataset.drag; a.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", dragId); } catch (_) {} });
+  document.addEventListener("dragend", () => { document.querySelectorAll(".dragging,.over").forEach(el => el.classList.remove("dragging", "over")); dragId = null; });
+  document.addEventListener("dragover", e => { const c = e.target.closest && e.target.closest("[data-col]"); if (!c || !dragId) return; e.preventDefault(); document.querySelectorAll(".over").forEach(el => el !== c && el.classList.remove("over")); c.classList.add("over"); });
+  document.addEventListener("drop", e => { const c = e.target.closest && e.target.closest("[data-col]"); if (!c || !dragId) return; e.preventDefault(); const id = dragId; dragId = null; c.classList.remove("over"); setStatus(id, c.dataset.col); });
+
+  await Promise.all([load(), loadPrivate()]);
+  if (location.hash === "#add" && !items.find(isMine)) openForm(false);
+  if (location.hash === "#mine") flashMine();
+  setInterval(() => { if (!document.querySelector("dialog[open]") && !dragId) load(); }, 20000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session feedback · Maven Builder Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/maven-mark-dark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="/app/assets/app.css">
+<style>
+.wrap{max-width:640px;margin:0 auto;padding:28px 16px 64px}
+.hero{background:var(--forest);color:var(--cream);border:var(--bw) solid var(--forest);border-radius:24px;padding:28px 22px;box-shadow:6px 6px 0 var(--terra);margin-bottom:24px}
+.hero .kick{color:var(--lime)}
+.hero h1{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,8vw,2.9rem);line-height:1;letter-spacing:-.04em;margin:12px 0}
+.hero p{color:#C9D1C6}
+.script{font-family:"Caveat",cursive;font-size:26px;color:var(--terra);margin-top:6px}
+.q{background:var(--paper);border:var(--bw) solid var(--forest);border-radius:20px;padding:20px 18px;margin-bottom:16px;box-shadow:4px 4px 0 var(--forest)}
+.q .t{display:block;font-weight:700;font-size:18px;margin-bottom:4px}
+.q .h{display:block;color:var(--muted);font-size:14px;margin-bottom:12px}
+.num{font-family:var(--mono);font-size:12px;color:var(--terra-d);letter-spacing:.14em;margin-bottom:6px;display:block;font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts input{position:absolute;opacity:0;pointer-events:none}
+.opts label{flex:1 1 auto;min-width:48px;min-height:46px;display:grid;place-items:center;text-align:center;border:var(--bw) solid var(--forest);border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer;background:var(--cream);user-select:none;transition:transform .08s}
+.opts label:active{transform:scale(.96)}
+.opts input:checked+label{background:var(--terra);box-shadow:3px 3px 0 var(--forest)}
+.opts input:focus-visible+label{outline:3px solid #3B82C4;outline-offset:2px}
+.nps label{min-width:40px;padding:8px 0;flex:1 1 40px}
+.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:8px}
+.send{width:100%;font-family:var(--disp);font-weight:800;font-size:22px;background:var(--terra);color:var(--forest);border:var(--bw) solid var(--forest);border-radius:18px;padding:18px;box-shadow:5px 5px 0 var(--forest);margin-top:8px}
+.send:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--forest)}
+.send[disabled]{opacity:.6;cursor:wait}
+.req{color:var(--terra-d)}
+.done .hero{box-shadow:6px 6px 0 var(--lime)}
+.done h1{color:var(--lime)}
+.priv{font-size:13.5px;color:var(--muted);text-align:center;margin-top:12px}
+</style>
+<script src="/assets/site-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/app/assets/maven.js"></script>
+</head>
+<body>
+<header id="shell"></header>
+<main class="wrap">
+<section id="formView" hidden>
+  <div class="hero">
+    <span class="kick" id="hk">Session</span>
+    <h1 id="ht">How was it?</h1>
+    <p>Two minutes. Be honest. What you tell us decides how the next session runs.</p>
+    <p class="script">thank you, builder</p>
+  </div>
+  <form id="f" novalidate>
+    <div class="q"><span class="num">01 <span class="req">· required</span></span><span class="t" id="q1">Overall, how was the session?</span><span class="h">1 = not great · 5 = loved it</span>
+      <div class="opts" role="radiogroup" aria-labelledby="q1" id="o-rating"></div></div>
+    <div class="q"><span class="num">02</span><span class="t" id="q2">How was the pace?</span>
+      <div class="opts" role="radiogroup" aria-labelledby="q2">
+        <input type="radio" name="pace" id="p1" value="too_slow"><label for="p1">Too slow</label>
+        <input type="radio" name="pace" id="p2" value="just_right"><label for="p2">Just right</label>
+        <input type="radio" name="pace" id="p3" value="too_fast"><label for="p3">Too fast</label></div></div>
+    <div class="q"><span class="num">03</span><span class="t" id="q3">How confident do you now feel directing AI to build something?</span><span class="h">1 = still lost · 5 = I can do it alone</span>
+      <div class="opts" role="radiogroup" aria-labelledby="q3" id="o-confidence"></div></div>
+    <div class="q"><span class="num">04</span><span class="t" id="q4">Did you ship today’s build?</span><span class="h" id="q4h"></span>
+      <div class="opts" role="radiogroup" aria-labelledby="q4">
+        <input type="radio" name="shipped" id="s1" value="yes"><label for="s1">Yes, it’s live</label>
+        <input type="radio" name="shipped" id="s2" value="almost"><label for="s2">Almost</label>
+        <input type="radio" name="shipped" id="s3" value="no"><label for="s3">Not yet</label></div></div>
+    <div class="q"><span class="num">05</span><label class="t" for="highlight">What was the most useful part?</label>
+      <textarea class="in" id="highlight" name="highlight" maxlength="1000" placeholder="A slide, an idea, a moment…"></textarea></div>
+    <div class="q"><span class="num">06</span><label class="t" for="confusing">What was confusing, or where did you get stuck?</label>
+      <textarea class="in" id="confusing" name="confusing" maxlength="1000" placeholder="No wrong answers. This helps us most."></textarea></div>
+    <div class="q"><span class="num">07</span><label class="t" for="improve">One thing we should do differently next time?</label>
+      <textarea class="in" id="improve" name="improve" maxlength="1000"></textarea></div>
+    <div class="q"><span class="num">08</span><span class="t" id="q8">How likely are you to recommend Maven Builder Academy to a friend?</span>
+      <div class="opts nps" role="radiogroup" aria-labelledby="q8" id="o-recommend"></div>
+      <div class="scale"><span>Not likely</span><span>Very likely</span></div></div>
+    <button class="send" type="submit" id="btn">Send feedback</button>
+    <p class="err" id="err" role="alert" style="margin-top:12px"></p>
+    <p class="priv">Only Aleem sees your answers.</p>
+  </form>
+</section>
+<section class="done" id="doneView" hidden aria-live="polite">
+  <div class="hero"><span class="kick">Received</span><h1>Thank you, builder.</h1><p id="doneNext">Your feedback is in.</p><p class="script">now go ship the next thing</p></div>
+  <a class="btn pri" href="/app"><i class="ph ph-house"></i>Back to home</a>
+</section>
+</main>
+<script>
+(async function(){
+  const { sb, boot, esc } = MAB;
+  const { me } = await boot({ page: "home" });
+  const n = parseInt(new URLSearchParams(location.search).get("s") || "0", 10);
+  const { data: sessions } = await sb.from("cohort_sessions").select("n,title,ship,starts_at").order("n");
+  const s = (sessions || []).find(x => x.n === n);
+  if (!s) { location.replace("/app"); return; }
+  const nxt = (sessions || []).find(x => x.n === n + 1);
+  document.title = `Session ${n} feedback · Maven Builder Academy`;
+  document.getElementById("hk").textContent = `Session ${String(n).padStart(2, "0")} · ${s.title}`;
+  document.getElementById("ht").textContent = `How was ${s.title}?`;
+  if (s.ship) document.getElementById("q4h").textContent = s.ship;
+  document.getElementById("doneNext").textContent = nxt ? `Your feedback is in. See you at Session ${nxt.n}: ${nxt.title}.` : "Your feedback is in. Thank you for building with us.";
+
+  const scale = (id, name, from, to) => { const el = document.getElementById(id); for (let i = from; i <= to; i++) el.insertAdjacentHTML("beforeend", `<input type="radio" name="${name}" id="${name}${i}" value="${i}"><label for="${name}${i}">${i}</label>`); };
+  scale("o-rating", "rating", 1, 5); scale("o-confidence", "confidence", 1, 5); scale("o-recommend", "recommend", 0, 10);
+
+  const done = () => { document.getElementById("formView").hidden = true; document.getElementById("doneView").hidden = false; window.scrollTo(0, 0); };
+  const { data: mine } = await sb.from("feedback").select("id").eq("user_id", me.user_id).eq("session", n).limit(1);
+  if (mine && mine.length) { done(); return; }
+  document.getElementById("formView").hidden = false;
+
+  const f = document.getElementById("f"), btn = document.getElementById("btn"), err = document.getElementById("err");
+  const pick = k => { const el = f.querySelector(`input[name="${k}"]:checked`); return el ? el.value : null; };
+  const txt = k => (f.elements[k].value || "").trim() || null;
+  const num = v => v === null ? null : Number(v);
+  f.addEventListener("submit", async e => {
+    e.preventDefault(); err.textContent = "";
+    const rating = pick("rating");
+    if (!rating) { err.textContent = "Please rate the session (question 1) before sending."; f.querySelector("#rating1").focus(); return; }
+    btn.disabled = true; btn.textContent = "Sending…";
+    const { error } = await sb.from("feedback").insert({ session: n, rating: Number(rating), pace: pick("pace"), confidence: num(pick("confidence")), shipped: pick("shipped"),
+      highlight: txt("highlight"), confusing: txt("confusing"), improve: txt("improve"), recommend: num(pick("recommend")), name: (me.full_name || "").slice(0, 80) || null });
+    if (error && !/duplicate|unique/i.test(error.message)) { err.textContent = "That didn’t send. Check your data connection and tap again."; btn.disabled = false; btn.textContent = "Send feedback"; return; }
+    done();
+  });
+})();
+</script>
+</body>
+</html>

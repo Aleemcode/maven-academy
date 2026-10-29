@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Log in · Maven Builder Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/maven-mark-dark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="/app/assets/app.css">
+<style>
+body{display:flex;flex-direction:column;align-items:center;padding:32px 16px 48px;background:var(--cream)}
+.logo{height:44px;width:auto;margin-bottom:26px}
+.wrap{width:100%;max-width:460px}
+.panel{padding:26px 24px 24px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:var(--bw) solid var(--forest);border-radius:var(--r-pill);padding:4px;background:var(--cream);margin-bottom:22px}
+.seg button{border:0;background:none;border-radius:var(--r-pill);padding:10px 8px;font-weight:700;font-size:14.5px;color:var(--ink-2);transition:background .15s var(--ease),color .15s}
+.seg button[aria-selected=true]{background:var(--forest);color:var(--cream)}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(1.9rem,6vw,2.4rem);line-height:1.02;letter-spacing:-.04em;margin:8px 0 8px}
+.sub{color:var(--ink-2);margin-bottom:20px}
+form{display:flex;flex-direction:column;gap:14px}
+.pw{position:relative}
+.pw .in{padding-right:52px}
+.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:36px;border:0;background:none;border-radius:10px;display:grid;place-items:center;font-size:20px;color:var(--ink-2)}
+.eye:hover{background:var(--cream-2)}
+.alt{margin-top:18px;font-size:14.5px;color:var(--muted);text-align:center}
+.alt a,.alt button{color:var(--forest);font-weight:700;background:none;border:0;text-decoration:underline;text-underline-offset:3px}
+.foot{margin-top:22px;font-size:14px;color:var(--muted);text-align:center}
+.foot a{color:var(--forest)}
+.note a{font-weight:700}
+</style>
+<script src="/assets/site-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/app/assets/maven.js"></script>
+</head>
+<body>
+<img class="logo" src="/assets/brand/maven-lockup-dark.svg" alt="Maven Builder Academy">
+<main class="wrap">
+  <div class="card panel rise">
+    <div class="seg" role="tablist" aria-label="Log in or set up">
+      <button type="button" role="tab" id="tLogin" aria-selected="true" aria-controls="login">Log in</button>
+      <button type="button" role="tab" id="tSetup" aria-selected="false" aria-controls="setup">First time here</button>
+    </div>
+
+    <section id="login" role="tabpanel" aria-labelledby="tLogin">
+      <span class="kick">Students only</span>
+      <h1>Welcome back, builder.</h1>
+      <p class="sub">Your sessions, your project and your labs are inside.</p>
+      <form id="fLogin" novalidate>
+        <label class="f">Email<input class="in" type="email" name="email" autocomplete="email" inputmode="email" required></label>
+        <label class="f">Password<span class="pw"><input class="in" type="password" name="password" autocomplete="current-password" required><button class="eye" type="button" aria-label="Show password"><i class="ph ph-eye"></i></button></span></label>
+        <p class="err" id="eLogin" role="alert"></p>
+        <button class="btn pri block" type="submit" id="bLogin">Log in<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+      </form>
+      <p class="alt">Forgot your password? <a id="forgot" target="_blank" rel="noopener">Message Aleem</a></p>
+    </section>
+
+    <section id="setup" role="tabpanel" aria-labelledby="tSetup" hidden>
+      <span class="kick">One-time setup</span>
+      <h1>Set up your access.</h1>
+      <p class="sub">Use the email you paid with. We check your seat, then you’re in.</p>
+      <form id="fSetup" novalidate>
+        <label class="f">Your name<small>How it appears on the board and your certificate.</small><input class="in" type="text" name="name" autocomplete="name" maxlength="80" required></label>
+        <label class="f">Email you paid with<input class="in" type="email" name="email" autocomplete="email" inputmode="email" required></label>
+        <label class="f">Choose a password<small>At least 8 characters.</small><span class="pw"><input class="in" type="password" name="password" autocomplete="new-password" minlength="8" required><button class="eye" type="button" aria-label="Show password"><i class="ph ph-eye"></i></button></span></label>
+        <div class="err" id="eSetup" role="alert"></div>
+        <button class="btn pri block" type="submit" id="bSetup">Check my seat and continue<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+      </form>
+    </section>
+  </div>
+  <p class="foot">Not a student yet? <a href="/">See Maven Builder Academy</a></p>
+</main>
+<script>
+(function(){
+  const { sb, waLink, esc, syncCookie } = MAB;
+  const q = new URLSearchParams(location.search);
+  const next = (q.get("next") || "").startsWith("/app") ? q.get("next") : "/app";
+  const go = () => location.replace(next);
+
+  // Already logged in? Refresh the session (this also renews the lab cookie) and continue.
+  sb.auth.getSession().then(({ data }) => { if (data.session) { syncCookie(data.session); go(); } });
+
+  const tabs = { login: document.getElementById("tLogin"), setup: document.getElementById("tSetup") };
+  function show(which) {
+    for (const k in tabs) { const on = k === which; tabs[k].setAttribute("aria-selected", on); document.getElementById(k).hidden = !on; }
+    const f = document.querySelector(`#${which} input`); if (f) setTimeout(() => f.focus(), 30);
+  }
+  tabs.login.onclick = () => show("login"); tabs.setup.onclick = () => show("setup");
+  if (q.get("setup") === "1") show("setup");
+
+  document.getElementById("forgot").href = waLink("Hi Aleem, I forgot my Maven student app password. My email is: ");
+  document.querySelectorAll(".eye").forEach(b => b.onclick = () => {
+    const i = b.parentElement.querySelector("input"), on = i.type === "password";
+    i.type = on ? "text" : "password"; b.setAttribute("aria-label", on ? "Hide password" : "Show password");
+    b.innerHTML = `<i class="ph ${on ? "ph-eye-slash" : "ph-eye"}"></i>`;
+  });
+
+  const busy = (btn, on, label) => { btn.disabled = on; if (label) btn.firstChild.textContent = label; };
+
+  document.getElementById("fLogin").addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = e.target, err = document.getElementById("eLogin"), btn = document.getElementById("bLogin");
+    const email = f.email.value.trim().toLowerCase(), password = f.password.value;
+    err.textContent = "";
+    if (!email || !password) { err.textContent = "Enter your email and password."; return; }
+    busy(btn, true, "Logging in…");
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      busy(btn, false, "Log in");
+      err.innerHTML = /invalid/i.test(error.message)
+        ? `That email and password don’t match. First time here? <button type="button" class="linkish" id="toSetup" style="background:none;border:0;font-weight:700;text-decoration:underline;color:inherit">Set up your access</button>.`
+        : "We couldn’t log you in. Check your connection and try again.";
+      const ts = document.getElementById("toSetup"); if (ts) ts.onclick = () => { document.querySelector("#fSetup [name=email]").value = email; show("setup"); };
+      return;
+    }
+    syncCookie(data.session); go();
+  });
+
+  const SETUP_ERR = {
+    email: "That email doesn’t look right.",
+    name: "Add your name so your cohort knows who built what.",
+    password: "Your password needs at least 8 characters.",
+    already_set_up: "You’ve already set up your access. Log in instead.",
+    not_on_roster: `We couldn’t find a payment for that email. Use the exact email you paid with on Paystack. Paid by bank transfer? <a href="${waLink("Hi Aleem, I paid for Maven Builder Academy by transfer. Please add my email to the student app: ")}" target="_blank" rel="noopener">Message Aleem</a> and he’ll add you.`,
+    not_configured: "Student access is being switched on right now. Try again in a little while.",
+    payment_check_failed: "We couldn’t reach Paystack to check your seat. Try again in a minute."
+  };
+  document.getElementById("fSetup").addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = e.target, err = document.getElementById("eSetup"), btn = document.getElementById("bSetup");
+    const name = f.name.value.trim(), email = f.email.value.trim().toLowerCase(), password = f.password.value;
+    err.innerHTML = "";
+    if (name.length < 2) { err.textContent = SETUP_ERR.name; f.name.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = SETUP_ERR.email; f.email.focus(); return; }
+    if (password.length < 8) { err.textContent = SETUP_ERR.password; f.password.focus(); return; }
+    busy(btn, true, "Checking your seat…");
+    let j = {};
+    try {
+      const r = await fetch("/api/claim", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, email, password }) });
+      j = await r.json().catch(() => ({}));
+      if (!r.ok) throw j;
+    } catch (x) {
+      busy(btn, false, "Check my seat and continue");
+      const code = (x && x.error) || "";
+      if (code === "already_set_up") { document.querySelector("#fLogin [name=email]").value = email; show("login"); document.getElementById("eLogin").textContent = SETUP_ERR.already_set_up; return; }
+      err.innerHTML = SETUP_ERR[code] || "Something went wrong. Check your connection and try again.";
+      return;
+    }
+    busy(btn, true, "Seat confirmed. Opening your classroom…");
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) { busy(btn, false, "Check my seat and continue"); show("login"); return; }
+    syncCookie(data.session); location.replace("/app?welcome=1");
+  });
+})();
+</script>
+</body>
+</html>
