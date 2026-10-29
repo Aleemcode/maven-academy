@@ -77,4 +77,36 @@ async function paystackPayment(email) {
   return { reference: p.reference, paid_at: p.paid_at || p.paidAt || p.created_at, name };
 }
 
-module.exports = { SB_URL, serviceHeaders, send, readJson, cleanEmail, validEmail, getStudent, upsertStudent, userFromToken, paystackPayment };
+// Every qualifying Paystack payment for the current cohort (same rules as /api/seats).
+async function paystackCohort() {
+  const key = process.env.PAYSTACK_SECRET_KEY;
+  if (!key) return { error: "paystack_not_configured" };
+  const opens = process.env.COHORT_OPENS || "2026-09-01";
+  const minAmount = parseInt(process.env.SEAT_MIN_KOBO || "1000000", 10);
+  const slugs = (process.env.PAYSTACK_PAGE_SLUGS || process.env.PAYSTACK_PAGE_SLUG || "mavenba").toLowerCase().split(",").map(x => x.trim()).filter(Boolean);
+  const byEmail = new Map();
+  for (let page = 1; page <= 30; page++) {
+    const r = await fetch(`https://api.paystack.co/transaction?status=success&perPage=100&page=${page}&from=${encodeURIComponent(opens)}`, { headers: { Authorization: `Bearer ${key}` } });
+    if (!r.ok) return { error: "paystack_" + r.status };
+    const rows = ((await r.json()).data) || [];
+    for (const t of rows) {
+      if (t.status !== "success" || t.currency !== "NGN" || Number(t.amount) < minAmount) continue;
+      const meta = t.metadata && typeof t.metadata === "object" ? t.metadata : {};
+      const m = String(meta.referrer || "").toLowerCase().match(/\/pay\/([^/?#]+)/);
+      if (m && !slugs.includes(m[1])) continue;
+      const c = t.customer || {};
+      const email = cleanEmail(c.email);
+      if (!validEmail(email) || byEmail.has(email)) continue;
+      let name = [c.first_name, c.last_name].filter(Boolean).join(" ").trim();
+      if (!name && Array.isArray(meta.custom_fields)) {
+        const f = meta.custom_fields.find(x => /name/i.test(String(x.variable_name || x.display_name || "")));
+        if (f) name = String(f.value || "").trim();
+      }
+      byEmail.set(email, { email, full_name: name.slice(0, 80) || null, paystack_ref: t.reference, paid_at: t.paid_at || t.paidAt || t.created_at || null });
+    }
+    if (rows.length < 100) break;
+  }
+  return { payments: [...byEmail.values()] };
+}
+
+module.exports = { paystackCohort, SB_URL, serviceHeaders, send, readJson, cleanEmail, validEmail, getStudent, upsertStudent, userFromToken, paystackPayment };

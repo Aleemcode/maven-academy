@@ -25,12 +25,16 @@ table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:820px}
 th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:12px 14px;border-bottom:var(--bw) solid var(--forest);background:var(--cream);white-space:nowrap}
 td{padding:12px 14px;border-bottom:2px solid var(--hair);vertical-align:top}
 tr:last-child td{border-bottom:0}
+td .btn{white-space:nowrap}
 td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
 .dots{display:flex;gap:4px}
 .dots i{width:18px;height:18px;border-radius:6px;border:2px solid var(--forest);display:grid;place-items:center;font-style:normal;font-family:var(--mono);font-size:9px;font-weight:700;background:var(--paper)}
 .dots i.on{background:var(--lime)}
 .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .filters .in{max-width:280px}
+.sync{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:6px 0 4px;font-size:14px;color:var(--muted)}
+.sync b{color:var(--forest)}
+.stat small{display:block;font-size:13px;color:var(--ink-2);margin-top:6px}
 .sess{display:flex;flex-direction:column;gap:14px}
 .sform{padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
 .sform h3{grid-column:1/-1;font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
@@ -59,6 +63,7 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
   <span class="kick">Facilitator</span><h1 class="hello">Run the cohort</h1>
   <p class="lead">Roster, sessions, feedback and Demo Day, in one place. Students never see this page.</p>
   <div class="stats" id="stats"></div>
+  <div class="sync"><span id="syncMsg" aria-live="polite">Checking Paystack…</span><button class="btn sm" type="button" id="syncBtn"><i class="ph ph-arrows-clockwise"></i>Refresh from Paystack</button><button class="btn sm" type="button" id="nudgeBtn" hidden><i class="ph ph-whatsapp-logo"></i>Copy reminder for those not in yet</button></div>
   <div class="seg" role="tablist">
     <button type="button" role="tab" data-tab="students" aria-selected="true">Students</button>
     <button type="button" role="tab" data-tab="sessions" aria-selected="false">Sessions</button>
@@ -67,9 +72,9 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
   </div>
 
   <section data-panel="students">
-    <div class="filters"><input class="in" type="search" id="q" placeholder="Search name or email" aria-label="Search students"><select class="in" id="fil" aria-label="Filter" style="max-width:220px"><option value="">Everyone</option><option value="nosetup">Hasn’t set up access</option><option value="noproj">No project yet</option><option value="presented">Presented</option></select></div>
-    <div class="tbl-wrap"><table><thead><tr><th>Student</th><th>Access</th><th>Project</th><th>Feedback</th><th>Demo Day</th><th></th></tr></thead><tbody id="rows"><tr><td colspan="6"><div class="skel" style="height:80px"></div></td></tr></tbody></table></div>
-    <p class="hint" style="margin-top:10px">Students appear here once they set up access (or you add them). Paystack payers are checked automatically when they sign up.</p>
+    <div class="filters"><input class="in" type="search" id="q" placeholder="Search name or email" aria-label="Search students"><select class="in" id="fil" aria-label="Filter" style="max-width:220px"><option value="">Everyone</option><option value="nosetup">Paid, not in the app yet</option><option value="noproj">No project yet</option><option value="presented">Presented</option></select></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Student</th><th>Paid</th><th>Access</th><th>Project</th><th>Feedback</th><th>Demo Day</th><th></th></tr></thead><tbody id="rows"><tr><td colspan="7"><div class="skel" style="height:80px"></div></td></tr></tbody></table></div>
+    <p class="hint" style="margin-top:10px">Everyone who paid through Paystack for this cohort is listed, whether or not they’ve logged in yet. Bank transfers: use “Add a student”.</p>
   </section>
   <section data-panel="sessions" hidden><div class="sess" id="sess"></div></section>
   <section data-panel="feedback" hidden><div class="fbs" id="fbs"></div></section>
@@ -115,17 +120,41 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
   }
 
   async function load() {
-    const [o, s, f] = await Promise.all([sb.rpc("facilitator_overview"), sb.from("cohort_sessions").select("*").order("n"), sb.from("feedback").select("*").order("created_at")]);
-    roster = (o.data || []).filter(r => r.role !== "facilitator"); sessions = s.data || []; feedback = f.data || [];
+    const [o, s, f, st] = await Promise.all([sb.rpc("facilitator_overview"), sb.from("cohort_sessions").select("*").order("n"), sb.from("feedback").select("*").order("created_at"), sb.from("students").select("email,paystack_ref,paid_at")]);
+    const pay = Object.fromEntries((st.data || []).map(x => [x.email, x]));
+    roster = (o.data || []).filter(r => r.role !== "facilitator").map(r => ({ ...r, paystack_ref: pay[r.email]?.paystack_ref || null, paid_at: pay[r.email]?.paid_at || null }));
+    sessions = s.data || []; feedback = f.data || [];
     stats(); rows(); sess(); fbs();
   }
 
+  async function sync(manual) {
+    const msg = document.getElementById("syncMsg"), btn = document.getElementById("syncBtn");
+    btn.disabled = true; msg.textContent = "Checking Paystack…";
+    try {
+      const j = await api({ action: "sync_paystack" });
+      msg.innerHTML = `<b>${j.paid}</b> paid through Paystack${j.added ? ` · ${j.added} new added` : ""} · checked ${esc(time(j.syncedAt))}`;
+      await load();
+      if (manual) toast(j.added ? `${j.added} new students added from Paystack` : "Roster is up to date");
+    } catch (x) { msg.textContent = x.error === "not_configured" ? "Server key missing in Vercel." : "Couldn’t reach Paystack just now. Try Refresh in a minute."; }
+    btn.disabled = false;
+  }
+  document.getElementById("syncBtn").onclick = () => sync(true);
+  document.getElementById("nudgeBtn").onclick = async () => {
+    const out = roster.filter(r => !r.claimed);
+    const text = `Hi builders! Your Maven student app is ready: sessions, replays, the project board and your labs, all in one place.\n\nSet up in 1 minute: ${location.origin}/app/login → “First time here” → use the email you paid with.\n\nNot in yet:\n` + out.map(r => `• ${r.full_name || r.email}`).join("\n");
+    try { await navigator.clipboard.writeText(text); toast(`Reminder copied (${out.length} names). Paste it in the WhatsApp group.`); } catch (e) { toast("Couldn’t copy. Try again."); }
+  };
+
   function stats() {
+    const paid = roster.length, viaPs = roster.filter(r => r.paystack_ref && r.paystack_ref !== "manual").length;
     const set = roster.filter(r => r.claimed).length, proj = roster.filter(r => r.project_id).length, pres = roster.filter(r => r.presented_at).length;
-    const last = [...sessions].reverse().find(s => new Date(s.starts_at) < new Date());
-    const fbLast = last ? feedback.filter(x => x.session === last.n).length : 0;
-    document.getElementById("stats").innerHTML = [[set + "/" + Math.max(30, roster.length), "set up access"], [proj, "projects on board"], [last ? fbLast : "–", last ? `feedback · S${last.n}` : "feedback"], [pres, "presented"]]
-      .map(([b, s]) => `<div class="card stat"><b>${b}</b><span>${s}</span></div>`).join("");
+    document.getElementById("stats").innerHTML = [
+      [paid, "paid students", `${viaPs} Paystack · ${paid - viaPs} added by you`],
+      [`${set}/${paid}`, "in the app", paid - set ? `${paid - set} not logged in yet` : "Everyone is in"],
+      [proj, "projects on board", ""],
+      [pres, "presented", ""]
+    ].map(([b, s, sm]) => `<div class="card stat"><b>${b}</b><span>${s}</span>${sm ? `<small>${sm}</small>` : ""}</div>`).join("");
+    document.getElementById("nudgeBtn").hidden = !(paid - set);
   }
 
   function rows() {
@@ -135,12 +164,13 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
       (!fil || (fil === "nosetup" && !r.claimed) || (fil === "noproj" && !r.project_id) || (fil === "presented" && r.presented_at)));
     document.getElementById("rows").innerHTML = list.map(r => `<tr>
       <td><b>${esc(r.full_name || "No name yet")}</b><span class="sub">${esc(r.email)}</span></td>
-      <td>${r.claimed ? '<span class="chip lime">Set up</span>' : '<span class="chip">Not yet</span>'}</td>
+      <td>${r.paystack_ref && r.paystack_ref !== "manual" ? `<span class="chip">Paystack</span>${r.paid_at ? `<span class="sub">${esc(day(r.paid_at))}</span>` : ""}` : '<span class="chip">Added by you</span>'}</td>
+      <td>${r.claimed ? '<span class="chip lime">In the app</span>' : '<span class="chip">Not yet</span>'}</td>
       <td>${r.project_id ? `<b>${esc(r.project_name)}</b><span class="sub">${esc(STAGE[r.status] || r.status)}${safeUrl(r.link) ? ` · <a href="${esc(safeUrl(r.link))}" target="_blank" rel="noopener">link</a>` : ""}</span>${r.help_needed ? `<span class="sub" title="${esc(r.help_needed)}">Needs: ${esc(r.help_needed.slice(0, 70))}${r.help_needed.length > 70 ? "…" : ""}</span>` : ""}` : '<span class="sub">No project</span>'}</td>
       <td><div class="dots" aria-label="Feedback given for sessions ${esc((r.feedback_sessions || []).join(", ") || "none")}">${sessions.map(s => `<i class="${(r.feedback_sessions || []).includes(s.n) ? "on" : ""}" style="${held.includes(s.n) ? "" : "opacity:.35"}">${s.n}</i>`).join("")}</div></td>
       <td>${r.presented_at ? `<span class="chip dark">Presented</span>${r.cert_code ? `<span class="sub"><a href="/app/certificate?c=${esc(r.cert_code)}" target="_blank" rel="noopener">${esc(r.cert_code)}</a></span>` : ""}` : r.project_id ? `<button class="btn sm" type="button" data-present="${r.project_id}"><i class="ph ph-presentation-chart"></i>Mark presented</button>` : ""}</td>
       <td>${r.claimed ? `<button class="btn sm" type="button" data-pw="${esc(r.email)}" data-name="${esc(r.full_name || r.email)}"><i class="ph ph-key"></i>Reset</button>` : ""}</td></tr>`).join("")
-      || `<tr><td colspan="6"><p class="empty">${roster.length ? "No one matches." : "No students yet. They appear as they set up access."}</p></td></tr>`;
+      || `<tr><td colspan="7"><p class="empty">${roster.length ? "No one matches." : "No students yet."}</p></td></tr>`;
   }
   document.getElementById("q").oninput = rows; document.getElementById("fil").onchange = rows;
   document.getElementById("rows").addEventListener("click", async e => {
@@ -204,7 +234,7 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
     catch (x) { err.textContent = x.error === "email" ? "That email doesn’t look right." : x.error === "not_configured" ? "The server key isn’t set in Vercel yet." : "Couldn’t add them. Try again."; }
   });
 
-  load();
+  load().then(() => sync(false));
 })();
 </script>
 </body>
