@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MAB Taste Lab</title>
+<meta name="description" content="Learn the language of taste, one taste at a time, and craft intentional design direction for AI-built products. Maven Builder Academy.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@700&family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Instrument+Serif&family=Manrope:wght@400;600;800&family=Fraunces:wght@400;600;800&family=Nunito:wght@400;700;900&family=DM+Sans:wght@400;700&family=IBM+Plex+Sans:wght@400;600&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+ <aside class="side" id="side" aria-label="Taste Lab navigation">
+  <div class="brand"><div class="mk">T</div><div><b>Taste Lab</b><small>MAVEN BUILDER ACADEMY</small></div></div>
+  <nav class="nav" id="nav"></nav>
+ </aside>
+ <div class="veil" id="veil"></div>
+ <div class="main">
+  <header class="top">
+   <button class="menu-btn" id="menuBtn" aria-label="Open navigation"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+   <div class="crumb" id="crumb"></div>
+   <div class="sp"></div>
+   <a class="btn sm ghost" href="#/library" style="min-height:40px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v16H4zM14 4l6 1.5-3.5 15L11 19"/></svg><span class="lbl">Library</span></a>
+   <button class="btn pri sm" id="craftTop" style="min-height:40px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z"/></svg><span class="lbl">Craft your taste</span></button>
+  </header>
+  <main class="page" id="page" tabindex="-1"></main>
+ </div>
+</div>
+
+<div class="scrim" id="scrim" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+ <div class="modal">
+  <div class="m-top"><div><div class="eyebrow">Craft your taste</div><h2 id="mTitle">Direct it. Don’t accept defaults.</h2></div><button class="x" id="mClose" aria-label="Close">×</button></div>
+  <div class="m-body" id="mBody">
+   <div class="rail" id="rail"></div>
+   <div class="m-step" id="mStep"></div>
+   <div class="m-pv" id="mPv"></div>
+  </div>
+  <div class="m-foot"><button class="btn sm" id="mBack">← Back</button><div class="count" id="mCount"></div><div class="bar"><i id="mBar"></i></div><button class="btn sm pri" id="mNext">Next →</button></div>
+ </div>
+</div>
+
+<div class="scrim" id="dScrim" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+ <div class="modal" style="grid-template-rows:auto minmax(0,1fr);height:auto;max-height:min(860px,100%)">
+  <div class="m-top"><div><div class="eyebrow" id="dEye">Taste card</div><h2 id="dTitle"></h2></div><button class="x" id="dClose" aria-label="Close">×</button></div>
+  <div style="overflow:auto;padding:20px" id="dBody"></div>
+ </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="l0.js"></script>
+<script src="l1.js"></script>
+<script src="l2.js"></script>
+<script src="l3.js"></script>
+<script src="l4.js"></script>
+<script src="l5.js"></script>
+<script src="l6.js"></script>
+<script src="l9.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
