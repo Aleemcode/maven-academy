@@ -1,0 +1,28 @@
+name: vendor-labs
+on:
+  push:
+    branches: [vendor-labs]
+permissions:
+  contents: write
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download the deployed labs
+        run: |
+          set -e
+          mkdir -p labs/taste-lab labs/prompt-lab
+          for f in index.html app.js style.css l0.js l1.js l2.js l3.js l4.js l5.js l6.js l9.js; do
+            curl -fsSL "https://mab-taste-lab.vercel.app/$f" -o "labs/taste-lab/$f"
+          done
+          curl -fsSL "https://mab-prompt-lab.vercel.app/" -o labs/prompt-lab/index.html
+          curl -fsSL "https://warm-fusion.vercel.app/" -o labs/warm-fusion-index.html || true
+          ls -la labs labs/taste-lab labs/prompt-lab
+      - name: Commit
+        run: |
+          git config user.name "Aleemcode"
+          git config user.email "aakinyoola857@gmail.com"
+          git add labs
+          git commit -m "chore: vendor deployed Taste Lab and Prompt Lab source" || echo nothing
+          git push
