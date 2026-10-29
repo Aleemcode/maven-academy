@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
         if (Number(t.amount) < minAmount) { const k = String(Number(t.amount) / 100); diag.belowMin[k] = (diag.belowMin[k] || 0) + 1; continue; }
         const meta = t.metadata && typeof t.metadata === "object" ? t.metadata : {};
         const ref = String(meta.referrer || "").toLowerCase();
-        const m = ref.match(/\/pay\/([^/?#]+)/);
+        const m = ref.match(/\/pay\/([^/?#,\s]+)/);
         if (!m) diag.noReferrer++;
         if (m && !slugs.includes(m[1])) { diag.otherPage[m[1]] = (diag.otherPage[m[1]] || 0) + 1; continue; } // paid on a different payment page
         refs.add(t.reference); diag.counted++;

@@ -92,7 +92,7 @@ async function paystackCohort() {
     for (const t of rows) {
       if (t.status !== "success" || t.currency !== "NGN" || Number(t.amount) < minAmount) continue;
       const meta = t.metadata && typeof t.metadata === "object" ? t.metadata : {};
-      const m = String(meta.referrer || "").toLowerCase().match(/\/pay\/([^/?#]+)/);
+      const m = String(meta.referrer || "").toLowerCase().match(/\/pay\/([^/?#,\s]+)/);
       if (m && !slugs.includes(m[1])) continue;
       const c = t.customer || {};
       const email = cleanEmail(c.email);
