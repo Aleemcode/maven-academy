@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Warm Fusion Design System · By Design Maven Studio</title>
+  <meta name="description" content="Design Maven's design system that tones down the harshness of neo-brutalism with warm colors, mild corner radius, controllable tactile physics, and 12-step Radix semantic tokens." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Warm Fusion Design System · By Design Maven Studio" />
+  <meta property="og:description" content="Neo-Brutalist tactile physics fused with Swiss typographic warmth and 12-step Radix color semantics." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google & Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Cinzel:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Official Icon Family: Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    /* ============================================================
+       WARM FUSION CANONICAL TOKENS (12-STEP RADIX + TACTILE PHYSICS)
+       ============================================================ */
+    :root {
+      color-scheme: light;
+
+      /* — Radix 12-Step Neutral Scales (Light) — */
+      --sand-1: #FDFDFC;
+      --sand-2: #F9F6F0;  /* Ground */
+      --sand-3: #F1ECE0;  /* Wash / Raised ground */
+      --sand-4: #EAE5D9;
+      --sand-5: #E1DBD0;
+      --sand-6: #D5CFC3;
+      --sand-7: #C4BCAD;
+      --sand-8: #ABA291;
+      --sand-9: #8D8472;
+      --sand-10: #807765;
+      --sand-11: #5E5646; /* Muted text */
+      --sand-12: #211D15;
+
+      --slate-1: #FBFCFD;
+      --slate-2: #F8F9FA;
+      --slate-3: #F1F3F5;
+      --slate-4: #ECEEF0;
+      --slate-5: #E6E8EB;
+      --slate-6: #DFE3E6;
+      --slate-7: #D7DBDF;
+      --slate-8: #C1C8CD;
+      --slate-9: #889096;
+      --slate-10: #7E868C;
+      --slate-11: #27456D; /* Secondary Ink */
+      --slate-12: #001F51; /* DMaven High-Contrast Ink & Border */
+
+      /* — Radix 12-Step Brand Accent Scales — */
+      --orange-9: #FB5707; /* Canonical Terra CTA */
+      --orange-10: #D44200; /* Active Press */
+      --orange-3: #FFF0EA;  /* Computed Alpha Tint */
+
+      --grass-9: #1BC67F;  /* Canonical Emerald */
+      --grass-11: #006634; /* Dark Emerald */
+      --grass-3: #E8F9F1;  /* Growth Tint */
+
+      --amber-9: #FFCB66;  /* Canonical Warm Gold */
+      --amber-11: #78350F; /* Dark Gold */
+      --amber-3: #FFF8E8;  /* Gold Tint */
+
+      --blue-9: #3B86FE;   /* Canonical Blue */
+      --blue-3: #EEF4FF;   /* Blue Tint */
+
+      --crimson-9: #E11D48; /* Canonical Danger */
+      --crimson-3: #FFEBE1; /* Danger Tint */
+
+      /* — Semantic Aliases — */
+      --wf-ground: var(--sand-2);
+      --wf-ground-2: var(--sand-3);
+      --wf-surface: #FFFFFF;
+      --wf-forest: var(--slate-12);
+      --wf-pine: #0A2D6E;
+
+      --wf-ink: var(--slate-12);
+      --wf-ink-2: var(--slate-11);
+      --wf-muted: var(--sand-11);
+      --wf-ink-inv: #F8FAFC;
+      --wf-ink-inv-2: #CBD5E1;
+
+      --wf-terra: var(--orange-9);
+      --wf-terra-deep: var(--orange-10);
+      --wf-terra-tint: var(--orange-3);
+
+      --wf-green: var(--grass-9);
+      --wf-green-dark: var(--grass-11);
+      --wf-green-tint: var(--grass-3);
+
+      --wf-gold: var(--amber-9);
+      --wf-gold-dark: var(--amber-11);
+      --wf-gold-tint: var(--amber-3);
+
+      --wf-blue: var(--blue-9);
+      --wf-blue-tint: var(--blue-3);
+
+      --wf-danger: var(--crimson-9);
+      --wf-danger-tint: var(--crimson-3);
+
+      /* — Tactile Brutalist Physics — */
+      --wf-border: var(--slate-12);
+      --wf-bw: 2.5px;
+      --wf-bw-thin: 1.5px;
+      --wf-shadow: 5px 5px 0 var(--wf-border);
+      --wf-shadow-sm: 3px 3px 0 var(--wf-border);
+      --wf-shadow-lg: 8px 8px 0 var(--wf-border);
+
+      /* — Swiss Warmth Radii — */
+      --wf-r-xl: 22px; 
+      --wf-r-lg: 16px; 
+      --wf-r-md: 12px; 
+      --wf-r-sm: 8px; 
+      --wf-r-pill: 9999px;
+
+      /* — Typography Stacks — */
+      --wf-f-disp: "Bricolage Grotesque", -apple-system, sans-serif;
+      --wf-f-body: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --wf-f-mono: "Space Mono", ui-monospace, Menlo, monospace;
+      --wf-f-ar: "Amiri", serif;
+
+      /* — Transitions — */
+      --wf-dur: 200ms;
+      --wf-dur-fast: 120ms;
+      --wf-ease: cubic-bezier(.2,.7,.3,1);
+    }
+
+    /* Soft Ambiance Dark Mode (Retains Warm Ambiance with Soft Luminous Alpha Borders) */
+    .dark, [data-theme="dark"] {
+      color-scheme: dark;
+
+      --wf-ground: #0F1117;
+      --wf-ground-2: #171B22;
+      --wf-surface: #1E232E;
+
+      /* Soft Luminous Alpha Border: Eliminates harsh white neo-brutalist aggressiveness */
+      --wf-border: rgba(255, 255, 255, 0.16);
+      --wf-ink: #F5F2EB;       /* Warm Swiss cream text */
+      --wf-ink-2: #A8B1BE;     /* Soft slate text */
+      --wf-muted: #768090;
+
+      /* Ambient Warm Shadows in Dark Mode */
+      --wf-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+      --wf-shadow-sm: 2px 2px 0 rgba(0, 0, 0, 0.45);
+      --wf-shadow-lg: 7px 7px 0 rgba(0, 0, 0, 0.55);
+
+      /* Glowing Alpha Tints in Dark Mode */
+      --wf-terra-tint: rgba(251, 87, 7, 0.18);
+      --wf-green-tint: rgba(27, 198, 127, 0.18);
+      --wf-gold-tint: rgba(255, 203, 102, 0.18);
+      --wf-blue-tint: rgba(59, 134, 254, 0.18);
+      --wf-danger-tint: rgba(225, 29, 72, 0.18);
+    }
+
+    /* Reset & Base Rules */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      background: var(--wf-ground);
+      color: var(--wf-ink);
+      font-family: var(--wf-f-body);
+      font-size: 15.5px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      width: 100%;
+      min-width: 320px;
+      transition: background var(--wf-dur), color var(--wf-dur);
+    }
+
+    /* Top Navigation */
+    .wf-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--wf-ground);
+      border-bottom: var(--wf-bw) solid var(--wf-border);
+      padding: 12px 24px;
+      transition: background var(--wf-dur), border-color var(--wf-dur);
+    }
+    .wf-topbar__inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .wf-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--wf-ink);
+      flex-shrink: 0;
+    }
+    .wf-logo__badge {
+      background: var(--wf-terra);
+      color: #FFFFFF;
+      font-family: var(--wf-f-disp);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 9px;
+      border-radius: var(--wf-r-sm);
+      border: var(--wf-bw-thin) solid var(--wf-border);
+      box-shadow: 2px 2px 0 var(--wf-border);
+    }
+    .wf-logo__title {
+      font-family: var(--wf-f-disp);
+      font-weight: 800;
+      font-size: 17.5px;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    /* Search Input (Geist Style) */
+    .wf-search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--wf-surface);
+      border: var(--wf-bw-thin) solid var(--wf-border);
+      border-radius: var(--wf-r-pill);
+      padding: 7px 14px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 2px 2px 0 var(--wf-border);
+      position: relative;
+    }
+    .wf-search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: var(--wf-f-body);
+      font-size: 13.5px;
+      color: var(--wf-ink);
+      width: 100%;
+    }
+    .wf-search-kbd {
+      font-family: var(--wf-f-mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      background: var(--wf-ground-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--wf-border);
+      color: var(--wf-muted);
+      cursor: pointer;
+    }
+    .wf-search-clear {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--wf-muted);
+      font-size: 14px;
+      padding: 2px;
+    }
+
+    .wf-topbar__actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Main Portal Layout */
+    .portal-layout {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 65px);
+    }
+
+    /* Sticky Categorized Sidebar (Sleek, Single-Line, Balanced) */
+    .portal-sidebar {
+      position: sticky;
+      top: 65px;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+      border-right: var(--wf-bw) solid var(--wf-border);
+      padding: 24px 14px 40px;
+      background: var(--wf-ground);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      -webkit-overflow-scrolling: touch;
+      transition: background var(--wf-dur), border-color var(--wf-dur);
+    }
+    .sidebar-category {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .sidebar-heading {
+      font-family: var(--wf-f-disp);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--wf-muted);
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 10px;
+      font-family: var(--wf-f-disp);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--wf-ink);
+      text-decoration: none;
+      border-radius: var(--wf-r-sm);
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sidebar-link span.sidebar-link__title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .sidebar-link:hover {
+      background: var(--wf-ground-2);
+      border-color: var(--wf-border);
+    }
+    .sidebar-link.active {
+      background: var(--wf-surface);
+      border-color: var(--wf-border);
+      box-shadow: 2px 2px 0 var(--wf-border);
+      color: var(--wf-terra);
+    }
+    .sidebar-link__tag {
+      font-family: var(--wf-f-mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: var(--wf-r-pill);
+      background: var(--wf-terra-tint);
+      color: var(--wf-terra-deep);
+      flex-shrink: 0;
+      white-space: nowrap !important;
+      line-height: 1.1;
+    }
+
+    /* Main Content Area */
+    .portal-content {
+      padding: clamp(24px, 4vw, 48px) clamp(20px, 4vw, 56px);
+      max-width: 1040px;
+      min-width: 0;
+    }
+
+    /* Content Typography & Sections */
+    .doc-section {
+      padding-bottom: 52px;
+      margin-bottom: 48px;
+      border-bottom: var(--wf-bw) solid var(--wf-border);
+    }
+    .doc-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 24px;
+    }
+    .doc-tag { margin-bottom: 12px; }
+    .doc-title {
+      font-family: var(--wf-f-disp);
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: var(--wf-ink);
+      margin-bottom: 12px;
+      text-wrap: balance;
+    }
+    .doc-lead {
+      font-size: clamp(15px, 2vw, 17px);
+      line-height: 1.6;
+      color: var(--wf-ink-2);
+      margin-bottom: 24px;
+      text-wrap: pretty;
+    }
+    .doc-h3 {
+      font-family: var(--wf-f-disp);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--wf-ink);
+      margin: 26px 0 10px;
+    }
+    .doc-p {
+      font-size: 15px;
+      color: var(--wf-ink-2);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* Manifesto / Genesis Quote Card */
+    .manifesto-box {
+      background: var(--wf-ground-2);
+      border: var(--wf-bw) solid var(--wf-border);
+      border-left: 6px solid var(--wf-terra);
+      border-radius: var(--wf-r-md);
+      padding: 20px 24px;
+      margin: 20px 0;
+      box-shadow: var(--wf-shadow-sm);
+    }
+    .manifesto-box__title {
+      font-family: var(--wf-f-disp);
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--wf-ink);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .manifesto-box__quote {
+      font-family: var(--wf-f-body);
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--wf-ink);
+    }
+
+    /* Component Sandbox Cards */
+    .sandbox-card {
+      background: var(--wf-surface);
+      border: var(--wf-bw) solid var(--wf-border);
+      border-radius: var(--wf-r-lg);
+      padding: clamp(20px, 3vw, 28px);
+      box-shadow: var(--wf-shadow);
+      margin: 20px 0 28px;
+      transition: background var(--wf-dur), border-color var(--wf-dur);
+    }
+    .sandbox-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: var(--wf-bw-thin) solid var(--wf-ground-2);
+    }
+
+    /* Tactile Buttons (Zero Text Wrapping + Click Offset Physics) */
+    .wf-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--wf-f-disp);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 9px 20px;
+      border-radius: var(--wf-r-pill);
+      border: var(--wf-bw) solid var(--wf-border);
+      background: var(--wf-terra);
+      color: #FFFFFF;
+      text-decoration: none;
+      box-shadow: var(--wf-shadow);
+      cursor: pointer;
+      white-space: nowrap !important;
+      user-select: none;
+      transition: transform var(--wf-dur) var(--wf-ease), box-shadow var(--wf-dur) var(--wf-ease), background var(--wf-dur), border-color var(--wf-dur);
+    }
+    .wf-btn:hover {
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: var(--wf-shadow-lg);
+    }
+    .wf-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--wf-border);
+    }
+    .wf-btn--secondary {
+      background: var(--wf-surface);
+      color: var(--wf-ink);
+    }
+    .wf-btn--gold {
+      background: var(--wf-gold);
+      color: var(--slate-12);
+    }
+    .wf-btn--green {
+      background: var(--wf-green);
+      color: #FFFFFF;
+    }
+    .wf-btn--danger {
+      background: var(--wf-danger);
+      color: #FFFFFF;
+    }
+    .wf-btn--danger:hover {
+      background: #BE123C;
+    }
+    .wf-btn--sm {
+      padding: 6px 14px;
+      font-size: 12.5px;
+      box-shadow: var(--wf-shadow-sm);
+    }
+
+    /* Badges & Monospace Tags */
+    .mono-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--wf-f-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 11px;
+      border-radius: var(--wf-r-pill);
+      border: var(--wf-bw-thin) solid var(--wf-border);
+      background: var(--wf-surface);
+      color: var(--wf-ink);
+      white-space: nowrap !important;
+    }
+    .mono-tag--terra { background: var(--wf-terra-tint); color: var(--wf-terra); }
+    .mono-tag--green { background: var(--wf-green-tint); color: var(--wf-green); }
+    .mono-tag--gold { background: var(--wf-gold-tint); color: var(--amber-11); }
+    .mono-tag--blue { background: var(--wf-blue-tint); color: var(--blue-9); }
+
+    /* Toast Cards */
+    .wf-toast {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border: var(--wf-bw) solid var(--wf-border);
+      border-radius: var(--wf-r-lg);
+      padding: 14px 18px;
+      box-shadow: var(--wf-shadow);
+      background: var(--wf-surface);
+    }
+    .wf-toast__meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--wf-f-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .wf-toast__body {
+      font-family: var(--wf-f-body);
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--wf-ink);
+    }
+    /* Composite the tint over the solid surface so toasts stay fully opaque —
+       the tints are alpha in dark mode, which otherwise makes overlay toasts see-through. */
+    .wf-toast--success { background: linear-gradient(var(--wf-green-tint), var(--wf-green-tint)), var(--wf-surface); }
+    .wf-toast--success .wf-toast__meta { color: var(--wf-green); }
+    .wf-toast--caution { background: linear-gradient(var(--wf-gold-tint), var(--wf-gold-tint)), var(--wf-surface); }
+    .wf-toast--caution .wf-toast__meta { color: var(--amber-11); }
+    .wf-toast--error { background: linear-gradient(var(--wf-danger-tint), var(--wf-danger-tint)), var(--wf-surface); }
+    .wf-toast--error .wf-toast__meta { color: var(--wf-danger); }
+    .wf-toast--info { background: linear-gradient(var(--wf-blue-tint), var(--wf-blue-tint)), var(--wf-surface); }
+    .wf-toast--info .wf-toast__meta { color: var(--blue-9); }
+    /* caution's dark-brown meta is low-contrast on the dark toast — use bright gold in dark mode */
+    .dark .wf-toast--caution .wf-toast__meta, [data-theme="dark"] .wf-toast--caution .wf-toast__meta { color: var(--wf-gold); }
+
+    /* Form Inputs */
+    .wf-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: var(--wf-bw) solid var(--wf-border);
+      border-radius: var(--wf-r-md);
+      background: var(--wf-surface);
+      font-family: var(--wf-f-body);
+      font-size: 14px;
+      color: var(--wf-ink);
+      outline: none;
+      transition: border-color var(--wf-dur), box-shadow var(--wf-dur);
+    }
+    .wf-input:focus {
+      border-color: var(--wf-terra);
+      box-shadow: 0 0 0 3px rgba(251, 87, 7, 0.18);
+    }
+    .wf-input--error {
+      border-color: var(--wf-danger);
+    }
+    .wf-input--success {
+      border-color: var(--wf-green);
+    }
+    .wf-select {
+      width: 100%;
+      padding: 10px 42px 10px 14px;
+      border: var(--wf-bw) solid var(--wf-border);
+      border-radius: var(--wf-r-md);
+      background-color: var(--wf-surface);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23FB5707' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 16px) center;
+      background-size: 16px;
+      font-family: var(--wf-f-body);
+      font-size: 14px;
+      color: var(--wf-ink);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    /* Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    /* Terminal & Exporter Window */
+    .terminal-box {
+      background: var(--wf-surface);
+      border: var(--wf-bw) solid var(--wf-border);
+      border-radius: var(--wf-r-lg);
+      padding: 16px;
+      box-shadow: var(--wf-shadow-lg);
+      color: var(--wf-ink);
+      transition: background var(--wf-dur), border-color var(--wf-dur);
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: var(--wf-bw-thin) solid var(--wf-ground-2);
+      margin-bottom: 12px;
+    }
+    .terminal-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--wf-border);
+      display: inline-block;
+    }
+    .terminal-dot--red { background: #FB5707; }
+    .terminal-dot--yellow { background: #FFCB66; }
+    .terminal-dot--green { background: #1BC67F; }
+
+    .terminal-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .terminal-tab {
+      font-family: var(--wf-f-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--wf-r-pill);
+      background: var(--wf-ground);
+      color: var(--wf-ink);
+      border: var(--wf-bw-thin) solid var(--wf-border);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .terminal-tab.active {
+      background: var(--wf-terra);
+      color: #FFFFFF;
+      box-shadow: 2px 2px 0 var(--wf-border);
+    }
+    .terminal-code {
+      background: #001230;
+      color: #F8FAFC;
+      padding: 16px;
+      border-radius: var(--wf-r-md);
+      border: var(--wf-bw-thin) solid var(--wf-border);
+      font-family: var(--wf-f-mono);
+      font-size: 12.5px;
+      line-height: 1.55;
+      overflow-x: auto;
+      max-height: 420px;
+      white-space: pre;
+    }
+
+    /* Modal / Centered Dialog & Mobile Bottom-Sheet */
+    .wf-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 18, 48, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 1050;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--wf-dur);
+    }
+    .wf-modal-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .wf-modal-dialog {
+      background: var(--wf-surface);
+      border: var(--wf-bw) solid var(--wf-border);
+      border-radius: var(--wf-r-xl);
+      box-shadow: var(--wf-shadow-lg);
+      width: 100%;
+      max-width: 640px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 24px 28px;
+      transform: scale(0.95) translateY(12px);
+      transition: transform var(--wf-dur) var(--wf-ease);
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+    .wf-modal-backdrop.is-open .wf-modal-dialog {
+      transform: scale(1) translateY(0);
+    }
+    .wf-modal-handle { display: none; }
+
+    /* Toast Notification Container */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      max-width: 380px;
+      width: 100%;
+    }
+    .toast-container .wf-toast {
+      pointer-events: auto;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(.2,.7,.3,1);
+    }
+    .toast-container .wf-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Floating Studio FAB on Mobile */
+    .studio-fab {
+      display: none;
+      position: fixed;
+      bottom: max(20px, env(safe-area-inset-bottom, 20px));
+      right: 20px;
+      z-index: 990;
+      background: var(--wf-terra);
+      color: #FFFFFF;
+      border: var(--wf-bw) solid var(--wf-border);
+      border-radius: var(--wf-r-pill);
+      padding: 12px 20px;
+      font-family: var(--wf-f-disp);
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: var(--wf-shadow-lg);
+      cursor: pointer;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap !important;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 920px) {
+      .portal-layout { grid-template-columns: 1fr; }
+      .portal-sidebar { display: none; }
+      .studio-fab { display: flex; }
+      .wf-search-box { display: none; }
+    }
+
+    @media (max-width: 680px) {
+      .wf-modal-backdrop { align-items: flex-end; padding: 0; }
+      .wf-modal-dialog {
+        max-width: 100%;
+        border-bottom: none;
+        border-radius: var(--wf-r-xl) var(--wf-r-xl) 0 0;
+        box-shadow: 0 -6px 0 var(--wf-border);
+        transform: translateY(100%);
+        padding: 20px 20px max(24px, env(safe-area-inset-bottom, 24px));
+      }
+      .wf-modal-backdrop.is-open .wf-modal-dialog { transform: translateY(0); }
+      .wf-modal-handle {
+        display: block;
+        width: 44px;
+        height: 5px;
+        background: var(--wf-border);
+        border-radius: 9999px;
+        margin: 0 auto 16px;
+        opacity: 0.35;
+      }
+      .toast-container { right: 16px; left: 16px; bottom: 16px; max-width: none; width: auto; }
+    }
+
+    /* === Launch audit: kill horizontal overflow + phone topbar === */
+    /* Grid/flex children default to min-width:auto (min-content), so a wide code
+       line or long token forces the whole page wider than the viewport. */
+    .portal-layout, .portal-layout > * { min-width: 0; }
+    .doc-section, .wf-card, .wf-panel, .terminal-box { min-width: 0; max-width: 100%; }
+    pre { max-width: 100%; overflow-x: auto; }
+    .doc-section p code, .doc-section li code, .doc-section td code,
+    .doc-section h1 code, .doc-section h2 code, .doc-section h3 code, .doc-section h4 code {
+      overflow-wrap: anywhere; word-break: break-word;
+    }
+
+    @media (max-width: 680px) {
+      .wf-topbar { padding: 10px 16px; }
+      .wf-topbar__actions { gap: 8px; }
+      /* Theme Studio is reachable via the floating action button on small screens */
+      .wf-topbar__actions .wf-btn:not(.wf-btn--secondary) { display: none; }
+      /* GitHub link → icon only (keeps the dark-mode toggle button intact) */
+      a.wf-btn--secondary { font-size: 0; padding-left: 11px; padding-right: 11px; }
+      a.wf-btn--secondary i { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="wf-topbar">
+    <div class="wf-topbar__inner">
+      <a href="#overview" class="wf-logo-group">
+        <span class="wf-logo__badge">WF</span>
+        <span class="wf-logo__title">Warm Fusion</span>
+      </a>
+
+      <!-- Quick Search Bar -->
+      <div class="wf-search-box">
+        <i class="ph-bold ph-magnifying-glass" style="color:var(--wf-muted);"></i>
+        <input type="text" id="doc-search" placeholder="Search tokens, components, skills..." oninput="handleSearch(this.value)" />
+        <button class="wf-search-clear" id="search-clear-btn" onclick="clearSearch()" title="Clear search">
+          <i class="ph-bold ph-x-circle"></i>
+        </button>
+        <span class="wf-search-kbd" onclick="document.getElementById('doc-search').focus()">⌘K</span>
+      </div>
+
+      <div class="wf-topbar__actions">
+        <button onclick="openThemeStudioModal()" class="wf-btn wf-btn--sm">
+          <i class="ph-bold ph-sliders-horizontal"></i>
+          Theme Studio
+        </button>
+        <button onclick="toggleDarkMode()" class="wf-btn wf-btn--sm wf-btn--secondary" id="dark-toggle-btn" title="Toggle Warm Light / Dark Ambiance">
+          <i class="ph-bold ph-moon"></i>
+        </button>
+        <a href="https://github.com/Aleemcode/warm-fusion" target="_blank" rel="noopener" class="wf-btn wf-btn--sm wf-btn--secondary">
+          <i class="ph-bold ph-github-logo"></i>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Portal Layout -->
+  <div class="portal-layout">
+
+    <!-- Sticky Left Categorized Sidebar (Sleek, Balanced, Single-Line) -->
+    <aside class="portal-sidebar" id="portal-sidebar">
+      
+      <!-- Category 1: Foundations -->
+      <div class="sidebar-category">
+        <div class="sidebar-heading">
+          <i class="ph-bold ph-compass"></i> Foundations
+        </div>
+        <a href="#overview" class="sidebar-link active">
+          <span class="sidebar-link__title">Overview & Hero</span>
+        </a>
+        <a href="#genesis" class="sidebar-link">
+          <span class="sidebar-link__title">Design Genesis</span>
+          <span class="sidebar-link__tag">Origin</span>
+        </a>
+        <a href="#chemistry" class="sidebar-link">
+          <span class="sidebar-link__title">The Warm Chemistry</span>
+        </a>
+        <a href="#manifesto" class="sidebar-link">
+          <span class="sidebar-link__title">Architecture Manifesto</span>
+        </a>
+        <a href="#radix-colors" class="sidebar-link">
+          <span class="sidebar-link__title">12-Step Radix Engine</span>
+        </a>
+        <a href="#typography" class="sidebar-link">
+          <span class="sidebar-link__title">Typography Pairings</span>
+        </a>
+      </div>
+
+      <!-- Category 2: Interactive Studio -->
+      <div class="sidebar-category">
+        <div class="sidebar-heading">
+          <i class="ph-bold ph-sliders-horizontal"></i> Theme Studio
+        </div>
+        <a href="#studio" class="sidebar-link">
+          <span class="sidebar-link__title">Live Theme Sandbox</span>
+          <span class="sidebar-link__tag">Live</span>
+        </a>
+      </div>
+
+      <!-- Category 3: Component Library -->
+      <div class="sidebar-category">
+        <div class="sidebar-heading">
+          <i class="ph-bold ph-stack"></i> Components
+        </div>
+        <a href="#component-button" class="sidebar-link">
+          <span class="sidebar-link__title">Tactile Buttons</span>
+          <span class="sidebar-link__tag">Core</span>
+        </a>
+        <a href="#component-badge" class="sidebar-link">
+          <span class="sidebar-link__title">Badges & Tags</span>
+        </a>
+        <a href="#component-card" class="sidebar-link">
+          <span class="sidebar-link__title">Cards & Elevation</span>
+        </a>
+        <a href="#component-dialog" class="sidebar-link">
+          <span class="sidebar-link__title">Dialog & Drawer</span>
+        </a>
+        <a href="#component-toast" class="sidebar-link">
+          <span class="sidebar-link__title">Feedback Toasts</span>
+        </a>
+        <a href="#component-input" class="sidebar-link">
+          <span class="sidebar-link__title">Form Inputs</span>
+        </a>
+        <a href="#component-primitives" class="sidebar-link">
+          <span class="sidebar-link__title">Radix Primitives</span>
+        </a>
+      </div>
+
+      <!-- Category 4: AI & Code Export -->
+      <div class="sidebar-category">
+        <div class="sidebar-heading">
+          <i class="ph-bold ph-sparkle"></i> Studio & AI
+        </div>
+        <a href="#exporter" class="sidebar-link">
+          <span class="sidebar-link__title">AI Agent Skill Exporter</span>
+          <span class="sidebar-link__tag">AI Superpower</span>
+        </a>
+        <a href="#integration" class="sidebar-link">
+          <span class="sidebar-link__title">Tailwind & CSS Tokens</span>
+        </a>
+      </div>
+
+      <!-- Category 5: Open Source & Community -->
+      <div class="sidebar-category">
+        <div class="sidebar-heading">
+          <i class="ph-bold ph-git-pull-request"></i> Open Source
+        </div>
+        <a href="#contributing" class="sidebar-link">
+          <span class="sidebar-link__title">How to Contribute</span>
+        </a>
+        <a href="https://github.com/Aleemcode/warm-fusion" target="_blank" rel="noopener" class="sidebar-link">
+          <span class="sidebar-link__title">GitHub Repository</span>
+          <i class="ph-bold ph-arrow-up-right ph-sm"></i>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Canvas -->
+    <main class="portal-content" id="main-content">
+
+      <!-- 1. Hero Overview Section -->
+      <header class="doc-section" id="overview">
+        <div class="doc-tag">
+          <span class="mono-tag mono-tag--terra"><i class="ph-bold ph-sparkle ph-sm"></i> Warm Fusion v1.1.0</span>
+          <span class="mono-tag mono-tag--green">12-Step Radix Engine</span>
+          <span class="mono-tag mono-tag--gold"><i class="ph-bold ph-palette ph-sm"></i> Phosphor Icons</span>
+        </div>
+        <h1 class="doc-title">
+          Warm Fusion Design System
+        </h1>
+        <p class="doc-lead">
+          Design Maven's design system that tones down the harshness of neo-brutalism with warm colors, mild corner radii (against brutalist sharp edges), controllable tactile physics, parameterized entirely by <strong>12-step Radix semantic tokens</strong> for expressive, multi-faceted brand identities.
+        </p>
+
+        <!-- Quickstart CLI Terminal -->
+        <div class="terminal-box" style="margin-top:20px;">
+          <div class="terminal-header">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <div class="terminal-dots">
+                <span class="terminal-dot terminal-dot--red"></span>
+                <span class="terminal-dot terminal-dot--yellow"></span>
+                <span class="terminal-dot terminal-dot--green"></span>
+              </div>
+              <div class="terminal-tabs">
+                <button class="terminal-tab active" onclick="switchCliTab('npm')">npm install</button>
+                <button class="terminal-tab" onclick="switchCliTab('pnpm')">pnpm</button>
+                <button class="terminal-tab" onclick="switchCliTab('yarn')">yarn</button>
+                <button class="terminal-tab" onclick="switchCliTab('bun')">bun</button>
+                <button class="terminal-tab" onclick="switchCliTab('degit')">npx degit</button>
+                <button class="terminal-tab" onclick="switchCliTab('git')">git clone</button>
+              </div>
+            </div>
+            <button class="wf-btn wf-btn--sm wf-btn--gold" onclick="copyCliCommand()">
+              <i class="ph-bold ph-copy ph-sm"></i> Copy
+            </button>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; background:#001230; padding:12px 16px; border-radius:var(--wf-r-md); border:var(--wf-bw-thin) solid var(--wf-border); font-family:var(--wf-f-mono); font-size:13px; overflow-x:auto;">
+            <span style="color:var(--wf-terra); font-weight:700;">$</span>
+            <code id="cli-command-display" style="color:#F8FAFC; white-space:nowrap;">npm install @designmaven/design-system @phosphor-icons/react</code>
+          </div>
+        </div>
+      </header>
+
+      <!-- 2. Design Genesis & Origin Story -->
+      <section class="doc-section" id="genesis">
+        <span class="mono-tag mono-tag--gold doc-tag">Origin Story</span>
+        <h2 class="doc-title">The Genesis of Warm Fusion</h2>
+        
+        <div class="manifesto-box" style="border-left:6px solid var(--wf-gold-dark);">
+          <div class="manifesto-box__title">
+            <i class="ph-bold ph-lightbulb ph-lg" style="color:var(--wf-gold-dark);"></i>
+            Crafted for Multi-Color Brands & Long User Sessions
+          </div>
+          <p class="manifesto-box__quote">
+            "I was working on a multicolor brand personal project and needed a design system that delivers real tactile physics on buttons. I researched across design movements and observed that only Neo-Brutalism offers that punchy physical click feeling on buttons. However, standard Neo-Brutalism feels punishingly harsh, aggressive, and fatiguing to the eyes over prolonged sessions. Digital products are meant for long, productive sessions.
+          </p>
+          <p class="manifesto-box__quote" style="margin-top:12px;">
+            Working closely with Claude AI, I crafted my feeling of warmth, organic cream backgrounds, mild corner radii to kill the brutalist sharp edges, and controllable tactile physics on buttons — and boom, it birthed <strong>Warm Fusion</strong>.
+          </p>
+          <p class="manifesto-box__quote" style="margin-top:12px;">
+            I also observed that hardcoded color schemes are brittle and difficult to maintain in production environments. So I parameterized the entire color engine with the <strong>Radix UI 12-step color library</strong>, which handles semantic tokens and superb alpha variations brilliantly.
+          </p>
+          <p class="manifesto-box__quote" style="margin-top:12px;">
+            I decided to open-source it as my contribution to the design and developer community. One of its greatest superpowers is the dynamic <code>SKILL.md</code> exporter: curate your parameters here, paste it into any agentic coding environment (Google Antigravity, Claude, Cursor, Gemini), and it generates an impeccably consistent product throughout your entire codebase."
+          </p>
+          <div style="margin-top:16px; font-size:13.5px; font-weight:700; color:var(--wf-ink);">
+            — Aleem Akinyoola, Creator & Senior Design Engineer
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. The Chemistry of Warm Fusion -->
+      <section class="doc-section" id="chemistry">
+        <span class="mono-tag mono-tag--terra doc-tag">The Aesthetic Formula</span>
+        <h2 class="doc-title">The Chemistry of Warm Fusion</h2>
+        <p class="doc-lead">
+          Warm Fusion is a deliberate equilibrium between physical mechanical feedback and human typographic warmth:
+        </p>
+
+        <div class="grid-3">
+          <div class="sandbox-card">
+            <span class="mono-tag mono-tag--terra" style="margin-bottom:10px;">The Bone</span>
+            <h3 style="font-family:var(--wf-f-disp); font-size:18px; font-weight:800; margin-bottom:8px;">Tactile Brutalist Physics</h3>
+            <p style="font-size:13.5px; color:var(--wf-ink-2);">
+              Crisp 2.5px borders, hard drop shadows with zero blur, and physical press animations (<code>translate(2px, 2px)</code>) that give clicks real mechanical punch.
+            </p>
+          </div>
+
+          <div class="sandbox-card">
+            <span class="mono-tag mono-tag--green" style="margin-bottom:10px;">The Soul</span>
+            <h3 style="font-family:var(--wf-f-disp); font-size:18px; font-weight:800; margin-bottom:8px;">Swiss Typographic Warmth</h3>
+            <p style="font-size:13.5px; color:var(--wf-ink-2);">
+              Warm organic cream grounds (<code>#F9F6F0</code>), generous whitespace rhythm, human-centered typography (<em>Bricolage Grotesque</em> & <em>Instrument Sans</em>), and rounded 16px corners.
+            </p>
+          </div>
+
+          <div class="sandbox-card">
+            <span class="mono-tag mono-tag--blue" style="margin-bottom:10px;">The Harmony</span>
+            <h3 style="font-family:var(--wf-f-disp); font-size:18px; font-weight:800; margin-bottom:8px;">Multi-Color Brand Balance</h3>
+            <p style="font-size:13.5px; color:var(--wf-ink-2);">
+              Engineered specifically for expressive, multi-color brands. Plug in diverse palette colors and the Radix 12-step parameter engine blends them into balanced harmony.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Senior Architecture Manifesto & Guardrails -->
+      <section class="doc-section" id="manifesto">
+        <span class="mono-tag mono-tag--terra doc-tag">Senior Engineering Manifesto</span>
+        <h2 class="doc-title">The Design System Caveat & Guardrails</h2>
+        
+        <div class="manifesto-box">
+          <div class="manifesto-box__title">
+            <i class="ph-bold ph-shield-warning ph-lg" style="color:var(--wf-terra);"></i>
+            Architectural Tenet: Grammar vs. Literature
+          </div>
+          <p class="manifesto-box__quote">
+            "A design system provides the structural grammar, but you must write the UX literature. If you lack solid information architecture, clear visual hierarchy, intentional content design, and thoughtful user flows, you can still build poor experiences with great tokens. Treat Warm Fusion as your precision toolkit, not a shortcut around product thinking."
+          </p>
+        </div>
+
+        <p class="doc-p">
+          To maintain product composure and avoid visual fragmentation, adhere strictly to our core guardrails:
+        </p>
+        <ul style="padding-left:20px; font-size:14.5px; color:var(--wf-ink-2); line-height:1.7;">
+          <li><strong>1. Zero Text Wrapping on Action Labels & Badges:</strong> Buttons, badges, and menu tags must never break onto multiple lines (<code>white-space: nowrap !important;</code>). If container constraints cause overflow, truncate with single-line ellipsis (<code>text-overflow: ellipsis; overflow: hidden;</code>) and reveal full context on hover via tooltips.</li>
+          <li><strong>2. Single Primary CTA Per View:</strong> Every screen must have exactly ONE high-energy Primary CTA button (using the configured primary brand token <code>var(--wf-terra)</code>). Never compete with multiple high-contrast actions on the same view. Pair secondary actions with surface, neutral, or ghost styling.</li>
+          <li><strong>3. Generous Breathing Room:</strong> Never crowd cards or containers without minimum 20px padding and structured visual hierarchy.</li>
+          <li><strong>4. Conversational Monospace Feedback:</strong> Always pair state changes with semantic Toast notifications featuring uppercase monospace metadata and clear conversational copy.</li>
+          <li><strong>5. Calibrated Dark Mode Ambiance:</strong> In dark mode, replace stark white borders with soft luminous Radix alpha borders (<code>rgba(255, 255, 255, 0.16)</code>) and warm cream text to preserve prolonged visual comfort.</li>
+        </ul>
+      </section>
+
+      <!-- 5. Radix 12-Step Semantic Color Engine -->
+      <section class="doc-section" id="radix-colors">
+        <span class="mono-tag mono-tag--green doc-tag">Token Architecture</span>
+        <h2 class="doc-title">12-Step Radix Semantic Color Engine</h2>
+        <p class="doc-lead">
+          Zero hardcoded visual leaks. Warm Fusion is parameterized using <strong>Radix UI 12-Step Color Scales</strong> (<code>@radix-ui/colors</code>) + dynamic Alpha computation. When you adjust a token in the Theme Studio, the engine derives background washes, interactive hover/active states, and transparent focus halos.
+        </p>
+
+        <div class="sandbox-card">
+          <div class="sandbox-card__header">
+            <span style="font-family:var(--wf-f-disp); font-weight:800; font-size:15px;">Live Parameter Token Scale</span>
+            <span class="mono-tag mono-tag--terra">WCAG AA/AAA Compliant</span>
+          </div>
+          <div class="grid-2">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px solid var(--wf-ground-2);">
+                <span>Ground / Canvas</span>
+                <code style="font-family:var(--wf-f-mono); font-weight:700; color:var(--wf-terra);" id="scale-ground-val">var(--sand-2) · #F9F6F0</code>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px solid var(--wf-ground-2);">
+                <span>Raised Section Wash</span>
+                <code style="font-family:var(--wf-f-mono); font-weight:700; color:var(--wf-terra);" id="scale-wash-val">var(--sand-3) · Alpha 85%</code>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px solid var(--wf-ground-2);">
+                <span>Structural Border & Ink</span>
+                <code style="font-family:var(--wf-f-mono); font-weight:700; color:var(--wf-terra);" id="scale-ink-val">var(--slate-12) · #001F51</code>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px solid var(--wf-ground-2);">
+                <span>Primary CTA (Energy)</span>
+                <code style="font-family:var(--wf-f-mono); font-weight:700; color:var(--wf-terra);" id="scale-terra-val">var(--orange-9) · #FB5707</code>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px solid var(--wf-ground-2);" id="scale-green-row">
+                <span>Secondary Growth</span>
+                <code style="font-family:var(--wf-f-mono); font-weight:700; color:var(--wf-green);" id="scale-green-val">var(--grass-9) · #1BC67F</code>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px solid var(--wf-ground-2);">
+                <span>Accent Gold</span>
+                <code style="font-family:var(--wf-f-mono); font-weight:700; color:var(--amber-11);" id="scale-gold-val">var(--amber-9) · #FFCB66</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Typography & Curated Pairings -->
+      <section class="doc-section" id="typography">
+        <span class="mono-tag mono-tag--blue doc-tag">Typography System</span>
+        <h2 class="doc-title">Curated Typography Pairings</h2>
+        <p class="doc-lead">
+          Select from 4 expertly curated font stacks. Switching a pairing immediately updates the entire documentation DOM and injects the corresponding font imports and Tailwind configs into your exported AI agent skills.
+        </p>
+
+        <div class="grid-2">
+          <div class="sandbox-card" style="cursor:pointer;" onclick="setTypographyPairing('humanist')">
+            <span class="mono-tag mono-tag--terra" style="margin-bottom:8px;">Stack 1 · Default</span>
+            <h3 style="font-family:'Bricolage Grotesque', sans-serif; font-size:18px; font-weight:800; margin-bottom:4px;">The Humanist Grotesque</h3>
+            <p style="font-family:'Instrument Sans', sans-serif; font-size:13.5px; color:var(--wf-ink-2);">
+              Bricolage Grotesque (Display) + Instrument Sans (Body) + Space Mono (Code).
+            </p>
+          </div>
+
+          <div class="sandbox-card" style="cursor:pointer;" onclick="setTypographyPairing('geist')">
+            <span class="mono-tag mono-tag--blue" style="margin-bottom:8px;">Stack 2 · Digital</span>
+            <h3 style="font-family:'Inter', sans-serif; font-size:18px; font-weight:800; margin-bottom:4px;">The Modern Digital (Geist Stack)</h3>
+            <p style="font-family:'Inter', sans-serif; font-size:13.5px; color:var(--wf-ink-2);">
+              Inter / Geist (Display & Body) + Space Mono (Code). Ultra-clean precision.
+            </p>
+          </div>
+
+          <div class="sandbox-card" style="cursor:pointer;" onclick="setTypographyPairing('swiss')">
+            <span class="mono-tag mono-tag--green" style="margin-bottom:8px;">Stack 3 · Editorial</span>
+            <h3 style="font-family:'Plus Jakarta Sans', sans-serif; font-size:18px; font-weight:800; margin-bottom:4px;">The Swiss Editorial</h3>
+            <p style="font-family:'DM Sans', sans-serif; font-size:13.5px; color:var(--wf-ink-2);">
+              Plus Jakarta Sans (Display) + DM Sans (Body) + JetBrains Mono (Code).
+            </p>
+          </div>
+
+          <div class="sandbox-card" style="cursor:pointer;" onclick="setTypographyPairing('heritage')">
+            <span class="mono-tag mono-tag--gold" style="margin-bottom:8px;">Stack 4 · Heritage</span>
+            <h3 style="font-family:'Amiri', serif; font-size:20px; font-weight:700; margin-bottom:4px;">The Classical Heritage</h3>
+            <p style="font-family:'Instrument Sans', sans-serif; font-size:13.5px; color:var(--wf-ink-2);">
+              Amiri / Cinzel (Display) + Instrument Sans (Body) + Space Mono (Code).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Interactive Theme Studio Sandbox (On-Page) -->
+      <section class="doc-section" id="studio">
+        <span class="mono-tag mono-tag--terra doc-tag">Interactive Controls</span>
+        <h2 class="doc-title">Live Theme Studio & Parameter Engine</h2>
+        <p class="doc-lead">
+          Calibrate your colors, typography, borders, drop shadows, and corner radii. All changes cascade immediately across every component on the page and synchronize live with your generated AI skills, Tailwind configs, and CSS tokens.
+        </p>
+
+        <div class="sandbox-card">
+          <div id="inline-studio-controls">
+            <!-- Dynamically Rendered Controls -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Component: Tactile Buttons -->
+      <section class="doc-section" id="component-button">
+        <span class="mono-tag mono-tag--terra doc-tag">Component Sandbox</span>
+        <h2 class="doc-title">Tactile Buttons (Zero Text Wrapping)</h2>
+        <p class="doc-lead">
+          Engineered with strict click offset physics (<code>translate(2px, 2px)</code>) and guaranteed single-line integrity (<code>white-space: nowrap !important;</code>).
+        </p>
+
+        <div class="sandbox-card">
+          <div class="sandbox-card__header">
+            <span>Button Variants & Triggers</span>
+            <span class="mono-tag mono-tag--terra">Interactive</span>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+            <button class="wf-btn" onclick="fireToast('success', 'Primary Action clicked! Physical click registered.')">
+              <i class="ph-bold ph-lightning"></i> Primary Action
+            </button>
+            <button class="wf-btn wf-btn--secondary" onclick="fireToast('info', 'Secondary Surface action triggered.')">
+              <i class="ph-bold ph-gear"></i> Secondary Surface
+            </button>
+            <button class="wf-btn wf-btn--gold" onclick="fireToast('caution', 'Warm Gold action triggered.')">
+              <i class="ph-bold ph-star"></i> Warm Gold
+            </button>
+            <button class="wf-btn wf-btn--green" onclick="fireToast('success', 'Growth action confirmed!')">
+              <i class="ph-bold ph-check"></i> Growth Action
+            </button>
+            <button class="wf-btn wf-btn--danger" onclick="fireToast('error', 'Danger Action triggered!')">
+              <i class="ph-bold ph-trash"></i> Danger Action
+            </button>
+            <button class="wf-btn wf-btn--sm">
+              Small Pill
+            </button>
+          </div>
+          <pre style="background:#001230; color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">import { Button } from "@designmaven/design-system";
+import { Lightning } from "@phosphor-icons/react";
+
+&lt;Button variant="primary" size="md"&gt;
+  &lt;Lightning weight="bold" /&gt; Primary Action
+&lt;/Button&gt;</pre>
+        </div>
+      </section>
+
+      <!-- 9. Component: Badges & Tags -->
+      <section class="doc-section" id="component-badge">
+        <span class="mono-tag mono-tag--gold doc-tag">Metadata Elements</span>
+        <h2 class="doc-title">Monospace Badges & Status Tags</h2>
+        <p class="doc-lead">
+          High-contrast metadata tags formatted in uppercase monospace typography with zero text wrapping.
+        </p>
+
+        <div class="sandbox-card">
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+            <span class="mono-tag mono-tag--terra"><i class="ph-bold ph-sparkle ph-sm"></i> Terra Badge</span>
+            <span class="mono-tag mono-tag--green"><i class="ph-bold ph-check ph-sm"></i> 100% Verified</span>
+            <span class="mono-tag mono-tag--gold"><i class="ph-bold ph-star ph-sm"></i> Premium Tier</span>
+            <span class="mono-tag mono-tag--blue"><i class="ph-bold ph-info ph-sm"></i> System Active</span>
+            <span class="mono-tag">Neutral Status</span>
+          </div>
+          <p class="doc-p" style="margin-bottom:0;">
+            Tags automatically compute dynamic alpha backgrounds (<code>--wf-terra-tint</code>, <code>--wf-green-tint</code>, etc.) matching the current Theme Studio values.
+          </p>
+        </div>
+      </section>
+
+      <!-- 10. Component: Cards & Elevation -->
+      <section class="doc-section" id="component-card">
+        <span class="mono-tag mono-tag--green doc-tag">Surfaces & Elevation</span>
+        <h2 class="doc-title">Tactile Cards & Elevation</h2>
+        <p class="doc-lead">
+          Structured cards featuring hard drop shadows (<code>var(--wf-shadow)</code>) with zero blur and soft luminous borders in dark mode.
+        </p>
+
+        <div class="grid-2">
+          <div class="sandbox-card" style="margin:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <span class="mono-tag mono-tag--terra">Active Surface</span>
+              <i class="ph-bold ph-cube ph-lg" style="color:var(--wf-terra);"></i>
+            </div>
+            <h3 style="font-family:var(--wf-f-disp); font-size:18px; font-weight:800; margin-bottom:6px;">Standard Tactile Card</h3>
+            <p style="font-size:13.5px; color:var(--wf-ink-2);">
+              Structured boundaries, generous 24px padding, and mechanical drop shadows that anchor information with confidence.
+            </p>
+          </div>
+
+          <div class="sandbox-card" style="margin:0; background:var(--wf-ground-2);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <span class="mono-tag mono-tag--blue">Raised Ground</span>
+              <i class="ph-bold ph-layers ph-lg" style="color:var(--wf-blue);"></i>
+            </div>
+            <h3 style="font-family:var(--wf-f-disp); font-size:18px; font-weight:800; margin-bottom:6px;">Subtle Section Wash</h3>
+            <p style="font-size:13.5px; color:var(--wf-ink-2);">
+              Raised canvas wash (<code>var(--wf-ground-2)</code>) designed for sidebars, callout panels, and nested metadata groupings.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. Component: Dialog & Drawer -->
+      <section class="doc-section" id="component-dialog">
+        <span class="mono-tag mono-tag--blue doc-tag">Adaptive Overlays</span>
+        <h2 class="doc-title">Adaptive Dialog & Mobile Bottom-Sheet</h2>
+        <p class="doc-lead">
+          Automatically adapts between a centered floating dialog with 8px hard drop shadow on desktop, and a tactile bottom-sheet drawer with a drag handle on mobile screens (≤680px).
+        </p>
+
+        <div class="sandbox-card">
+          <div class="sandbox-card__header">
+            <span>Adaptive Overlay Preview</span>
+            <button class="wf-btn wf-btn--sm" onclick="openDemoModal()">
+              <i class="ph-bold ph-browsers"></i> Launch Modal & Drawer
+            </button>
+          </div>
+          <p class="doc-p" style="margin-bottom:0;">
+            Test on desktop to see the centered tactile frame with backdrop blur, or resize to mobile to test smooth bottom-sheet docking.
+          </p>
+        </div>
+      </section>
+
+      <!-- 12. Component: Feedback Toasts -->
+      <section class="doc-section" id="component-toast">
+        <span class="mono-tag mono-tag--green doc-tag">Signature Feedback</span>
+        <h2 class="doc-title">Monospace Feedback Toasts</h2>
+        <p class="doc-lead">
+          Warm Fusion feedback toasts feature a crisp monospace status header (icon + variant name + active hex code) paired with clear, human conversational guidance.
+        </p>
+
+        <div class="grid-2">
+          <div class="wf-toast wf-toast--success">
+            <div class="wf-toast__meta">
+              <i class="ph-bold ph-check"></i>
+              <span>SUCCESS</span>
+              <span>·</span>
+              <span id="toast-success-code">#1BC67F</span>
+            </div>
+            <p class="wf-toast__body">
+              All recipe tokens compiled cleanly. Ready for production deployment.
+            </p>
+          </div>
+
+          <div class="wf-toast wf-toast--caution">
+            <div class="wf-toast__meta">
+              <i class="ph-bold ph-warning"></i>
+              <span>CAUTION</span>
+              <span>·</span>
+              <span id="toast-caution-code">#FFCB66</span>
+            </div>
+            <p class="wf-toast__body">
+              Heads up: this recipe requires your API credentials added first.
+            </p>
+          </div>
+
+          <div class="wf-toast wf-toast--error">
+            <div class="wf-toast__meta">
+              <i class="ph-bold ph-x"></i>
+              <span>ERROR</span>
+              <span>·</span>
+              <span id="toast-error-code">#E11D48</span>
+            </div>
+            <p class="wf-toast__body">
+              The build didn't run. Errors are conversations — here's the fix.
+            </p>
+          </div>
+
+          <div class="wf-toast wf-toast--info">
+            <div class="wf-toast__meta">
+              <i class="ph-bold ph-info"></i>
+              <span>INFO</span>
+              <span>·</span>
+              <span id="toast-info-code">#3B86FE</span>
+            </div>
+            <p class="wf-toast__body">
+              New tool version released. Your recipes still work seamlessly.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13. Component: Input Controls -->
+      <section class="doc-section" id="component-input">
+        <span class="mono-tag mono-tag--gold doc-tag">Form Suite</span>
+        <h2 class="doc-title">Tactile Form Controls & High-Contrast States</h2>
+        <p class="doc-lead">
+          Input fields with 2.5px borders, subtle focus halo glows, and semantic validation states.
+        </p>
+        
+        <div class="sandbox-card">
+          <div class="grid-2" style="margin-bottom:16px;">
+            <div>
+              <label style="font-family:var(--wf-f-disp); font-size:12.5px; font-weight:700; margin-bottom:5px; display:block;">Full Name (Default)</label>
+              <input type="text" class="wf-input" placeholder="e.g. Aleem Akinyoola" value="Aleem Akinyoola" />
+            </div>
+
+            <div>
+              <label style="font-family:var(--wf-f-disp); font-size:12.5px; font-weight:700; margin-bottom:5px; display:block;">Email Address (Focus Active)</label>
+              <input type="email" class="wf-input" style="border-color:var(--wf-terra); box-shadow:0 0 0 3px rgba(251, 87, 7, 0.18);" value="aleem@dmaven.design" />
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label style="font-family:var(--wf-f-disp); font-size:12.5px; font-weight:700; color:var(--wf-danger); margin-bottom:5px; display:flex; align-items:center; gap:4px;">
+                <i class="ph-bold ph-warning-circle"></i> Workspace URL (Error State)
+              </label>
+              <input type="text" class="wf-input wf-input--error" value="invalid space name" />
+            </div>
+
+            <div>
+              <label style="font-family:var(--wf-f-disp); font-size:12.5px; font-weight:700; color:var(--wf-green); margin-bottom:5px; display:flex; align-items:center; gap:4px;">
+                <i class="ph-bold ph-check-circle"></i> Handle (Success State)
+              </label>
+              <input type="text" class="wf-input wf-input--success" value="@aleemcode" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14. Component: Radix Primitives -->
+      <section class="doc-section" id="component-primitives">
+        <span class="mono-tag mono-tag--blue doc-tag">Accessible Primitives</span>
+        <h2 class="doc-title">Radix Primitives & Interactive Controls</h2>
+        <p class="doc-lead">
+          Accessible Radix UI primitives wrapped in tactile borders and high-contrast active states.
+        </p>
+
+        <div class="sandbox-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" id="demo-check" checked style="width:20px; height:20px; accent-color:var(--wf-terra); cursor:pointer;" />
+              <label for="demo-check" style="font-family:var(--wf-f-disp); font-size:13.5px; font-weight:700; cursor:pointer;">Enforce Guardrails</label>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="radio" id="radio-1" name="demo-radio" checked style="width:18px; height:18px; accent-color:var(--wf-terra); cursor:pointer;" />
+              <label for="radio-1" style="font-family:var(--wf-f-disp); font-size:13.5px; font-weight:700; cursor:pointer;">Radix 12-Step</label>
+              
+              <input type="radio" id="radio-2" name="demo-radio" style="width:18px; height:18px; accent-color:var(--wf-terra); cursor:pointer; margin-left:12px;" />
+              <label for="radio-2" style="font-family:var(--wf-f-disp); font-size:13.5px; font-weight:700; cursor:pointer;">Alpha Tints</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15. Dynamic AI Agent Skill Generator -->
+      <section class="doc-section" id="exporter">
+        <span class="mono-tag mono-tag--green doc-tag">The Killer Superpower</span>
+        <h2 class="doc-title">Dynamic AI Agent Skill Generator</h2>
+        <p class="doc-lead">
+          Test and calibrate your colors, typography, and tactile physics in the Theme Studio, then export a tailored <code>SKILL.md</code> or <code>design.md</code> file loaded with all live Radix token variables, active theme mode, component recipes, and strict system guardrails for Google Antigravity, Claude, Cursor, and Gemini.
+        </p>
+
+        <div class="terminal-box">
+          <div class="terminal-header">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <div class="terminal-dots">
+                <span class="terminal-dot terminal-dot--red"></span>
+                <span class="terminal-dot terminal-dot--yellow"></span>
+                <span class="terminal-dot terminal-dot--green"></span>
+              </div>
+              <div class="terminal-tabs">
+                <button class="terminal-tab active" id="tab-skill" onclick="switchExportTab('skill')">SKILL.md / design.md</button>
+                <button class="terminal-tab" id="tab-tailwind" onclick="switchExportTab('tailwind')">tailwind.config.js</button>
+                <button class="terminal-tab" id="tab-css" onclick="switchExportTab('css')">tokens.css</button>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="wf-btn wf-btn--sm wf-btn--gold" onclick="copyCurrentCode()">
+                <i class="ph-bold ph-copy ph-sm"></i> Copy
+              </button>
+              <button class="wf-btn wf-btn--sm" onclick="downloadCurrentCode()">
+                <i class="ph-bold ph-download-simple ph-sm"></i> Download
+              </button>
+            </div>
+          </div>
+          <pre class="terminal-code" id="code-display"></pre>
+        </div>
+      </section>
+
+      <!-- 16. Integration: Tailwind & CSS Tokens -->
+      <section class="doc-section" id="integration">
+        <span class="mono-tag mono-tag--blue doc-tag">Developer Setup</span>
+        <h2 class="doc-title">Tailwind CSS & CSS Tokens Integration</h2>
+        <p class="doc-lead">
+          Drop Warm Fusion tokens into your existing web stack. Full support for Tailwind v3/v4, Next.js, Vite, and vanilla CSS architectures.
+        </p>
+
+        <div class="grid-2">
+          <div class="sandbox-card">
+            <h3 style="font-family:var(--wf-f-disp); font-size:16px; font-weight:800; margin-bottom:8px;">1. Import Tokens</h3>
+            <pre style="background:#001230; color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">import "@designmaven/design-system/tokens.css";</pre>
+          </div>
+
+          <div class="sandbox-card">
+            <h3 style="font-family:var(--wf-f-disp); font-size:16px; font-weight:800; margin-bottom:8px;">2. Use Tailwind Utilities</h3>
+            <pre style="background:#001230; color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">&lt;button className="bg-terra text-white font-display font-bold border-2.5 border-forest shadow-wf rounded-full px-5 py-2.5 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5"&gt;
+  Action
+&lt;/button&gt;</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- 17. Open Source & Community Contribution Hub -->
+      <section class="doc-section" id="contributing">
+        <span class="mono-tag mono-tag--terra doc-tag">Community & Open Source</span>
+        <h2 class="doc-title">How to Contribute to Warm Fusion</h2>
+        <p class="doc-lead">
+          Warm Fusion is an open-source design system built for the community. We welcome developers and designers to submit new components, curated color presets, and AI agent prompts!
+        </p>
+
+        <div class="grid-2" style="margin-bottom:24px;">
+          <div class="sandbox-card">
+            <span class="mono-tag mono-tag--terra" style="margin-bottom:8px;">1. Fork & Branch</span>
+            <h3 style="font-family:var(--wf-f-disp); font-size:17px; font-weight:800; margin-bottom:6px;">Create Your Feature Branch</h3>
+            <p style="font-size:13.5px; color:var(--wf-ink-2);">
+              Fork <code>Aleemcode/warm-fusion</code> on GitHub and create a clean branch: <code>git checkout -b feat/my-new-component</code>.
+            </p>
+          </div>
+
+          <div class="sandbox-card">
+            <span class="mono-tag mono-tag--green" style="margin-bottom:8px;">2. Build with Tokens</span>
+            <h3 style="font-family:var(--wf-f-disp); font-size:17px; font-weight:800; margin-bottom:6px;">Wrap in Warm Fusion Tokens</h3>
+            <p style="font-size:13.5px; color:var(--wf-ink-2);">
+              Use 2.5px solid ink borders, hard 5px drop shadows, Radix color semantics, and Phosphor Icons (<code>ph-bold</code>).
+            </p>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:12px;">
+          <a href="https://github.com/Aleemcode/warm-fusion" target="_blank" rel="noopener" class="wf-btn">
+            <i class="ph-bold ph-github-logo"></i> View on GitHub
+          </a>
+          <a href="https://github.com/Aleemcode/warm-fusion/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener" class="wf-btn wf-btn--secondary">
+            <i class="ph-bold ph-book-open"></i> Read Contributing Guide
+          </a>
+          <a href="https://github.com/Aleemcode/warm-fusion/issues/new" target="_blank" rel="noopener" class="wf-btn wf-btn--gold">
+            <i class="ph-bold ph-plus-circle"></i> Request / Propose Component
+          </a>
+        </div>
+      </section>
+
+      <!-- Footer & Creator Attribution -->
+      <footer style="padding:48px 0 24px; border-top:var(--wf-bw) solid var(--wf-border); text-align:center;">
+        <span class="mono-tag mono-tag--terra" style="margin-bottom:12px;">Warm Fusion Design System</span>
+        <h3 style="font-family:var(--wf-f-disp); font-size:22px; font-weight:800; color:var(--wf-ink); margin-bottom:6px;">
+          Created by Design Maven Studio
+        </h3>
+        <p style="font-size:14.5px; color:var(--wf-ink-2); margin-bottom:18px;">
+          Architected by <strong>Aleem Akinyoola</strong>. MIT Licensed for the open-source community.
+        </p>
+
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:28px;">
+          <a href="https://github.com/Aleemcode" target="_blank" rel="noopener" class="wf-btn wf-btn--sm wf-btn--secondary">
+            <i class="ph-bold ph-github-logo"></i> GitHub: @Aleemcode
+          </a>
+          <a href="https://www.linkedin.com/in/aleemakinyoola" target="_blank" rel="noopener" class="wf-btn wf-btn--sm wf-btn--secondary">
+            <i class="ph-bold ph-linkedin-logo"></i> LinkedIn: Aleem Akinyoola
+          </a>
+        </div>
+
+        <p style="font-family:var(--wf-f-mono); font-size:11.5px; color:var(--wf-muted);">
+          Warm Fusion &copy; 2026 Design Maven Studio. All rights reserved.
+        </p>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Theme Studio Modal Dialog -->
+  <div class="wf-modal-backdrop" id="studio-modal-backdrop" onclick="if(event.target===this) closeThemeStudioModal()">
+    <div class="wf-modal-dialog">
+      <div class="wf-modal-handle"></div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+        <span class="mono-tag mono-tag--terra"><i class="ph-bold ph-sliders-horizontal ph-sm"></i> Theme Studio</span>
+        <button onclick="closeThemeStudioModal()" style="background:none; border:none; cursor:pointer; color:var(--wf-ink);">
+          <i class="ph-bold ph-x ph-lg"></i>
+        </button>
+      </div>
+
+      <div id="modal-studio-controls">
+        <!-- Dynamically Rendered Controls -->
+      </div>
+
+      <div style="margin-top:24px;">
+        <button class="wf-btn" style="width:100%;" onclick="closeThemeStudioModal(); fireToast('success', 'Theme parameters customized & synchronized!');">
+          Apply & Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo Modal Dialog Element -->
+  <div class="wf-modal-backdrop" id="demo-modal-backdrop" onclick="if(event.target===this) closeDemoModal()">
+    <div class="wf-modal-dialog">
+      <div class="wf-modal-handle"></div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <span class="mono-tag mono-tag--terra"><i class="ph-bold ph-browsers ph-sm"></i> Adaptive Overlay</span>
+        <button onclick="closeDemoModal()" style="background:none; border:none; cursor:pointer; color:var(--wf-ink);">
+          <i class="ph-bold ph-x ph-lg"></i>
+        </button>
+      </div>
+      <h3 style="font-family:var(--wf-f-disp); font-size:20px; font-weight:800; margin-bottom:8px;">
+        Harmonized Dialog & Mobile Bottom-Sheet
+      </h3>
+      <p style="font-size:14px; color:var(--wf-ink-2); margin-bottom:18px; line-height:1.5;">
+        On desktop viewports (>680px), this component renders as a centered dialog with 8px hard drop shadow. On mobile viewports (≤680px), it locks to the bottom edge with a tactile swipe drag handle.
+      </p>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="wf-btn wf-btn--secondary wf-btn--sm" onclick="closeDemoModal()">Dismiss</button>
+        <button class="wf-btn wf-btn--sm" onclick="closeDemoModal(); fireToast('success', 'Modal action confirmed!');">Confirm Action</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Floating Action Button (FAB) -->
+  <button class="studio-fab" onclick="openThemeStudioModal()">
+    <i class="ph-bold ph-sliders-horizontal"></i>
+    <span>Theme Studio</span>
+  </button>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    // State
+    const currentTheme = {
+      ground: "#F9F6F0",
+      surface: "#FFFFFF",
+      ink: "#001F51",
+      terra: "#FB5707",
+      green: "#1BC67F",
+      gold: "#FFCB66",
+      blue: "#3B86FE",
+      danger: "#E11D48",
+      bw: "2.5px",
+      shadow: "5px",
+      radius: "16px",
+      fontPairing: "humanist"
+    };
+
+    let isDarkMode = false;
+    let activeExportTab = 'skill';
+    let activeCliTab = 'npm';
+
+    // CLI Commands Object
+    const cliCommands = {
+      npm: "npm install @designmaven/design-system @phosphor-icons/react",
+      pnpm: "pnpm add @designmaven/design-system @phosphor-icons/react",
+      yarn: "yarn add @designmaven/design-system @phosphor-icons/react",
+      bun: "bun add @designmaven/design-system @phosphor-icons/react",
+      degit: "npx degit Aleemcode/warm-fusion my-warm-fusion-app",
+      git: "git clone https://github.com/Aleemcode/warm-fusion.git"
+    };
+
+    // 10 Rich Curated Presets
+    const presets = {
+      classic: { name: "brilliantroots™", ground: "#F9F6F0", surface: "#FFFFFF", ink: "#001F51", terra: "#FB5707", green: "#1BC67F", gold: "#FFCB66", bw: "2.5px", shadow: "5px", radius: "16px" },
+      swiss: { name: "Swiss Studio", ground: "#F8F7F4", surface: "#FFFFFF", ink: "#1E2022", terra: "#E63946", green: "#2A9D8F", gold: "#E9C46A", bw: "2px", shadow: "4px", radius: "12px" },
+      nordic: { name: "Nordic Pine", ground: "#F4F1DE", surface: "#FFFFFF", ink: "#0D2818", terra: "#DDA15E", green: "#588157", gold: "#E07A5F", bw: "2.5px", shadow: "6px", radius: "18px" },
+      amber: { name: "Amber Sun", ground: "#FAF5EF", surface: "#FFFFFF", ink: "#2B1E16", terra: "#D97706", green: "#65A30D", gold: "#FBBF24", bw: "2.5px", shadow: "5px", radius: "16px" },
+      cyber: { name: "Cyber Volt", ground: "#F3F4F6", surface: "#FFFFFF", ink: "#0B0F19", terra: "#F43F5E", green: "#10B981", gold: "#06B6D4", bw: "3px", shadow: "7px", radius: "8px" },
+      noir: { name: "Velvet Noir", ground: "#FAF8F5", surface: "#FFFFFF", ink: "#18181B", terra: "#6366F1", green: "#10B981", gold: "#F59E0B", bw: "2px", shadow: "4px", radius: "14px" },
+      terracotta: { name: "Terracotta Earth", ground: "#FAF4EB", surface: "#FFFFFF", ink: "#2C1810", terra: "#C2410C", green: "#4D7C0F", gold: "#B45309", bw: "2.5px", shadow: "5px", radius: "16px" },
+      oceanic: { name: "Oceanic Reef", ground: "#F0FDF4", surface: "#FFFFFF", ink: "#082F49", terra: "#F43F5E", green: "#0D9488", gold: "#F59E0B", bw: "2.5px", shadow: "6px", radius: "18px" },
+      kyoto: { name: "Kyoto Matcha", ground: "#FBFBF7", surface: "#FFFFFF", ink: "#1C1917", terra: "#E11D48", green: "#15803D", gold: "#CA8A04", bw: "2px", shadow: "4px", radius: "14px" },
+      minimal: { name: "Minimal Ink", ground: "#FFFFFF", surface: "#F8FAFC", ink: "#0F172A", terra: "#2563EB", green: "#059669", gold: "#D97706", bw: "2.5px", shadow: "5px", radius: "12px" }
+    };
+
+    // Typography Stacks
+    const typographyStacks = {
+      humanist: {
+        name: "The Humanist Grotesque",
+        disp: '"Bricolage Grotesque", -apple-system, sans-serif',
+        body: '"Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif',
+        mono: '"Space Mono", monospace'
+      },
+      geist: {
+        name: "The Modern Digital (Geist)",
+        disp: '"Inter", -apple-system, sans-serif',
+        body: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
+        mono: '"Space Mono", monospace'
+      },
+      swiss: {
+        name: "The Swiss Editorial",
+        disp: '"Plus Jakarta Sans", sans-serif',
+        body: '"DM Sans", sans-serif',
+        mono: '"JetBrains Mono", monospace'
+      },
+      heritage: {
+        name: "The Classical Heritage",
+        disp: '"Amiri", "Cinzel", serif',
+        body: '"Instrument Sans", sans-serif',
+        mono: '"Space Mono", monospace'
+      }
+    };
+
+    // Helper: Hex to RGBA
+    function hexToRgba(hex, alpha) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const r = parseInt(hex.substring(0, 2), 16) || 0;
+      const g = parseInt(hex.substring(2, 4), 16) || 0;
+      const b = parseInt(hex.substring(4, 6), 16) || 0;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function switchCliTab(tab) {
+      activeCliTab = tab;
+      document.querySelectorAll('.terminal-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('cli-command-display').innerText = cliCommands[tab];
+    }
+
+    function copyCliCommand() {
+      const cmd = document.getElementById('cli-command-display').innerText;
+      navigator.clipboard.writeText(cmd).then(() => {
+        fireToast('success', 'CLI command copied to clipboard!', '#1BC67F');
+      });
+    }
+
+    // Dynamic Reactive Engine
+    function updateToken(prop, val) {
+      document.documentElement.style.setProperty(prop, val);
+
+      if (prop === '--wf-ground') {
+        currentTheme.ground = val;
+        document.documentElement.style.setProperty('--wf-ground-2', hexToRgba(val, 0.85));
+        const el = document.getElementById('scale-ground-val');
+        if (el) el.innerText = `var(--sand-2) · ${val}`;
+      }
+      if (prop === '--wf-surface') currentTheme.surface = val;
+      if (prop === '--wf-terra') {
+        currentTheme.terra = val;
+        document.documentElement.style.setProperty('--wf-terra-tint', hexToRgba(val, 0.12));
+        const el = document.getElementById('scale-terra-val');
+        if (el) el.innerText = `var(--orange-9) · ${val}`;
+      }
+      if (prop === '--wf-green') {
+        currentTheme.green = val;
+        document.documentElement.style.setProperty('--wf-green-tint', hexToRgba(val, 0.12));
+        const tg = document.getElementById('toast-success-code');
+        if (tg) tg.innerText = val;
+        const el = document.getElementById('scale-green-val');
+        if (el) el.innerText = `var(--grass-9) · ${val}`;
+      }
+      if (prop === '--wf-gold') {
+        currentTheme.gold = val;
+        document.documentElement.style.setProperty('--wf-gold-tint', hexToRgba(val, 0.14));
+        const tc = document.getElementById('toast-caution-code');
+        if (tc) tc.innerText = val;
+        const el = document.getElementById('scale-gold-val');
+        if (el) el.innerText = `var(--amber-9) · ${val}`;
+      }
+
+      syncAllInputs();
+      renderCode();
+    }
+
+    function updateInk(val) {
+      if (!isDarkMode) {
+        document.documentElement.style.setProperty('--wf-ink', val);
+        document.documentElement.style.setProperty('--wf-forest', val);
+        document.documentElement.style.setProperty('--wf-border', val);
+      }
+      currentTheme.ink = val;
+      const el = document.getElementById('scale-ink-val');
+      if (el) el.innerText = `var(--slate-12) · ${val}`;
+      syncAllInputs();
+      renderCode();
+    }
+
+    function updatePhysics(type, val) {
+      if (type === 'bw') {
+        document.documentElement.style.setProperty('--wf-bw', val + 'px');
+        currentTheme.bw = val + 'px';
+      } else if (type === 'shadow') {
+        document.documentElement.style.setProperty('--wf-shadow', `${val}px ${val}px 0 var(--wf-border)`);
+        document.documentElement.style.setProperty('--wf-shadow-lg', `${Number(val)+3}px ${Number(val)+3}px 0 var(--wf-border)`);
+        currentTheme.shadow = val + 'px';
+      } else if (type === 'radius') {
+        document.documentElement.style.setProperty('--wf-r-lg', val + 'px');
+        document.documentElement.style.setProperty('--wf-r-md', (val > 12 ? val - 4 : val) + 'px');
+        currentTheme.radius = val + 'px';
+      }
+      syncAllInputs();
+      renderCode();
+    }
+
+    function setTypographyPairing(key) {
+      const s = typographyStacks[key];
+      if (!s) return;
+      currentTheme.fontPairing = key;
+      document.documentElement.style.setProperty('--wf-f-disp', s.disp);
+      document.documentElement.style.setProperty('--wf-f-body', s.body);
+      document.documentElement.style.setProperty('--wf-f-mono', s.mono);
+      fireToast('info', `Typography updated to ${s.name}`);
+      renderCode();
+    }
+
+    function applyPreset(name) {
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        if (btn.dataset.preset === name) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      const p = presets[name];
+      if (!p) return;
+
+      Object.assign(currentTheme, p);
+
+      updateToken('--wf-ground', p.ground);
+      updateToken('--wf-surface', p.surface);
+      updateInk(p.ink);
+      updateToken('--wf-terra', p.terra);
+      updateToken('--wf-green', p.green);
+      updateToken('--wf-gold', p.gold);
+      updatePhysics('bw', parseFloat(p.bw));
+      updatePhysics('shadow', parseFloat(p.shadow));
+      updatePhysics('radius', parseFloat(p.radius));
+
+      renderCode();
+    }
+
+    // Stateful & Reliable Dark Mode Switcher with Soft Alpha Borders
+    function toggleDarkMode() {
+      isDarkMode = !isDarkMode;
+      // Theme Studio sets some tokens inline on <html>; the theme-dependent ones would
+      // otherwise override .dark/:root and break the toggle. Clear them so each mode
+      // resolves to its canonical values (brand accents & physics still persist).
+      ['--wf-ground','--wf-ground-2','--wf-surface','--wf-ink','--wf-ink-2','--wf-muted','--wf-forest','--wf-border']
+        .forEach(p => document.documentElement.style.removeProperty(p));
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+      const btn = document.getElementById('dark-toggle-btn');
+      if (btn) {
+        btn.innerHTML = isDarkMode ? '<i class="ph-bold ph-sun"></i>' : '<i class="ph-bold ph-moon"></i>';
+        btn.title = isDarkMode ? 'Switch to Warm Light Mode' : 'Switch to Warm Dark Ambiance';
+      }
+      fireToast('info', isDarkMode ? 'Warm Dark Mode activated with soft luminous borders' : 'Warm Light Mode activated');
+      renderCode();
+    }
+
+    function openThemeStudioModal() {
+      document.getElementById('studio-modal-backdrop').classList.add('is-open');
+    }
+    function closeThemeStudioModal() {
+      document.getElementById('studio-modal-backdrop').classList.remove('is-open');
+    }
+
+    function openDemoModal() {
+      document.getElementById('demo-modal-backdrop').classList.add('is-open');
+    }
+    function closeDemoModal() {
+      document.getElementById('demo-modal-backdrop').classList.remove('is-open');
+    }
+
+    // Studio Controls Component Generator
+    function generateControlsTemplate(prefix) {
+      return `
+        <div style="margin-bottom:16px;">
+          <span style="font-family:var(--wf-f-disp); font-size:12px; font-weight:700; text-transform:uppercase; color:var(--wf-muted); display:block; margin-bottom:8px;">10 Curated Brand Presets</span>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            ${Object.keys(presets).map(k => `
+              <button class="preset-btn terminal-tab ${k==='classic'?'active':''}" data-preset="${k}" onclick="applyPreset('${k}')">${presets[k].name}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <span style="font-family:var(--wf-f-disp); font-size:12px; font-weight:700; text-transform:uppercase; color:var(--wf-muted); display:block; margin-bottom:8px;">Curated Typography Stacks</span>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            ${Object.keys(typographyStacks).map(k => `
+              <button class="terminal-tab ${currentTheme.fontPairing===k?'active':''}" onclick="setTypographyPairing('${k}')">${typographyStacks[k].name}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <span style="font-family:var(--wf-f-disp); font-size:12px; font-weight:700; text-transform:uppercase; color:var(--wf-muted); display:block; margin-bottom:8px;">12-Step Radix Color Parameters</span>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; background:var(--wf-ground); border:var(--wf-bw-thin) solid var(--wf-border); padding:6px 10px; border-radius:var(--wf-r-sm);">
+              <input type="color" id="${prefix}-picker-ground" value="${currentTheme.ground}" onchange="updateToken('--wf-ground', this.value)" style="width:24px; height:24px; border-radius:50%; border:none; cursor:pointer;" />
+              <div>
+                <span style="font-size:11px; font-weight:700; display:block;">Ground</span>
+                <span id="${prefix}-picker-ground-hex" style="font-size:10px; font-family:var(--wf-f-mono); color:var(--wf-muted);">${currentTheme.ground}</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; background:var(--wf-ground); border:var(--wf-bw-thin) solid var(--wf-border); padding:6px 10px; border-radius:var(--wf-r-sm);">
+              <input type="color" id="${prefix}-picker-surface" value="${currentTheme.surface}" onchange="updateToken('--wf-surface', this.value)" style="width:24px; height:24px; border-radius:50%; border:none; cursor:pointer;" />
+              <div>
+                <span style="font-size:11px; font-weight:700; display:block;">Surface</span>
+                <span id="${prefix}-picker-surface-hex" style="font-size:10px; font-family:var(--wf-f-mono); color:var(--wf-muted);">${currentTheme.surface}</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; background:var(--wf-ground); border:var(--wf-bw-thin) solid var(--wf-border); padding:6px 10px; border-radius:var(--wf-r-sm);">
+              <input type="color" id="${prefix}-picker-ink" value="${currentTheme.ink}" onchange="updateInk(this.value)" style="width:24px; height:24px; border-radius:50%; border:none; cursor:pointer;" />
+              <div>
+                <span style="font-size:11px; font-weight:700; display:block;">Ink & Border</span>
+                <span id="${prefix}-picker-ink-hex" style="font-size:10px; font-family:var(--wf-f-mono); color:var(--wf-muted);">${currentTheme.ink}</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; background:var(--wf-ground); border:var(--wf-bw-thin) solid var(--wf-border); padding:6px 10px; border-radius:var(--wf-r-sm);">
+              <input type="color" id="${prefix}-picker-terra" value="${currentTheme.terra}" onchange="updateToken('--wf-terra', this.value)" style="width:24px; height:24px; border-radius:50%; border:none; cursor:pointer;" />
+              <div>
+                <span style="font-size:11px; font-weight:700; display:block;">Primary CTA</span>
+                <span id="${prefix}-picker-terra-hex" style="font-size:10px; font-family:var(--wf-f-mono); color:var(--wf-muted);">${currentTheme.terra}</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; background:var(--wf-ground); border:var(--wf-bw-thin) solid var(--wf-border); padding:6px 10px; border-radius:var(--wf-r-sm);">
+              <input type="color" id="${prefix}-picker-green" value="${currentTheme.green}" onchange="updateToken('--wf-green', this.value)" style="width:24px; height:24px; border-radius:50%; border:none; cursor:pointer;" />
+              <div>
+                <span style="font-size:11px; font-weight:700; display:block;">Secondary</span>
+                <span id="${prefix}-picker-green-hex" style="font-size:10px; font-family:var(--wf-f-mono); color:var(--wf-muted);">${currentTheme.green}</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; background:var(--wf-ground); border:var(--wf-bw-thin) solid var(--wf-border); padding:6px 10px; border-radius:var(--wf-r-sm);">
+              <input type="color" id="${prefix}-picker-gold" value="${currentTheme.gold}" onchange="updateToken('--wf-gold', this.value)" style="width:24px; height:24px; border-radius:50%; border:none; cursor:pointer;" />
+              <div>
+                <span style="font-size:11px; font-weight:700; display:block;">Accent Gold</span>
+                <span id="${prefix}-picker-gold-hex" style="font-size:10px; font-family:var(--wf-f-mono); color:var(--wf-muted);">${currentTheme.gold}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span style="font-family:var(--wf-f-disp); font-size:12px; font-weight:700; text-transform:uppercase; color:var(--wf-muted); display:block; margin-bottom:8px;">Tactile Physics & Corner Radii</span>
+          
+          <div style="margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+              <span>Border Width</span>
+              <span id="${prefix}-label-bw" style="font-family:var(--wf-f-mono); font-weight:700;">${currentTheme.bw}</span>
+            </div>
+            <input type="range" min="1" max="4" step="0.5" value="${parseFloat(currentTheme.bw)}" oninput="updatePhysics('bw', this.value)" style="width:100%; accent-color:var(--wf-terra); cursor:pointer;" />
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+              <span>Drop Shadow Depth</span>
+              <span id="${prefix}-label-shadow" style="font-family:var(--wf-f-mono); font-weight:700;">${currentTheme.shadow}</span>
+            </div>
+            <input type="range" min="2" max="10" step="1" value="${parseFloat(currentTheme.shadow)}" oninput="updatePhysics('shadow', this.value)" style="width:100%; accent-color:var(--wf-terra); cursor:pointer;" />
+          </div>
+
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+              <span>Card Radius</span>
+              <span id="${prefix}-label-radius" style="font-family:var(--wf-f-mono); font-weight:700;">${currentTheme.radius}</span>
+            </div>
+            <input type="range" min="6" max="28" step="2" value="${parseFloat(currentTheme.radius)}" oninput="updatePhysics('radius', this.value)" style="width:100%; accent-color:var(--wf-terra); cursor:pointer;" />
+          </div>
+        </div>
+      `;
+    }
+
+    function syncAllInputs() {
+      ['inline', 'modal'].forEach(prefix => {
+        const g = document.getElementById(`${prefix}-picker-ground`);
+        if (g) {
+          g.value = currentTheme.ground;
+          document.getElementById(`${prefix}-picker-ground-hex`).innerText = currentTheme.ground;
+          document.getElementById(`${prefix}-picker-surface`).value = currentTheme.surface;
+          document.getElementById(`${prefix}-picker-surface-hex`).innerText = currentTheme.surface;
+          document.getElementById(`${prefix}-picker-ink`).value = currentTheme.ink;
+          document.getElementById(`${prefix}-picker-ink-hex`).innerText = currentTheme.ink;
+          document.getElementById(`${prefix}-picker-terra`).value = currentTheme.terra;
+          document.getElementById(`${prefix}-picker-terra-hex`).innerText = currentTheme.terra;
+          document.getElementById(`${prefix}-picker-green`).value = currentTheme.green;
+          document.getElementById(`${prefix}-picker-green-hex`).innerText = currentTheme.green;
+          document.getElementById(`${prefix}-picker-gold`).value = currentTheme.gold;
+          document.getElementById(`${prefix}-picker-gold-hex`).innerText = currentTheme.gold;
+
+          document.getElementById(`${prefix}-label-bw`).innerText = currentTheme.bw;
+          document.getElementById(`${prefix}-label-shadow`).innerText = currentTheme.shadow;
+          document.getElementById(`${prefix}-label-radius`).innerText = currentTheme.radius;
+        }
+      });
+    }
+
+    // Dynamic AI Agent Skill Generator (Captures Live Values & Theme Mode)
+    function generateSkillMd() {
+      const font = typographyStacks[currentTheme.fontPairing] || typographyStacks.humanist;
+      const themeModeStr = isDarkMode ? "dark" : "light";
+      return `---
+name: dmaven-warm-fusion
+description: >-
+  Comprehensive guide and design system rules for Warm Fusion Design System (by Design Maven Studio).
+  Combines Neo-Brutalist tactile physics with Swiss typographic warmth for rich multi-color brands.
+  Includes 12-step Radix semantic color tokens, Tailwind CSS presets, complete React + Radix UI component library, Phosphor Icons, and strict guardrails.
+---
+
+# Warm Fusion Design System (\`dmaven-warm-fusion\`)
+
+Created by **Design Maven Studio** · Architected by **Aleem Akinyoola**.
+
+---
+
+## 1. Design Genesis & Semantic Radix Tokens
+- **Active Theme Mode**: \`${themeModeStr}\` (Light / Dark Ambiance)
+- Ground / Canvas: \`${currentTheme.ground}\` (mapped to \`var(--sand-2)\`)
+- Pure Surface: \`${currentTheme.surface}\` (mapped to \`var(--sand-1)\` / \`#FFFFFF\`)
+- Ink & Structural Border: \`${currentTheme.ink}\` (mapped to \`var(--slate-12)\`)
+- Primary CTA Accent: \`${currentTheme.terra}\` (mapped to \`var(--orange-9)\`)
+- Secondary / Growth: \`${currentTheme.green}\` (mapped to \`var(--grass-9)\`)
+- Tertiary / Gold: \`${currentTheme.gold}\` (mapped to \`var(--amber-9)\`)
+- Structural Border Width: \`${currentTheme.bw}\`
+- Hard Drop Shadow: \`${currentTheme.shadow} ${currentTheme.shadow} 0 ${currentTheme.ink}\`
+- Card Radius: \`${currentTheme.radius}\`
+- Typography Stack: \`${font.name}\`
+- **Icon Standard**: Phosphor Icons (\`ph-bold\` / \`@phosphor-icons/react\` with \`weight="bold"\`)
+
+---
+
+## 2. Quickstart Installation
+\`\`\`bash
+# NPM Package (Published)
+npm install @designmaven/design-system @phosphor-icons/react
+
+# Starter Template
+npx degit Aleemcode/warm-fusion my-warm-fusion-app
+\`\`\`
+
+---
+
+## 3. Complete React + Radix UI Component Library
+
+### Component 1: \`Button\`
+Tactile physical button with zero text wrapping, brutalist borders, and click offset physics.
+\`\`\`tsx
+import { Button } from "@designmaven/design-system";
+import { Sparkle, ArrowRight } from "@phosphor-icons/react";
+
+<Button variant="primary" size="md">
+  <Sparkle weight="bold" /> Start Action <ArrowRight weight="bold" />
+</Button>
+<Button variant="secondary">Cancel</Button>
+<Button variant="danger">Delete Workspace</Button>
+\`\`\`
+
+### Component 2: \`Card\`
+Tactile card with hard drop shadow and optional hover lift micro-interaction.
+\`\`\`tsx
+import { Card, Badge } from "@designmaven/design-system";
+
+<Card variant="surface" interactive>
+  <Badge variant="terra">Active Batch</Badge>
+  <h3 className="font-display font-bold text-lg text-ink mt-2">Tactile Card Container</h3>
+  <p className="font-body text-sm text-ink-2 mt-1">Swiss warmth fused with crisp structural boundaries.</p>
+</Card>
+\`\`\`
+
+### Component 3: \`Badge\` / \`Tag\`
+High-contrast monospace pill tag for categories, status badges, and metadata. Zero text wrapping.
+\`\`\`tsx
+import { Badge } from "@designmaven/design-system";
+import { CheckCircle } from "@phosphor-icons/react";
+
+<Badge variant="terra">New Release</Badge>
+<Badge variant="green"><CheckCircle weight="bold" /> 100% Verified</Badge>
+<Badge variant="gold">Premium</Badge>
+<Badge variant="neutral">Draft</Badge>
+\`\`\`
+
+### Component 4: \`Dialog\` / \`Modal\` & \`Drawer\`
+Centered dialog on desktop with hard 8px shadow; docks automatically to the bottom edge with a drag handle on mobile viewports (<=680px).
+\`\`\`tsx
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, Button } from "@designmaven/design-system";
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button variant="primary">Open Dialog</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Adaptive Modal & Drawer</DialogTitle>
+      <DialogDescription>
+        Renders as a floating centered modal on desktop and docks seamlessly as a tactile bottom sheet on mobile screens.
+      </DialogDescription>
+    </DialogHeader>
+    <div className="flex justify-end gap-2 mt-4">
+      <Button variant="secondary">Dismiss</Button>
+      <Button variant="primary">Confirm Action</Button>
+    </div>
+  </DialogContent>
+</Dialog>
+\`\`\`
+
+### Component 5: \`Toast\` (Signature Feedback Notification)
+Monospace status pill header with clear colored indicator and conversational copy.
+\`\`\`tsx
+import { Toast, useToast } from "@designmaven/design-system";
+
+const { toast } = useToast();
+
+// Success
+toast({
+  type: "success", // Header: "✓ SUCCESS · ${currentTheme.green}"
+  title: "Profile updated successfully!",
+  description: "Your brand tokens have been synchronized across all views."
+});
+
+// Error
+toast({
+  type: "error", // Header: "× ERROR · ${currentTheme.danger}"
+  title: "Connection timeout",
+  description: "Could not reach the database. Please check your credentials."
+});
+\`\`\`
+
+---
+
+## 4. Strict Guardrails
+1. **Zero Text Wrapping on Action Labels & Badges**: Buttons, badges, and menu tags must never awkwardly break into multiple lines (\`white-space: nowrap !important;\`). If constrained, truncate with single-line ellipsis (\`overflow: hidden; text-overflow: ellipsis;\`) and reveal context on hover via tooltip.
+2. **Official Icons**: Exclusively use **Phosphor Icons** (weight: \`bold\` or \`regular\`). Never use emojis or mismatched icon sets.
+3. **Never use blurred shadows in light mode**: Use hard offset drop shadows (\`${currentTheme.shadow} ${currentTheme.shadow} 0 ${currentTheme.ink}\`).
+4. **Dark Mode Soft Ambiance**: In dark mode, replace stark white borders with soft luminous Radix alpha borders (\`rgba(255, 255, 255, 0.16)\`) to preserve eye comfort during long sessions.
+5. **Mobile Bottom-Sheet Rule**: On mobile screens (<=680px), modals MUST dock to \`bottom: 0\` with a drag handle and zero lateral drift.
+6. **Physical Press Animations**: Interactive buttons animate with \`transform: translate(2px, 2px)\` on active press.
+`;
+    }
+
+    function generateTailwindConfig() {
+      const font = typographyStacks[currentTheme.fontPairing] || typographyStacks.humanist;
+      return `/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        ground: "${currentTheme.ground}",
+        "ground-2": "${hexToRgba(currentTheme.ground, 0.85)}",
+        surface: "${currentTheme.surface}",
+        forest: "${currentTheme.ink}",
+        ink: "${currentTheme.ink}",
+        terra: "${currentTheme.terra}",
+        "terra-tint": "${hexToRgba(currentTheme.terra, 0.12)}",
+        green: "${currentTheme.green}",
+        "green-tint": "${hexToRgba(currentTheme.green, 0.12)}",
+        gold: "${currentTheme.gold}",
+        "gold-tint": "${hexToRgba(currentTheme.gold, 0.14)}",
+        blue: "${currentTheme.blue}",
+        danger: "${currentTheme.danger}",
+      },
+      borderWidth: {
+        wf: "${currentTheme.bw}",
+        "wf-thin": "1.5px",
+      },
+      boxShadow: {
+        wf: "${currentTheme.shadow} ${currentTheme.shadow} 0 ${currentTheme.ink}",
+        "wf-sm": "3px 3px 0 ${currentTheme.ink}",
+        "wf-lg": "${parseFloat(currentTheme.shadow)+3}px ${parseFloat(currentTheme.shadow)+3}px 0 ${currentTheme.ink}",
+      },
+      borderRadius: {
+        "wf-xl": "22px",
+        "wf-lg": "${currentTheme.radius}",
+        "wf-md": "${parseFloat(currentTheme.radius) > 12 ? parseFloat(currentTheme.radius)-4 : parseFloat(currentTheme.radius)}px",
+        "wf-sm": "8px",
+        "wf-pill": "9999px",
+      },
+      fontFamily: {
+        display: [${font.disp}],
+        body: [${font.body}],
+        mono: [${font.mono}],
+      },
+    },
+  },
+  plugins: [],
+};`;
+    }
+
+    function generateCssTokens() {
+      return `/* Warm Fusion Parameterized CSS Tokens */
+:root {
+  --wf-ground: ${currentTheme.ground};
+  --wf-ground-2: ${hexToRgba(currentTheme.ground, 0.85)};
+  --wf-surface: ${currentTheme.surface};
+  --wf-border: ${currentTheme.ink};
+  --wf-ink: ${currentTheme.ink};
+  --wf-forest: ${currentTheme.ink};
+  --wf-terra: ${currentTheme.terra};
+  --wf-terra-tint: ${hexToRgba(currentTheme.terra, 0.12)};
+  --wf-green: ${currentTheme.green};
+  --wf-green-tint: ${hexToRgba(currentTheme.green, 0.12)};
+  --wf-gold: ${currentTheme.gold};
+  --wf-gold-tint: ${hexToRgba(currentTheme.gold, 0.14)};
+  --wf-blue: ${currentTheme.blue};
+  --wf-blue-tint: ${hexToRgba(currentTheme.blue, 0.12)};
+  --wf-danger: ${currentTheme.danger};
+  --wf-danger-tint: ${hexToRgba(currentTheme.danger, 0.12)};
+
+  --wf-bw: ${currentTheme.bw};
+  --wf-shadow: ${currentTheme.shadow} ${currentTheme.shadow} 0 ${currentTheme.ink};
+  --wf-shadow-sm: 3px 3px 0 ${currentTheme.ink};
+  --wf-shadow-lg: ${parseFloat(currentTheme.shadow)+3}px ${parseFloat(currentTheme.shadow)+3}px 0 ${currentTheme.ink};
+  
+  --wf-r-lg: ${currentTheme.radius};
+  --wf-r-pill: 9999px;
+}
+
+/* Soft Ambiance Dark Mode */
+.dark, [data-theme="dark"] {
+  --wf-ground: #0F1117;
+  --wf-ground-2: #171B22;
+  --wf-surface: #1E232E;
+  --wf-border: rgba(255, 255, 255, 0.16);
+  --wf-ink: #F5F2EB;
+  --wf-ink-2: #A8B1BE;
+  --wf-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+}`;
+    }
+
+    function renderCode() {
+      const display = document.getElementById('code-display');
+      if (!display) return;
+      if (activeExportTab === 'skill') display.innerText = generateSkillMd();
+      else if (activeExportTab === 'tailwind') display.innerText = generateTailwindConfig();
+      else if (activeExportTab === 'css') display.innerText = generateCssTokens();
+    }
+
+    function switchExportTab(tab) {
+      activeExportTab = tab;
+      document.querySelectorAll('.terminal-tab').forEach(t => t.classList.remove('active'));
+      const activeBtn = document.getElementById('tab-' + tab);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderCode();
+    }
+
+    function copyCurrentCode() {
+      const code = document.getElementById('code-display').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        fireToast('success', `${activeExportTab.toUpperCase()} copied to clipboard!`, '#1BC67F');
+      });
+    }
+
+    function downloadCurrentCode() {
+      const code = document.getElementById('code-display').innerText;
+      const filename = activeExportTab === 'skill' ? 'SKILL.md' : activeExportTab === 'tailwind' ? 'tailwind.config.js' : 'tokens.css';
+      const blob = new Blob([code], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      fireToast('success', `${filename} downloaded!`);
+    }
+
+    // Feedback Toast Trigger
+    function fireToast(type, msg, color) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `wf-toast wf-toast--${type}`;
+
+      const titles = {
+        success: { icon: 'ph-check', name: 'SUCCESS', hex: color || currentTheme.green },
+        caution: { icon: 'ph-warning', name: 'CAUTION', hex: color || currentTheme.gold },
+        error: { icon: 'ph-x', name: 'ERROR', hex: color || currentTheme.danger },
+        info: { icon: 'ph-info', name: 'INFO', hex: color || currentTheme.blue }
+      };
+
+      const t = titles[type] || titles.info;
+      const bodyText = msg || (type === 'success' ? 'Theme parameters applied successfully!' : 'Warm Fusion action registered.');
+
+      toast.innerHTML = `
+        <div class="wf-toast__meta">
+          <i class="ph-bold ${t.icon}"></i>
+          <span>${t.name}</span>
+          <span>·</span>
+          <span>${t.hex}</span>
+        </div>
+        <p class="wf-toast__body">${bodyText}</p>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.add('show'), 20);
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Comprehensive Search Engine
+    function handleSearch(query) {
+      query = query.toLowerCase().trim();
+      const clearBtn = document.getElementById('search-clear-btn');
+      if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+
+      const sections = document.querySelectorAll('.doc-section');
+      let matches = 0;
+
+      sections.forEach(sec => {
+        const text = sec.innerText.toLowerCase();
+        const isMatch = !query || text.includes(query);
+        sec.style.display = isMatch ? 'block' : 'none';
+        if (isMatch) matches++;
+      });
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('doc-search');
+      if (input) {
+        input.value = '';
+        handleSearch('');
+      }
+    }
+
+    // Sequential & Smooth Scrollspy Engine
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.doc-section');
+      const scrollPos = window.scrollY + 160;
+      let currentActiveId = '';
+
+      sections.forEach(sec => {
+        if (sec.style.display !== 'none') {
+          const top = sec.offsetTop;
+          const height = sec.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            currentActiveId = sec.getAttribute('id');
+          }
+        }
+      });
+
+      if (currentActiveId) {
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href === `#${currentActiveId}`) {
+            link.classList.add('active');
+          } else if (href && href.startsWith('#')) {
+            link.classList.remove('active');
+          }
+        });
+      }
+    }, { passive: true });
+
+    // Keyboard shortcut ⌘K / Ctrl+K
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const input = document.getElementById('doc-search');
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }
+    });
+
+    // Initialize on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('inline-studio-controls').innerHTML = generateControlsTemplate('inline');
+      document.getElementById('modal-studio-controls').innerHTML = generateControlsTemplate('modal');
+      renderCode();
+    });
+  </script>
+</body>
+</html>

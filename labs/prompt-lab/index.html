@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompt Lab · Maven Builder Academy</title>
+<meta name="description" content="Pick your layout, style, type and motion. Get a design brief any AI can follow.">
+<meta property="og:title" content="Prompt Lab · Maven Builder Academy">
+<meta property="og:description" content="Click your design choices. Get a brief any AI can follow.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300..800&family=Manrope:wght@300..800&family=Playfair+Display:wght@400..800&family=Instrument+Serif&family=Space+Grotesk:wght@300..700&family=DM+Sans:wght@300..800&family=IBM+Plex+Sans:wght@300..700&family=Nunito:wght@300..800&family=Oswald:wght@300..700&family=Source+Serif+4:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F4F0E5;--paper:#FFFDF7;--ink:#14261D;--muted:#4A5A4F;--line:#14261D;--terra:#E8722C;--terra-d:#B8551A;--lime:#D6E59A;--forest:#14261D}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:'Instrument Sans',Arial,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+.top{position:sticky;top:0;z-index:20;background:var(--cream);border-bottom:2.5px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.3px}
+.brand small{font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:var(--terra-d);text-transform:uppercase}
+.mark{width:28px;height:28px;border:2.5px solid var(--line);border-radius:7px;background:var(--terra);box-shadow:2px 2px 0 var(--line)}
+.topbtns{display:flex;gap:8px}
+.btn{border:2.5px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:700;background:var(--paper);box-shadow:3px 3px 0 var(--line);transition:transform .12s ease-out,box-shadow .12s ease-out;font-size:14px}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--line)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+.btn.primary{background:var(--terra)}
+.btn:focus-visible,.opt:focus-visible,.chip:focus-visible{outline:3px solid #3B82C4;outline-offset:2px}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;min-height:calc(100vh - 60px)}
+.left{padding:24px 24px 80px;border-right:2.5px solid var(--line)}
+.right{position:sticky;top:60px;height:calc(100vh - 60px);overflow:auto;padding:24px;background:#EFEADC;display:flex;flex-direction:column;gap:18px}
+.intro{background:var(--forest);color:var(--cream);border:2.5px solid var(--line);border-radius:22px;padding:22px;box-shadow:5px 5px 0 var(--terra);margin-bottom:22px}
+.intro h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(28px,4vw,40px);line-height:1;letter-spacing:-1px;margin:8px 0}
+.intro p{color:#C9D1C6;max-width:560px}
+.kick{font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--lime)}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.steps a{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--ink);background:var(--lime);border:2px solid var(--line);border-radius:999px;padding:4px 10px;text-decoration:none}
+.group{margin-bottom:26px;scroll-margin-top:76px}
+.ghead{display:flex;align-items:baseline;gap:10px;border-bottom:2.5px solid var(--line);padding-bottom:8px;margin-bottom:14px}
+.ghead .n{font-family:'Space Mono',monospace;font-weight:700;font-size:12px;color:var(--terra-d)}
+.ghead h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:24px;letter-spacing:-.5px}
+.sec{margin-bottom:18px}
+.sech{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px}
+.sech h3{font-family:'Space Mono',monospace;font-weight:700;font-size:12px;letter-spacing:1.5px;text-transform:uppercase}
+.sech .multi{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+.help{color:var(--muted);font-size:13.5px;margin-bottom:10px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.opt{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:10px 8px 9px;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;transition:transform .12s ease-out,box-shadow .12s ease-out,background .12s}
+.opt:hover{transform:translateY(-2px);box-shadow:3px 3px 0 var(--line)}
+.opt[aria-pressed="true"]{background:var(--lime);box-shadow:3px 3px 0 var(--line)}
+.opt[aria-pressed="true"]::after{content:"";position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:var(--terra);border:2px solid var(--line)}
+.opt .lbl{font-weight:700;font-size:13px;line-height:1.15}
+.vis{width:100%;height:46px;display:flex;align-items:center;justify-content:center}
+.tip{display:none}
+.why{min-height:20px;font-size:13px;color:var(--ink);background:var(--paper);border:2px dashed #8A938C;border-radius:10px;padding:6px 10px;margin-top:8px}
+.why b{color:var(--terra-d)}
+textarea,input[type=text]{width:100%;border:2px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;background:var(--paper);color:var(--ink);resize:vertical}
+textarea:focus,input[type=text]:focus{outline:3px solid var(--terra);outline-offset:1px}
+.range{display:flex;align-items:center;gap:12px}
+.range input{flex:1;accent-color:var(--terra)}
+.range output{font-family:'Space Mono',monospace;font-weight:700;min-width:48px;text-align:right}
+.panel{flex:none;background:var(--paper);border:2.5px solid var(--line);border-radius:20px;box-shadow:4px 4px 0 var(--line);overflow:hidden}
+.panelh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-bottom:2.5px solid var(--line)}
+.panelh span{font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+.stage{padding:22px;display:flex;align-items:center;justify-content:center;min-height:300px;transition:background .3s}
+/* preview */
+.pv-frame{width:100%;max-width:520px;transition:all .3s}
+.pv-frame.mobile{max-width:260px}
+.pv-browser{border:1px solid rgba(0,0,0,.15);border-radius:10px;overflow:hidden}
+.pv-bar{height:22px;background:rgba(0,0,0,.06);display:flex;align-items:center;gap:5px;padding:0 8px}
+.pv-bar i{width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,.2);display:block}
+.pv-phone{border:6px solid #111;border-radius:30px;overflow:hidden}
+.pv{background:var(--pv-bg);color:var(--pv-text);padding:20px;font-family:var(--pv-body);font-size:var(--pv-bsize);transition:all .3s}
+.pv-card{background:var(--pv-surface);border:var(--pv-border);border-radius:var(--pv-radius);box-shadow:var(--pv-shadow);padding:18px;display:flex;flex-direction:column;gap:10px;transition:all .3s}
+.pv-eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pv-accent-text);font-weight:700}
+.pv-h{font-family:var(--pv-head);font-size:var(--pv-hsize);font-weight:var(--pv-hweight);letter-spacing:var(--pv-track);line-height:1.05}
+.pv-p{opacity:.75;line-height:1.5}
+.pv-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.pv-btn{background:var(--pv-accent);color:var(--pv-on-accent);border:var(--pv-btn-border);border-radius:var(--pv-btn-radius);padding:9px 16px;font-weight:700;font-size:13px;box-shadow:var(--pv-btn-shadow);transition:transform .15s,box-shadow .15s}
+.pv-btn2{background:transparent;color:var(--pv-text);border:1.5px solid currentColor;border-radius:var(--pv-btn-radius);padding:8px 14px;font-weight:600;font-size:13px;opacity:.8}
+.pv-anim{animation:var(--pv-anim)}
+@keyframes a-fade{from{opacity:0}to{opacity:1}}
+@keyframes a-slide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes a-scale{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+@keyframes a-blur{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:none}}
+@keyframes a-rotate{from{opacity:0;transform:rotate(-4deg)}to{opacity:1;transform:none}}
+.out{font-family:'Space Mono',monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;padding:14px;background:var(--forest);color:#E4E9DF;max-height:420px;overflow:auto}
+.copied{font-family:'Space Mono',monospace;font-size:11px;color:var(--terra-d);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:2px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--paper);font-weight:600;font-size:13px}
+.chip[aria-pressed="true"]{background:var(--lime);box-shadow:2px 2px 0 var(--line)}
+.foot{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);text-align:center;padding:20px 0}
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  .left{border-right:none;padding:16px 16px 40px}
+  .right{position:static;height:auto;padding:16px;border-top:2.5px solid var(--line)}
+  .top{padding:10px 16px}
+  .brand small{display:none}
+  .mob-jump{display:inline-flex}
+}
+.mob-jump{display:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="mark" aria-hidden="true"></div>Prompt Lab <small>· Maven Builder Academy</small></div>
+  <div class="topbtns">
+    <a class="btn mob-jump" href="#result">See brief ↓</a>
+    <button class="btn" id="resetBtn" type="button">Reset</button>
+    <button class="btn primary" id="copyTop" type="button">Copy brief</button>
+  </div>
+</header>
+
+<div class="wrap">
+<main class="left" id="controls">
+  <section class="intro">
+    <span class="kick">Skeleton + skin = brief</span>
+    <h1>Direct the design. Don’t leave it to a guess.</h1>
+    <p>Click your choices. Each one tells you what it means. Your brief builds itself on the right. Copy it into Stitch, Freebuff, Claude or any AI.</p>
+    <div class="steps"><a href="#g1">1 · Project</a><a href="#g2">2 · Layout</a><a href="#g3">3 · Style</a><a href="#g4">4 · Type</a><a href="#g5">5 · Motion</a><a href="#g6">6 · Finish</a></div>
+  </section>
+  <div id="groups"></div>
+</main>
+
+<aside class="right" id="result">
+  <div class="panel">
+    <div class="panelh"><span>Live look</span><span id="pvName">Warm Fusion</span></div>
+    <div class="stage" id="stage"></div>
+  </div>
+  <div class="panel">
+    <div class="panelh"><span>Your brief</span>
+      <div style="display:flex;gap:8px;align-items:center"><span class="copied" id="copied" aria-live="polite"></span>
+      <button class="btn" id="dlBtn" type="button" style="padding:5px 12px;font-size:12px">Download</button>
+      <button class="btn primary" id="copyBtn" type="button" style="padding:5px 12px;font-size:12px">Copy</button></div>
+    </div>
+    <pre class="out" id="out"></pre>
+  </div>
+  <p class="foot">MAVEN BUILDER ACADEMY · PROMPT LAB</p>
+</aside>
+</div>
+
+<script>
+// ---------- tiny visual helpers ----------
+const box=(w,h,s='')=>`<span style="display:block;width:${w}px;height:${h}px;background:#14261D;opacity:.85;border-radius:3px;${s}"></span>`;
+const col=(inner,g=3,s='')=>`<span style="display:flex;flex-direction:column;gap:${g}px;${s}">${inner}</span>`;
+const row=(inner,g=3,s='')=>`<span style="display:flex;gap:${g}px;${s}">${inner}</span>`;
+const sw=(c,b='#14261D')=>`<span style="display:block;width:34px;height:34px;border-radius:50%;background:${c};border:2px solid ${b}"></span>`;
+const tile=(s)=>`<span style="display:block;width:56px;height:34px;background:#fff;${s}"></span>`;
+const word=(t,s)=>`<span style="font-size:20px;line-height:1;${s}">${t}</span>`;
+
+// ---------- data ----------
+const PRESETS={
+ warm:{name:'Warm Fusion',theme:'light',bg:'cream',accent:'terra',radius:'round',border:'bold',shadow:'hard',head:'Bricolage Grotesque',body:'Instrument Sans',hweight:'800',track:'tight',anim:['slide'],timing:'easeout',micro:['press','hover','focus'],avoid:['gradients','emoji','blur','purple']},
+ minimal:{name:'Minimal',theme:'light',bg:'white',accent:'black',radius:'soft',border:'hair',shadow:'none',head:'Inter',body:'Inter',hweight:'600',track:'tight',anim:['fade'],timing:'easeout',micro:['hover','focus'],avoid:['gradients','emoji','stock']},
+ playful:{name:'Soft & Playful',theme:'light',bg:'lilac',accent:'violet',radius:'pill',border:'none',shadow:'large',head:'Nunito',body:'Nunito',hweight:'800',track:'normal',anim:['scale'],timing:'spring',micro:['press','hover','success'],avoid:['stock','lorem']},
+ material:{name:'Material',theme:'light',bg:'gray',accent:'blue',radius:'round',border:'none',shadow:'small',head:'Manrope',body:'Manrope',hweight:'700',track:'normal',anim:['fade','slide'],timing:'easeout',micro:['press','focus','loading'],avoid:['emoji','lorem']},
+ apple:{name:'Apple Clean',theme:'light',bg:'white',accent:'blue',radius:'round',border:'none',shadow:'small',head:'Inter',body:'Inter',hweight:'700',track:'tight',anim:['fade','scale'],timing:'spring',micro:['hover','focus','loading'],avoid:['gradients','emoji','stock','blur']},
+ brutal:{name:'Neo-Brutalist',theme:'light',bg:'stone',accent:'lime',radius:'sharp',border:'bold',shadow:'hard',head:'Space Grotesk',body:'Space Grotesk',hweight:'700',track:'tight',anim:['slide'],timing:'linear',micro:['press','hover'],avoid:['blur','gradients']},
+ editorial:{name:'Editorial',theme:'light',bg:'cream',accent:'black',radius:'sharp',border:'hair',shadow:'none',head:'Playfair Display',body:'Source Serif 4',hweight:'600',track:'normal',anim:['fade'],timing:'easeinout',micro:['hover','focus'],avoid:['emoji','stock','gradients']},
+ dark:{name:'Dark Minimal',theme:'dark',bg:'night',accent:'emerald',radius:'soft',border:'hair',shadow:'none',head:'Inter',body:'Inter',hweight:'600',track:'tight',anim:['fade','blur'],timing:'easeout',micro:['hover','focus','skeleton'],avoid:['emoji','gradients']}
+};
+const BG={cream:['Cream','#F4F0E5','#FFFDF7','#14261D'],white:['White','#FFFFFF','#FFFFFF','#111111'],gray:['Gray','#F3F4F6','#FFFFFF','#1F2937'],slate:['Slate','#F1F5F9','#FFFFFF','#0F172A'],stone:['Stone','#F5F5F4','#FFFFFF','#1C1917'],lilac:['Lilac','#F1ECFF','#FFFFFF','#2A1F55'],night:['Night','#0B0F0D','#151A17','#ECEFEA'],forest:['Forest','#14261D','#1E3226','#F4F0E5']};
+const ACC={terra:['Terracotta','#E8722C','#14261D'],lime:['Lime','#C7E36B','#14261D'],black:['Black','#111111','#FFFFFF'],blue:['Blue','#2563EB','#FFFFFF'],indigo:['Indigo','#4F46E5','#FFFFFF'],violet:['Violet','#7C3AED','#FFFFFF'],emerald:['Emerald','#10B981','#06281C'],rose:['Rose','#E11D48','#FFFFFF']};
+
+const G=[
+ {id:'g1',title:'Your project',secs:[
+  {k:'idea',type:'text',title:'What are you building?',help:'One or two sentences. Who is it for, and what do they want to get done?',ph:'A bank app screen where people send money to friends quickly and safely.'},
+  {k:'journey',type:'area',title:'The journey (your skeleton)',help:'Paste the screens and what-ifs from your wireframe, one per line. This is what stops the AI guessing.',ph:'1 Home → 2 Transfer → 3 Account number + bank → 4 Name shows → 5 Amount → 6 Review → 7 PIN → 8 Processing → 9 Success / Failed\nWhat if: wrong PIN → “2 tries left”\nWhat if: network drops → “Pending”, never charge twice'},
+  {k:'tool',type:'single',title:'Where will you paste this?',help:'Different AI tools like slightly different wording. We adjust the brief for you.',opts:[
+   ['stitch','Google Stitch','Makes screens from a prompt. Great for designing first.'],['freebuff','Freebuff','Builds and ships a working web app.'],['claude','Claude','Thinks and builds. Good for long briefs.'],['antigravity','Antigravity','Google’s coding agent.'],['any','Any AI','A general brief that works anywhere.']]}
+ ]},
+ {id:'g2',title:'Layout',secs:[
+  {k:'platform',type:'single',title:'Platform',help:'Where will people use it?',opts:[['web','Web','A website or web app, on a laptop or browser.',word('▭','font-size:30px')],['mobile','Mobile','A phone app. Thumbs, small screens, one column.',word('▯','font-size:30px')]]},
+  {k:'screen',type:'single',title:'Screen type',help:'What kind of screen is this? Each type has a job.',opts:[
+   ['hero','Landing hero','The first thing visitors see. Big headline, one main button.',col(box(52,7)+box(40,5)+box(22,8,'background:#E8722C'),4)],
+   ['dashboard','Dashboard','An overview of numbers and recent activity.',row(box(12,30)+col(row(box(16,12)+box(16,12)+box(16,12))+box(52,14),3),3)],
+   ['form','Form / checkout','Where people type details or pay.',col(box(52,7,'opacity:.3')+box(52,7,'opacity:.3')+box(30,8,'background:#E8722C'),4)],
+   ['list','List / feed','Many similar items in a scroll.',col(box(56,7)+box(56,7)+box(56,7)+box(56,7),3)],
+   ['detail','Detail page','Everything about one item.',row(box(26,32)+col(box(28,6)+box(24,4)+box(20,4),4),4)],
+   ['onboarding','Onboarding','Welcome steps for new users.',col(box(30,22)+row('<span style="width:5px;height:5px;border-radius:3px;background:#14261D"></span><span style="width:5px;height:5px;border-radius:3px;background:#14261D;opacity:.3"></span><span style="width:5px;height:5px;border-radius:3px;background:#14261D;opacity:.3"></span>',4,'justify-content:center'),5,'align-items:center')],
+   ['success','Success / receipt','Confirms something worked.',col('<span style="width:22px;height:22px;border-radius:50%;background:#D6E59A;border:2px solid #14261D;display:block"></span>'+box(40,6),5,'align-items:center')],
+   ['settings','Profile / settings','Account details and preferences.',col(row('<span style="width:14px;height:14px;border-radius:50%;background:#14261D;display:block"></span>'+box(30,6),4,'align-items:center')+box(52,6,'opacity:.4')+box(52,6,'opacity:.4'),4)]]},
+  {k:'arrange',type:'single',title:'Arrangement',help:'How the content is laid out on the screen.',opts:[
+   ['single','Single column','One thing under another. Best on mobile.',col(box(26,8)+box(26,8)+box(26,8),3)],
+   ['cards','Cards','Content in separate boxes.',box(30,30,'opacity:.7')],
+   ['grid','2×2 grid','Four equal boxes.',col(row(box(14,14)+box(14,14))+row(box(14,14)+box(14,14)),3)],
+   ['table','Table','Rows and columns, like a spreadsheet.',col(row(box(10,6)+box(10,6)+box(10,6)+box(10,6))+row(box(10,6)+box(10,6)+box(10,6)+box(10,6))+row(box(10,6)+box(10,6)+box(10,6)+box(10,6)),3)],
+   ['sideL','Sidebar left','Menu on the left, content on the right.',row(box(10,32)+box(30,32,'opacity:.5'),3)],
+   ['sideR','Sidebar right','Content left, extra info on the right.',row(box(30,32,'opacity:.5')+box(10,32),3)]]},
+  {k:'frame',type:'single',title:'Framing',help:'How the screen is presented in the preview.',opts:[['full','Full screen','Fills the whole screen.',box(52,32,'opacity:.6')],['browser','Browser','Shown inside a browser window.',col(box(52,6)+box(52,24,'opacity:.4'),0)],['phone','Phone','Shown inside a phone.',`<span style="display:block;width:22px;height:38px;border:3px solid #14261D;border-radius:6px"></span>`],['card','Card','Floating on a background.',`<span style="display:block;width:40px;height:26px;background:#fff;border:2px solid #14261D;border-radius:5px;box-shadow:3px 3px 0 #14261D"></span>`]]}
+ ]},
+ {id:'g3',title:'Style · the skin',secs:[
+  {k:'preset',type:'single',title:'Design language',help:'Start from a known style. It fills in everything below; then change any detail.',opts:Object.entries(PRESETS).map(([k,p])=>[k,p.name,{warm:'Cream, forest green, hard shadows. Warm and tactile.',minimal:'Black and white, quiet, lots of space.',playful:'Rounded, soft colours, friendly and fun.',material:'Google’s system. Cards, bold colour, clear motion.',apple:'Clean, light, generous space, gentle depth.',brutal:'Raw borders, hard shadows, loud and honest.',editorial:'Magazine feel. Elegant serif headings.',dark:'Dark background, glowing accent, focused.'}[k],presetVis(k)])},
+  {k:'theme',type:'single',title:'Theme',help:'Light or dark. Dark works for night use and media apps.',opts:[['light','Light mode','Dark text on a light background.',tile('border:2px solid #14261D;border-radius:6px')],['dark','Dark mode','Light text on a dark background.',tile('background:#151A17;border-radius:6px')]]},
+  {k:'bg',type:'single',title:'Background colour',help:'The colour behind everything. It sets the mood before anyone reads a word.',opts:Object.entries(BG).map(([k,v])=>[k,v[0],`Background ${v[1]}.`,sw(v[1])])},
+  {k:'accent',type:'single',title:'Accent colour',help:'The “action” colour: main buttons and highlights. Use it sparingly so it stands out.',opts:Object.entries(ACC).map(([k,v])=>[k,v[0],`Buttons and highlights in ${v[1]}.`,sw(v[1])])},
+  {k:'radius',type:'single',title:'Corners',help:'Sharp corners feel serious. Round corners feel friendly.',opts:[['sharp','Sharp','0px. Formal, editorial.',tile('border:2px solid #14261D')],['soft','Soft','8px. Calm, professional.',tile('border:2px solid #14261D;border-radius:6px')],['round','Round','16px. Friendly, modern.',tile('border:2px solid #14261D;border-radius:12px')],['pill','Pill','Fully rounded buttons. Playful.',tile('border:2px solid #14261D;border-radius:20px')]]},
+  {k:'border',type:'single',title:'Borders',help:'Lines around cards and buttons.',opts:[['none','None','No outlines. Shapes come from colour and shadow.',tile('border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.18)')],['hair','Hairline','1px light line. Subtle.',tile('border:1px solid #c9ccc9;border-radius:8px')],['bold','Bold','2.5px dark line. Confident, tactile.',tile('border:3px solid #14261D;border-radius:8px')]]},
+  {k:'shadow',type:'single',title:'Shadow · depth',help:'Shadow tells the eye what sits on top. Soft feels gentle; hard feels bold.',opts:[['none','None','Flat. Everything on one level.',tile('border:1px solid #c9ccc9;border-radius:8px')],['small','Small soft','A light lift.',tile('border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.18)')],['large','Large soft','Floating, dreamy.',tile('border-radius:8px;box-shadow:0 10px 20px rgba(0,0,0,.25)')],['hard','Hard offset','Solid shadow, no blur. Tactile.',tile('border:2px solid #14261D;border-radius:8px;box-shadow:4px 4px 0 #14261D')]]}
+ ]},
+ {id:'g4',title:'Typography',secs:[
+  {k:'head',type:'single',title:'Heading font',help:'The voice of your titles. It carries most of the personality.',opts:['Bricolage Grotesque','Inter','Manrope','Space Grotesk','Playfair Display','Instrument Serif','Nunito','Oswald'].map(f=>[f,f,fontNote(f),word('Title',`font-family:'${f}';font-weight:700;font-size:22px`)])},
+  {k:'body',type:'single',title:'Body & UI font',help:'For reading and buttons. Pick something calm and very readable.',opts:['Instrument Sans','Inter','Manrope','DM Sans','IBM Plex Sans','Nunito','Space Grotesk','Source Serif 4'].map(f=>[f,f,fontNote(f),word('Body',`font-family:'${f}';font-size:20px`)])},
+  {k:'hsize',type:'single',title:'Heading size',help:'Bigger headings = more drama. Mobile usually needs smaller.',opts:[['s','20–32px','Quiet, app-like.',word('Title','font-size:15px;font-weight:700')],['m','32–40px','Balanced.',word('Title','font-size:19px;font-weight:700')],['l','48–64px','Confident landing pages.',word('Title','font-size:24px;font-weight:700')],['xl','64–80px','Big statement.',word('Title','font-size:30px;font-weight:700')]]},
+  {k:'bsize',type:'single',title:'Body text size',help:'16px is the safe minimum for reading on phones.',opts:[['s','14–16px','Dense, data-heavy.',word('Body','font-size:13px')],['m','16–18px','Comfortable. Recommended.',word('Body','font-size:16px')],['l','18–20px','Easy reading, older users.',word('Body','font-size:19px')]]},
+  {k:'hweight',type:'single',title:'Heading weight',help:'How thick the heading letters are.',opts:[['300','Light','Elegant, airy.'],['400','Regular','Neutral.'],['600','Semibold','Clear, modern.'],['700','Bold','Strong.'],['800','Extra bold','Loud, confident.']].map(o=>[...o,word('Title',`font-weight:${o[0]};font-size:21px`)])},
+  {k:'track',type:'single',title:'Heading letter spacing',help:'Tight spacing looks modern on big headings. Wide looks calm or luxurious.',opts:[['tight','Tight','Modern, punchy.',word('Title','letter-spacing:-1.5px;font-weight:700')],['normal','Normal','Default.',word('Title','font-weight:700')],['wide','Wide','Calm, premium.',word('Title','letter-spacing:3px;font-weight:700')]]}
+ ]},
+ {id:'g5',title:'Motion & micro-interactions',secs:[
+  {k:'anim',type:'multi',title:'Entrance animation',help:'How things appear when the screen loads. Keep it short and subtle.',opts:[['fade','Fade','Appears softly.'],['slide','Slide up','Rises into place.'],['scale','Scale','Grows in slightly.'],['blur','Blur in','Sharpens into focus. Trendy.'],['rotate','Tilt','A small twist. Playful.'],['stagger','Stagger','Items arrive one after another.']].map(o=>[...o,box(26,26,'opacity:.7;border-radius:6px')])},
+  {k:'timing',type:'single',title:'Timing (easing)',help:'The feel of the movement. Ease-out feels natural; spring feels alive.',opts:[['linear','Linear','Robotic, constant speed.'],['easeout','Ease out','Fast then gentle. Most natural.'],['easeinout','Ease in-out','Smooth start and end.'],['spring','Spring','A tiny bounce. Lively.']].map(o=>[...o,`<span style="display:block;width:56px;height:3px;background:#14261D;position:relative"><span style="position:absolute;left:24px;top:-4px;width:10px;height:10px;border-radius:50%;background:#E8722C;border:2px solid #14261D"></span></span>`])},
+  {k:'dur',type:'range',title:'Duration',help:'0.2–0.4s feels snappy. Over 0.8s starts to feel slow.',min:0.1,max:1.2,step:0.05},
+  {k:'micro',type:'multi',title:'Micro-interactions',help:'Tiny responses to a tap or click. This is where products feel crafted.',opts:[['press','Press sink','Buttons sink into their shadow when pressed.'],['hover','Hover lift','Cards and buttons lift slightly on hover.'],['focus','Focus ring','A clear outline for keyboard users.'],['loading','Button loading','Button shows a spinner while working.'],['success','Success check','A checkmark draws itself on success.'],['skeleton','Skeleton loaders','Grey placeholder shapes while data loads.']].map(o=>[...o,word('✦','font-size:22px;color:#B8551A')])}
+ ]},
+ {id:'g6',title:'Finish · states and guardrails',secs:[
+  {k:'states',type:'multi',title:'States to design',help:'AI only designs the happy version. Tick every state your screen needs.',opts:[['empty','Empty','Nothing here yet, and what to do next.'],['loading','Loading','While waiting for data.'],['error','Error','Something went wrong, and how to recover.'],['success','Success','It worked.'],['disabled','Disabled','Buttons that can’t be used yet.']].map(o=>[...o,word(o[1][0],'font-family:Space Mono;font-weight:700')])},
+  {k:'avoid',type:'multi',title:'Never do this',help:'Banning AI’s default habits is one of the fastest ways to better design.',opts:[['gradients','No gradients','No rainbow or purple gradient fills.'],['emoji','No emoji','Use proper icons instead.'],['blur','No blurry shadows','No big muddy drop shadows.'],['purple','No default purple','Avoid the AI-default indigo/purple.'],['stock','No stock photos','Use placeholders, not cheesy stock.'],['lorem','No lorem ipsum','Write real, specific text.']].map(o=>[...o,word('⊘','font-size:22px;color:#B8551A')])},
+  {k:'extra',type:'area',title:'Anything else?',help:'Brand name, real text, references (“feels like Monzo”), accessibility needs.',ph:'Brand: Tunde Pay. Use Naira (₦). Must pass colour contrast for accessibility.'}
+ ]}
+];
+
+function fontNote(f){return({'Bricolage Grotesque':'Characterful grotesque. Warm and confident.','Inter':'The neutral workhorse of modern apps.','Manrope':'Geometric, friendly, modern.','Space Grotesk':'Techy with quirky details.','Playfair Display':'High-contrast serif. Elegant, editorial.','Instrument Serif':'Refined, delicate serif for display.','Nunito':'Rounded and friendly.','Oswald':'Tall and condensed. Posters and sport.','Instrument Sans':'Clean, crisp and readable.','DM Sans':'Soft geometric. Friendly products.','IBM Plex Sans':'Technical, enterprise.','Source Serif 4':'Comfortable serif for long reading.'})[f]||f}
+function presetVis(k){const p=PRESETS[k],b=BG[p.bg],a=ACC[p.accent];const r={sharp:0,soft:5,round:9,pill:18}[p.radius];const sh={none:'none',small:'0 2px 5px rgba(0,0,0,.2)',large:'0 6px 12px rgba(0,0,0,.25)',hard:'3px 3px 0 #14261D'}[p.shadow];const bd={none:'none',hair:'1px solid rgba(0,0,0,.2)',bold:'2px solid #14261D'}[p.border];return `<span style="display:flex;align-items:center;justify-content:center;width:62px;height:40px;background:${b[1]};border-radius:6px;border:1px solid rgba(0,0,0,.15)"><span style="display:block;width:34px;height:16px;background:${a[1]};border-radius:${r}px;box-shadow:${sh};border:${bd}"></span></span>`}
+
+// ---------- state ----------
+const DEFAULT={idea:'',journey:'',tool:'any',platform:'mobile',screen:'success',arrange:'single',frame:'phone',preset:'warm',hsize:'m',bsize:'m',dur:0.3,states:['loading','error','success'],extra:''};
+let S={};
+function applyPreset(k){const p=PRESETS[k];Object.assign(S,{preset:k,theme:p.theme,bg:p.bg,accent:p.accent,radius:p.radius,border:p.border,shadow:p.shadow,head:p.head,body:p.body,hweight:p.hweight,track:p.track,anim:[...p.anim],timing:p.timing,micro:[...p.micro],avoid:[...p.avoid]})}
+function reset(){S=JSON.parse(JSON.stringify(DEFAULT));applyPreset('warm')}
+try{const saved=JSON.parse(localStorage.getItem('mab_promptlab')||'null');if(saved)S=saved;else reset()}catch(e){reset()}
+if(!S.preset)reset();
+const save=()=>{try{localStorage.setItem('mab_promptlab',JSON.stringify(S))}catch(e){}};
+
+// ---------- render controls ----------
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function renderControls(){
+ const host=document.getElementById('groups');
+ host.innerHTML=G.map((g,gi)=>`<section class="group" id="${g.id}"><div class="ghead"><span class="n">0${gi+1}</span><h2>${g.title}</h2></div>${g.secs.map(sec=>{
+  let body='';
+  if(sec.type==='text')body=`<input type="text" data-k="${sec.k}" placeholder="${esc(sec.ph)}" value="${esc(S[sec.k]||'')}">`;
+  else if(sec.type==='area')body=`<textarea rows="5" data-k="${sec.k}" placeholder="${esc(sec.ph)}">${esc(S[sec.k]||'')}</textarea>`;
+  else if(sec.type==='range')body=`<div class="range"><input type="range" min="${sec.min}" max="${sec.max}" step="${sec.step}" value="${S[sec.k]}" data-k="${sec.k}" aria-label="${sec.title}"><output id="o-${sec.k}">${S[sec.k]}s</output></div>`;
+  else body=`<div class="opts" role="group" aria-label="${sec.title}">${sec.opts.map(o=>{const on=sec.type==='multi'?(S[sec.k]||[]).includes(o[0]):S[sec.k]===o[0];return `<button type="button" class="opt" data-k="${sec.k}" data-v="${esc(o[0])}" data-t="${sec.type}" data-why="${esc(o[2])}" aria-pressed="${on}">${o[3]?`<span class="vis" aria-hidden="true">${o[3]}</span>`:''}<span class="lbl">${esc(o[1])}</span></button>`}).join('')}</div><div class="why" id="why-${sec.k}">${whyFor(sec)}</div>`;
+  return `<div class="sec"><div class="sech"><h3>${sec.title}</h3>${sec.type==='multi'?'<span class="multi">pick any</span>':''}</div><p class="help">${sec.help}</p>${body}</div>`}).join('')}</section>`).join('');
+}
+function whyFor(sec){if(!sec.opts)return'';const v=sec.type==='multi'?(S[sec.k]||[]):[S[sec.k]];const picked=sec.opts.filter(o=>v.includes(o[0]));if(!picked.length)return '<b>Nothing picked.</b> That’s fine; the AI will choose.';return picked.map(o=>`<b>${esc(o[1])}:</b> ${esc(o[2])}`).join(' &nbsp;·&nbsp; ')}
+
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.opt');if(!b)return;
+ const k=b.dataset.k,v=b.dataset.v;
+ if(b.dataset.t==='multi'){const a=S[k]||[];S[k]=a.includes(v)?a.filter(x=>x!==v):[...a,v]}
+ else if(k==='preset'){applyPreset(v)}
+ else S[k]=v;
+ if(['bg','accent','radius','border','shadow','head','body','hweight','track','theme'].includes(k))S.custom=true;
+ if(k==='preset')S.custom=false;
+ if(k==='theme'){if(v==='dark'&&!['night','forest'].includes(S.bg))S.bg='night';if(v==='light'&&['night','forest'].includes(S.bg))S.bg='cream'}
+ if(k==='platform')S.frame=v==='mobile'?'phone':'browser';
+ refresh(true);
+});
+document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.k;if(!k)return;S[k]=e.target.type==='range'?parseFloat(e.target.value):e.target.value;if(e.target.type==='range')document.getElementById('o-'+k).textContent=S[k]+'s';update()});
+
+function refresh(controls){if(controls){const y=window.scrollY;renderControls();window.scrollTo(0,y)}update()}
+function update(){save();renderPreview();document.getElementById('out').textContent=buildBrief();document.getElementById('pvName').textContent=PRESETS[S.preset].name+(S.custom?' (customised)':'')}
+
+// ---------- preview ----------
+function renderPreview(){
+ const b=BG[S.bg],a=ACC[S.accent];
+ const R={sharp:'0px',soft:'8px',round:'16px',pill:'22px'}[S.radius];
+ const BR={sharp:'0px',soft:'8px',round:'12px',pill:'999px'}[S.radius];
+ const dark=['night','forest'].includes(S.bg);
+ const lineC=dark?'rgba(255,255,255,.35)':b[3];
+ const SH={none:'none',small:'0 2px 8px rgba(0,0,0,.12)',large:'0 18px 40px rgba(0,0,0,.22)',hard:`5px 5px 0 ${lineC}`}[S.shadow];
+ const BD={none:'none',hair:`1px solid ${dark?'rgba(255,255,255,.14)':'rgba(0,0,0,.12)'}`,bold:`2.5px solid ${lineC}`}[S.border];
+ const H={s:'22px',m:'28px',l:'34px',xl:'40px'}[S.hsize];
+ const B={s:'13px',m:'14.5px',l:'16px'}[S.bsize];
+ const T={tight:'-0.03em',normal:'0',wide:'0.06em'}[S.track];
+ const E={linear:'linear',easeout:'cubic-bezier(.2,.8,.2,1)',easeinout:'ease-in-out',spring:'cubic-bezier(.34,1.56,.64,1)'}[S.timing];
+ const an=(S.anim||[]).filter(x=>x!=='stagger');const k=an.length?'a-'+an[0]:'a-fade';
+ const anim=(S.anim||[]).length?`${k} ${S.dur}s ${E} both`:'none';
+ const vars=`--pv-bg:${b[1]};--pv-surface:${b[2]};--pv-text:${b[3]};--pv-accent:${a[1]};--pv-on-accent:${a[2]};--pv-accent-text:${dark?a[1]:shade(a[1])};--pv-radius:${R};--pv-btn-radius:${BR};--pv-border:${BD};--pv-btn-border:${S.border==='bold'?BD:'none'};--pv-shadow:${SH};--pv-btn-shadow:${S.shadow==='hard'?`3px 3px 0 ${lineC}`:'none'};--pv-head:'${S.head}',sans-serif;--pv-body:'${S.body}',sans-serif;--pv-hsize:${H};--pv-bsize:${B};--pv-hweight:${S.hweight};--pv-track:${T};--pv-anim:${anim}`;
+ const copy=screenCopy();
+ const st=(i)=>(S.anim||[]).includes('stagger')?`animation-delay:${(i*0.08).toFixed(2)}s`:'';
+ const card=`<div class="pv" style="${vars}"><div class="pv-card pv-anim" style="${st(0)}"><span class="pv-eyebrow pv-anim" style="${st(1)}">${copy.e}</span><div class="pv-h pv-anim" style="${st(2)}">${copy.h}</div><p class="pv-p pv-anim" style="${st(3)}">${copy.p}</p><div class="pv-row pv-anim" style="${st(4)}"><span class="pv-btn">${copy.b}</span><span class="pv-btn2">${copy.b2}</span></div></div></div>`;
+ let framed=card;
+ if(S.frame==='browser')framed=`<div class="pv-browser"><div class="pv-bar"><i></i><i></i><i></i></div>${card}</div>`;
+ if(S.frame==='phone')framed=`<div class="pv-phone">${card}</div>`;
+ if(S.frame==='card')framed=`<div style="border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.18)">${card}</div>`;
+ const stage=document.getElementById('stage');
+ stage.style.background=S.frame==='full'?b[1]:'#EFEADC';
+ stage.innerHTML=`<div class="pv-frame ${S.platform==='mobile'?'mobile':''}">${framed}</div>`;
+}
+function shade(hex){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const f=.62;return '#'+[r,g,b].map(x=>Math.round(x*f).toString(16).padStart(2,'0')).join('')}
+function screenCopy(){return({hero:{e:'New',h:'Send money in seconds',p:'Fast, safe transfers to any Nigerian bank.',b:'Get started',b2:'Learn more'},dashboard:{e:'Overview',h:'₦248,500.00',p:'Available balance · 3 transfers this week',b:'Transfer',b2:'Statement'},form:{e:'Step 2 of 3',h:'How much?',p:'Amount, plus a short note for Tunde.',b:'Continue',b2:'Back'},list:{e:'Recent',h:'Your transfers',p:'Tunde A. · ₦5,000 · Today',b:'See all',b2:'Filter'},detail:{e:'Receipt',h:'₦5,000 to Tunde',p:'GTBank · 0123456789 · 25 Oct, 8:41pm',b:'Share',b2:'Report'},onboarding:{e:'Welcome',h:'Banking that feels easy',p:'Three quick steps and you’re in.',b:'Next',b2:'Skip'},success:{e:'Transfer sent',h:'₦5,000 is on its way',p:'To Tunde Adeyemi, GTBank. Receipt saved.',b:'Share receipt',b2:'Done'},settings:{e:'Account',h:'Aleem A.',p:'Security · Notifications · Limits',b:'Edit profile',b2:'Log out'}})[S.screen]}
+
+// ---------- brief ----------
+const L=(sec,v)=>{const g=G.flatMap(x=>x.secs).find(s=>s.k===sec);const o=g&&g.opts&&g.opts.find(o=>o[0]===v);return o?o[1]:v};
+function buildBrief(){
+ const b=BG[S.bg],a=ACC[S.accent],p=PRESETS[S.preset];
+ const toolLine={stitch:'Design this screen in Google Stitch.',freebuff:'Build this as a working web page.',claude:'Design and build this screen as a single HTML file.',antigravity:'Build this screen as a working front-end.',any:'Design this screen.'}[S.tool];
+ const lines=[];
+ lines.push(`# Design brief: ${L('screen',S.screen)} (${S.platform==='mobile'?'mobile app':'web'})`);
+ lines.push('');
+ lines.push(`${toolLine} Follow every decision below exactly. Do not invent a different style.`);
+ lines.push('');
+ lines.push('## What we are building');
+ lines.push(S.idea?.trim()||'[Describe the product: who it is for and what they want to get done.]');
+ lines.push('');
+ lines.push('## The journey (build these steps, in this order)');
+ lines.push(S.journey?.trim()||'[Paste your screens and what-ifs from your wireframe.]');
+ lines.push('');
+ lines.push('## Layout');
+ lines.push(`- Platform: ${S.platform==='mobile'?'Mobile (390px wide, thumb-friendly, one column, tap targets at least 44px)':'Web (desktop first, responsive down to 390px)'}`);
+ lines.push(`- Screen type: ${L('screen',S.screen)}`);
+ lines.push(`- Arrangement: ${L('arrange',S.arrange)}`);
+ lines.push(`- Framing: ${L('frame',S.frame)}`);
+ lines.push('');
+ lines.push(`## Design language: ${p.name}${S.custom?' (customised)':''}`);
+ lines.push(`- Theme: ${S.theme==='dark'?'Dark':'Light'}`);
+ lines.push(`- Background: ${b[0]} ${b[1]}; cards/surfaces ${b[2]}; text ${b[3]}`);
+ lines.push(`- Accent (main buttons, highlights only): ${a[0]} ${a[1]} with ${a[2]} text on it`);
+ lines.push(`- Corners: ${L('radius',S.radius)} (${{sharp:'0px',soft:'8px',round:'16px cards, 12px buttons',pill:'16px cards, fully rounded buttons'}[S.radius]})`);
+ lines.push(`- Borders: ${{none:'none',hair:'1px subtle line',bold:'2.5px solid, same colour as text'}[S.border]}`);
+ lines.push(`- Shadow: ${{none:'none, flat',small:'small soft shadow',large:'large soft shadow',hard:'hard offset shadow 5px 5px 0, no blur'}[S.shadow]}`);
+ lines.push('');
+ lines.push('## Typography');
+ lines.push(`- Headings: ${S.head}, ${L('hweight',S.hweight).toLowerCase()} (${S.hweight}), ${L('track',S.track).toLowerCase()} letter spacing, ${L('hsize',S.hsize)}`);
+ lines.push(`- Body & UI: ${S.body}, ${L('bsize',S.bsize)}`);
+ lines.push('- Use one type scale. Never invent new sizes. Use Google Fonts.');
+ lines.push('');
+ lines.push('## Motion');
+ const an=(S.anim||[]).map(x=>L('anim',x)).join(', ');
+ lines.push(`- Entrance: ${an||'none'}${an?`, ${S.dur}s, ${L('timing',S.timing).toLowerCase()} easing`:''}`);
+ if((S.micro||[]).length)lines.push(`- Micro-interactions: ${(S.micro).map(x=>({press:'buttons sink into their shadow when pressed',hover:'cards and buttons lift slightly on hover',focus:'clear focus ring for keyboard users',loading:'buttons show a spinner while working',success:'a checkmark draws itself on success',skeleton:'skeleton placeholders while data loads'})[x]).join('; ')}`);
+ lines.push('- Respect “reduce motion” settings.');
+ lines.push('');
+ if((S.states||[]).length){lines.push('## States to design (not just the happy path)');(S.states).forEach(s=>lines.push(`- ${L('states',s)}: ${G[5].secs[0].opts.find(o=>o[0]===s)[2]}`));lines.push('')}
+ if((S.avoid||[]).length){lines.push('## Never');(S.avoid).forEach(s=>lines.push(`- ${G[5].secs[1].opts.find(o=>o[0]===s)[2]}`));lines.push('')}
+ if(S.extra?.trim()){lines.push('## Also');lines.push(S.extra.trim());lines.push('')}
+ lines.push('## Quality bar');
+ lines.push('- Text contrast at least 4.5:1. Real, specific text (no lorem ipsum).');
+ lines.push('- Consistent spacing on an 8px scale. One clear main action per screen.');
+ return lines.join('\n');
+}
+
+// ---------- actions ----------
+async function copy(){const t=buildBrief();try{await navigator.clipboard.writeText(t);flash('Copied ✓')}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');flash('Copied ✓')}catch(_){flash('Select and copy manually')}ta.remove()}}
+function flash(m){const c=document.getElementById('copied');c.textContent=m;setTimeout(()=>c.textContent='',2200)}
+document.getElementById('copyBtn').onclick=copy;
+document.getElementById('copyTop').onclick=copy;
+document.getElementById('dlBtn').onclick=()=>{const blob=new Blob([buildBrief()],{type:'text/markdown'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='design-brief.md';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+document.getElementById('resetBtn').onclick=()=>{reset();refresh(true)};
+
+renderControls();update();
+</script>
+</body>
+</html>
