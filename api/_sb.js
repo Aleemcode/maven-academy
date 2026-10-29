@@ -28,8 +28,8 @@ async function readJson(req) {
   try { return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}"); } catch (e) { return {}; }
 }
 
-const cleanEmail = e => String(e || "").trim().toLowerCase();
-const validEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) && e.length <= 200;
+const cleanEmail = e => String(e || "").trim().toLowerCase().replace(/^[\s,;:<>"']+|[\s,;:.<>"']+$/g, "");
+const validEmail = e => /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(e) && e.length <= 200;
 
 async function getStudent(email) {
   const r = await fetch(`${SB_URL}/rest/v1/students?email=eq.${encodeURIComponent(email)}&select=*`, { headers: serviceHeaders() });

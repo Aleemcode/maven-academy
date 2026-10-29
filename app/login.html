@@ -75,6 +75,8 @@ form{display:flex;flex-direction:column;gap:14px}
 <script>
 (function(){
   const { sb, waLink, esc, syncCookie } = MAB;
+  const clean = v => String(v || "").trim().toLowerCase().replace(/^[\s,;:<>"']+|[\s,;:.<>"']+$/g, "");
+  const okEmail = v => /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(v);
   const q = new URLSearchParams(location.search);
   const next = (q.get("next") || "").startsWith("/app") ? q.get("next") : "/app";
   const go = () => location.replace(next);
@@ -102,8 +104,8 @@ form{display:flex;flex-direction:column;gap:14px}
   document.getElementById("fLogin").addEventListener("submit", async e => {
     e.preventDefault();
     const f = e.target, err = document.getElementById("eLogin"), btn = document.getElementById("bLogin");
-    const email = f.email.value.trim().toLowerCase(), password = f.password.value;
-    err.textContent = "";
+    const email = clean(f.email.value), password = f.password.value;
+    f.email.value = email; err.textContent = "";
     if (!email || !password) { err.textContent = "Enter your email and password."; return; }
     busy(btn, true, "Logging in…");
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
@@ -130,10 +132,11 @@ form{display:flex;flex-direction:column;gap:14px}
   document.getElementById("fSetup").addEventListener("submit", async e => {
     e.preventDefault();
     const f = e.target, err = document.getElementById("eSetup"), btn = document.getElementById("bSetup");
-    const name = f.name.value.trim(), email = f.email.value.trim().toLowerCase(), password = f.password.value;
+    const name = f.name.value.trim(), email = clean(f.email.value), password = f.password.value;
+    f.email.value = email;
     err.innerHTML = "";
     if (name.length < 2) { err.textContent = SETUP_ERR.name; f.name.focus(); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = SETUP_ERR.email; f.email.focus(); return; }
+    if (!okEmail(email)) { err.textContent = SETUP_ERR.email; f.email.focus(); return; }
     if (password.length < 8) { err.textContent = SETUP_ERR.password; f.password.focus(); return; }
     busy(btn, true, "Checking your seat…");
     let j = {};
