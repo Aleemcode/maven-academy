@@ -16,29 +16,30 @@ const onText=bg=>ratio(INK,bg)>=ratio('#FFFFFF',bg)?INK:'#FFFFFF';
 /* segmented buttons: [data-g=name] > button[data-v] */
 function seg(el,name,fn){const g=$(el,'[data-g="'+name+'"]');if(!g)return;g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!g.contains(b))return;$$(g,'button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));fn(b.dataset.v,b)})}
 function slide(el,name,fn){const i=$(el,'input[name="'+name+'"]');if(!i)return;const h=()=>fn(parseFloat(i.value),i);i.addEventListener('input',h);return i}
+function once(el){const r=el.querySelector('.vz1');if(!r||r._vzOn)return true;r._vzOn=1;return false}
 function out(el,k,v){$$(el,'[data-o="'+k+'"]').forEach(n=>{n.innerHTML=v})}
 function watch(el,fn){if(window.ResizeObserver){let w=0;const ro=new ResizeObserver(()=>{if(!el.isConnected){ro.disconnect();return}const nw=el.clientWidth;if(nw!==w){w=nw;fn()}});ro.observe(el)}}
 const KIT=`<style>
-.vz1{font-family:'Instrument Sans',system-ui,sans-serif;color:#14261D;display:grid;gap:14px;min-width:0;font-size:15px;line-height:1.5}
-.vz1 *{box-sizing:border-box}
-.vz1 .stg{background:#F4F0E5;border:2.5px solid #14261D;border-radius:14px;padding:16px;position:relative;overflow:hidden;min-width:0}
-.vz1 .paper{background:#FFFDF7}
-.vz1 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.vz1 .seg{display:flex;flex-wrap:wrap;gap:6px}
-.vz1 .seg button,.vz1 .tb{min-height:44px;border:2px solid #14261D;border-radius:10px;background:#FFFDF7;padding:8px 12px;font:600 14px/1.2 'Instrument Sans',system-ui,sans-serif;color:#14261D;cursor:pointer}
-.vz1 .seg button[aria-pressed=true],.vz1 .tb[aria-pressed=true]{background:#14261D;color:#D6E59A}
-.vz1 .tb.pri{background:#E8722C;box-shadow:2px 2px 0 #14261D}
-.vz1 .sl{display:grid;gap:0}
-.vz1 .sl .h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:700;font-size:14px}
-.vz1 .v{font:700 12px/1.4 'Space Mono',monospace;background:#FFFDF7;border:1.5px solid #14261D;border-radius:6px;padding:1px 6px;white-space:nowrap}
-.vz1 input[type=range]{width:100%;accent-color:#E8722C;height:40px;margin:0}
-.vz1 .note{background:#FFFDF7;border:2px solid #14261D;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.5}
-.vz1 .note b{font-family:'Bricolage Grotesque',sans-serif}
-.vz1 .lab{font:700 11px/1.3 'Space Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;color:#4A5A4F}
-.vz1 .pill{display:inline-block;font:700 12px/1.4 'Space Mono',monospace;border:2px solid #14261D;border-radius:99px;padding:3px 10px;background:#FFFDF7}
-.vz1 .ok{background:#D6E59A}.vz1 .bad{background:#F6D7E8}.vz1 .mid{background:#F7DCC4}
-.vz1 .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr));gap:14px}
-.vz1 .sm{font-size:13px;color:#4A5A4F;margin:0}
+:where(.vz1){font-family:'Instrument Sans',system-ui,sans-serif;color:#14261D;display:grid;gap:14px;min-width:0;font-size:15px;line-height:1.5}
+:where(.vz1) *{box-sizing:border-box}
+:where(.vz1) .stg{background:#F4F0E5;border:2.5px solid #14261D;border-radius:14px;padding:16px;position:relative;overflow:hidden;min-width:0}
+:where(.vz1) .paper{background:#FFFDF7}
+:where(.vz1) .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+:where(.vz1) .seg{display:flex;flex-wrap:wrap;gap:6px}
+:where(.vz1) .seg button,:where(.vz1) .tb{min-height:44px;border:2px solid #14261D;border-radius:10px;background:#FFFDF7;padding:8px 12px;font:600 14px/1.2 'Instrument Sans',system-ui,sans-serif;color:#14261D;cursor:pointer}
+:where(.vz1) .seg button[aria-pressed=true],:where(.vz1) .tb[aria-pressed=true]{background:#14261D;color:#D6E59A}
+:where(.vz1) .tb.pri{background:#E8722C;box-shadow:2px 2px 0 #14261D}
+:where(.vz1) .sl{display:grid;gap:0}
+:where(.vz1) .sl .h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:700;font-size:14px}
+:where(.vz1) .v{font:700 12px/1.4 'Space Mono',monospace;background:#FFFDF7;border:1.5px solid #14261D;border-radius:6px;padding:1px 6px;white-space:nowrap}
+:where(.vz1) input[type=range]{width:100%;accent-color:#E8722C;height:40px;margin:0}
+:where(.vz1) .note{background:#FFFDF7;border:2px solid #14261D;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.5}
+:where(.vz1) .note b{font-family:'Bricolage Grotesque',sans-serif}
+:where(.vz1) .lab{font:700 11px/1.3 'Space Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;color:#4A5A4F}
+:where(.vz1) .pill{display:inline-block;font:700 12px/1.4 'Space Mono',monospace;border:2px solid #14261D;border-radius:99px;padding:3px 10px;background:#FFFDF7}
+:where(.vz1) .ok{background:#D6E59A}:where(.vz1) .bad{background:#F6D7E8}:where(.vz1) .mid{background:#F7DCC4}
+:where(.vz1) .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr));gap:14px}
+:where(.vz1) .sm{font-size:13px;color:#4A5A4F;margin:0}
 </style>`;
 const SPARK=c=>`<svg width="56" height="20" viewBox="0 0 56 20" aria-hidden="true"><g fill="${c}"><path d="M8 0l2 7 7 3-7 2-2 8-2-8-6-2 6-3z"/><path d="M28 4l1.4 4.6L34 10l-4.6 1.4L28 16l-1.4-4.6L22 10l4.6-1.4z"/><path d="M47 0l2 7 7 3-7 2-2 8-2-8-6-2 6-3z"/></g></svg>`;
 
@@ -48,24 +49,24 @@ const SPARK=c=>`<svg width="56" height="20" viewBox="0 0 56 20" aria-hidden="tru
 window.VIZ['intent']=[
 {id:'intent-decided',title:'Default vs decided',
  terms:['Intent','Default','Slop','Craft','Taste'],
- intro:'The same little screen, twice. On the left of the switch, the tool chose everything. On the right, a person decided every piece on purpose.',
+ intro:'The same little screen, twice. In Default, the tool chose everything. In Decided, a person chose every piece on purpose.',
  try:'Flip between Default and Decided, then tap each numbered pin to hear why that piece is there.',
  html:`<div class="vz1 vz-intent-decided">${KIT}<style>
 .vz-intent-decided .stg{display:flex;justify-content:center;padding:22px 14px 22px 14px}
-.vz-intent-decided .wrap{width:calc(100% - 40px);max-width:300px;position:relative}
+.vz-intent-decided .wrap{width:100%;max-width:344px;padding-right:44px;position:relative}
 .vz-intent-decided .cd{border-radius:18px;padding:22px 20px}
 .vz-intent-decided .slop{background:linear-gradient(135deg,#6D4AFF,#A63AE0);color:#fff;text-align:center;font-family:Arial,sans-serif;box-shadow:0 18px 40px rgba(109,74,255,.45)}
 .vz-intent-decided .craft{background:#FFFDF7;border:2.5px solid #14261D;box-shadow:5px 5px 0 #14261D}
 .vz-intent-decided .el{position:relative}
 .vz-intent-decided .el+.el{margin-top:10px}
-.vz-intent-decided .pin{position:absolute;right:-50px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:2px solid #14261D;background:#FFFDF7;color:#14261D;font:700 12px 'Space Mono',monospace;padding:0;cursor:pointer;z-index:2}
+.vz-intent-decided .pin{position:absolute;right:-64px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:2px solid #14261D;background:#FFFDF7;color:#14261D;font:700 12px 'Space Mono',monospace;padding:0;cursor:pointer;z-index:2}
 .vz-intent-decided .pin::after{content:'';position:absolute;inset:-8px}
 .vz-intent-decided .pin.seen{background:#D6E59A}
 .vz-intent-decided .pin[aria-pressed=true]{background:#E8722C;box-shadow:2px 2px 0 #14261D}
 .vz-intent-decided .hl{outline:2.5px dashed #E8722C;outline-offset:4px;border-radius:6px}
 .vz-intent-decided .sbtn{background:#FF7AE0;color:#1E0B3A;border-radius:8px;padding:10px;font-weight:700}
 .vz-intent-decided .cbtn{background:#E8722C;border:2.5px solid #14261D;border-radius:10px;padding:10px;font-weight:700;text-align:center}
-.vz-intent-decided .card-pin{top:14px;transform:none}
+.vz-intent-decided .card-pin{top:-13px;right:31px;transform:none}
 </style>
 <div class="row"><div class="seg" data-g="mode"><button data-v="def" aria-pressed="true">Default: the tool chose</button><button data-v="dec" aria-pressed="false">Decided: you chose</button></div></div>
 <div class="stg"><div class="wrap">
@@ -86,7 +87,7 @@ window.VIZ['intent']=[
 <div class="note" aria-live="polite" data-o="why"></div>
 <p class="sm" data-o="count"></p>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const R={def:{1:['Sparkles','Added because AI adds sparkles. They tell you nothing about the product. That is a <b>default</b>, not a decision.'],2:['The headline','“Welcome to the Future!” could sit on any product on earth. A sentence that fits everything says nothing.'],3:['The supporting line','“All-in-one”, “revolutionizes”: filler the model has seen a million times. No audience, no task. This is <b>slop</b>.'],4:['The button','“Get Started Now!!” does not say what happens next. Two exclamation marks shout instead of explain.'],5:['The surface','Purple gradient and a soft glow: the most common AI look. Nobody chose it for this product.']},
    dec:{1:['The eyebrow','It names who this is for: market traders. Naming the audience is the first decision, and every later choice follows from it.'],2:['The headline','A promise with a task (know what sold) and a cost (one tap). Biggest and boldest, so it is read first.'],3:['The supporting line','One quiet line explains how. Muted colour so it reads second, after the headline.'],4:['The button','It says exactly what will happen: “Record my first sale”. Terracotta, because it is the one accent and this is the one action.'],5:['The surface','Paper, an ink border and a hard shadow: the brand system, used on purpose. That care is <b>craft</b>.']}};
   let mode='def',cur=0;const seen={def:{},dec:{}};
@@ -136,7 +137,7 @@ window.VIZ['intent']=[
 <div class="note ask" aria-live="polite"><div data-o="q">Tap any piece of the screen above.</div><div class="row" data-o="act"></div></div>
 <div class="row"><span class="pill" data-o="score">0 of 8 decided</span><button class="tb" data-act="reset">Start again</button></div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const D=[[0,'Sparkles','Pure decoration. They carry no information and no feeling you chose.'],[0,'“Welcome to the future of commerce”','A slogan that could sit on any app. The headline below already does the real job.'],[1,'The headline','It is the promise: what the product does, for whom, at what cost. Everything else supports it.'],[0,'The stock photo','A smiling team tells a trader nothing about their sales. It only fills space.'],[0,'“Rated #1 by users”','A claim with no source. People skip it, or worse, stop trusting the page.'],[1,'Today’s total','This is the information the trader opened the app for. It earns its big size.'],[1,'“Record a sale”','The main task, one tap away. One clear action is the point of the screen.'],[0,'“Learn more”','A second button at equal weight splits attention. If it is needed, make it a quiet text link.']];
   const st={};let sel=-1;
   function score(){const n=Object.keys(st).length,good=Object.keys(st).filter(k=>st[k]===D[k][0]).length,del=Object.keys(st).filter(k=>!st[k]).length;
@@ -159,7 +160,7 @@ window.VIZ['intent']=[
 {id:'intent-brief',title:'Brief in, output out',
  terms:['Brief','Constraint','Hierarchy','Three steps or less'],
  intro:'A brief is the written direction you give before anything is made. Each line in it is a constraint: a rule you set on purpose. Watch what each rule does to the output.',
- try:'Switch the constraints on one at a time. The brief writes itself on the left, the screen changes on the right.',
+ try:'Switch the constraints on one at a time. Watch the brief write itself and the screen change with it.',
  html:`<div class="vz1 vz-intent-brief">${KIT}<style>
 .vz-intent-brief .cons{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(170px,100%),1fr));gap:6px}
 .vz-intent-brief .cons button{text-align:left;display:flex;gap:8px;align-items:center}
@@ -175,7 +176,7 @@ window.VIZ['intent']=[
  <div class="stg pvw" data-o="pv"></div>
 </div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const C=[['aud','Name the audience','For market traders in Nigeria.'],['prom','Write the promise','Promise: “Know what sold today, in one tap.” Button says what happens.'],['acc','One accent colour','Neutral cream and ink. One accent, terracotta, only on the main action.'],['hier','Clear hierarchy','Headline read first, one quiet line second. Left-aligned.'],['steps','Three steps or less','Recording a sale takes three steps or fewer.'],['deco','No decoration without a job','No gradients, no glow, no sparkles.']];
   const on={};
   out(el,'cons',C.map(c=>`<button data-k="${c[0]}" aria-pressed="false"><i aria-hidden="true"></i>${c[1]}</button>`).join(''));
@@ -234,7 +235,7 @@ window.VIZ['colour']=[
 <div class="row"><button class="tb" data-act="gray" aria-pressed="false">Value only (remove colour)</button></div>
 <div class="note" aria-live="polite" data-o="say"></div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const ip={h:$(el,'[name=h]'),s:$(el,'[name=s]'),l:$(el,'[name=l]')};let gray=false;
   const hueName=h=>h<15||h>=340?'red':h<45?'orange':h<68?'yellow':h<160?'green':h<195?'teal':h<255?'blue':h<290?'purple':'pink';
   const satW=s=>s<8?'grey':s<30?'muted':s<65?'rich':'vivid';
@@ -276,7 +277,7 @@ window.VIZ['colour']=[
 <p class="sm">Warm leans red-yellow and feels human. Cool leans blue and feels precise. Pure grey leans nowhere, which is why it reads as a default.</p></div>
 <div class="stg paper"><div class="row" style="justify-content:space-between;margin-bottom:8px"><span class="lab">Gradient</span><div class="seg" data-g="gr"><button data-v="ramp" aria-pressed="true">From your ramp</button><button data-v="rain">Rainbow</button></div></div><div class="gb" data-o="gb">Market day sale</div><p class="sm" data-o="gs" style="margin-top:8px"></p></div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   let base='#E8722C',pick=5;
   const steps=[['50',.88,1],['100',.74,1],['200',.55,1],['300',.36,1],['400',.17,1],['500',0,0],['600',.2,-1],['700',.42,-1],['800',.62,-1]];
   const col=s=>s[2]>0?mix(base,'#FFFFFF',s[1]):s[2]<0?mix(base,'#000000',s[1]):base.toUpperCase();
@@ -328,7 +329,7 @@ window.VIZ['colour']=[
 <div><div class="rbar" data-o="bar"></div><p class="sm" data-o="bs" style="margin-top:6px"></p></div>
 <div class="note" aria-live="polite" data-o="say"></div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const R={bg:['Background','#F4F0E5','The big quiet field everything sits on. A neutral: cream, not pure grey.'],surface:['Surface','#FFFDF7','Cards and panels that sit on the background. Slightly lighter, so they lift.'],text:['Text','#14261D','The main ink. A near-black tinted green, so it belongs to the palette.'],muted:['Muted text','#4A5A4F','Labels and secondary lines. Still passes 4.5:1, just quieter.'],accent:['Accent','#E8722C','The one loud colour. It marks the main action, and nothing else.'],success:['Success','#D6E59A','Means “done, all good”. Always with a word and icon, never colour alone.'],warning:['Warning','#F5C76B','Means “needs attention soon”. Used only for that.'],danger:['Danger','#F6D7E8','Means “something failed”. Deep red text on a soft pink fill.']};
   let role='accent';const app=$(el,'.ui');
   out(el,'chips',Object.keys(R).map(k=>`<button data-k="${k}" aria-pressed="false"><i style="background:${R[k][1]}"></i>${R[k][0]}</button>`).join(''));
@@ -379,7 +380,7 @@ window.VIZ['colour']=[
  </div>
 </div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const FG=['#14261D','#4A5A4F','#FFFFFF','#8C8C8C','#AD4F16','#E8722C','#D6E59A'],BG=['#FFFDF7','#F4F0E5','#FFFFFF','#E8722C','#F2B705','#14261D','#2563EB'];
   let fg='#FFFFFF',bg='#E8722C';
   const sw=(list,k)=>list.map(c=>`<button data-v="${c}" style="background:${c}" aria-label="${c}" aria-pressed="false"></button>`).join('')+`<input type="color" data-k="${k}" aria-label="Any ${k==='fg'?'text':'background'} colour">`;
@@ -390,7 +391,7 @@ window.VIZ['colour']=[
    $(el,'[data-k=fg]').value=fg.toLowerCase();$(el,'[data-k=bg]').value=bg.toLowerCase();
    out(el,'rt',rr.toFixed(2)+' : 1');
    out(el,'lm',`Text brightness ${lum(fg).toFixed(3)} · background ${lum(bg).toFixed(3)}. Ratio = (lighter + 0.05) ÷ (darker + 0.05).`);
-   const B=(n,lab,need)=>`<div class="row"><span class="pill ${r>=need?'ok':'bad'}">${r>=need?'Pass':'Fail'}</span><span>${lab} <span class="sm">needs ${need}:1</span></span></div>`;
+   const B=(n,lab,need)=>`<div style="display:flex;gap:8px;align-items:baseline"><span class="pill ${r>=need?'ok':'bad'}" style="flex:none">${r>=need?'Pass':'Fail'}</span><span>${lab} <span class="sm">needs ${need}:1</span></span></div>`;
    out(el,'bd',B(0,'Body text (AA)',4.5)+B(0,'Large or bold text, icons (AA)',3)+B(0,'Body text (AAA, best)',7));
    out(el,'say',note||(r>=4.5?`<b>Readable.</b> ${fg} on ${bg} clears 4.5:1, so it is safe for body text.`:r>=3?`<b>Almost.</b> This passes for big headlines but fails for body text. It may look fine on your bright laptop. On a cheap phone in the sun, it will not.`:`<b>Fails.</b> Too close in lightness. Remember: contrast is about lightness, not hue. Two very different colours can still fail.`))}
   el.addEventListener('click',e=>{const b=e.target.closest('.sws button');if(b&&el.contains(b)){if(b.closest('[data-g=fg]'))fg=b.dataset.v;else bg=b.dataset.v;draw();return}
@@ -428,7 +429,7 @@ window.VIZ['type']=[
 <div class="note" aria-live="polite" data-o="say"></div>
 <p class="sm" data-o="id"></p>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   let fam='Bricolage Grotesque',kind='sans',wt=400,part='x-height',M={};
   const st=$(el,'.spec'),wd=$(el,'.word'),cv=document.createElement('canvas').getContext('2d');
   const stack=f=>`'${f}',${kind==='serif'?'Georgia,serif':'system-ui,sans-serif'}`;
@@ -450,7 +451,7 @@ window.VIZ['type']=[
    M.r=Math.round(xh/cap*100);
    const L={'Baseline':base,'x-height':base-xh,'Cap height':base-cap,'Ascender':base-asc,'Descender':base+desc};
    let h='';for(const k in L){const on=k===part;h+=`<div class="ln${on?' on':''}" style="top:${L[k]}px"></div>`;if(on)h+=`<div class="tag" style="top:${k==='Descender'||k==='Baseline'?L[k]+5:L[k]-25}px">${k}</div>`}
-   if(part==='Counter'){const o=$(wd,'.o').getBoundingClientRect(),d=xh*(wt>600?.26:.38);h+=`<div class="ctr" style="width:${d}px;height:${d}px;left:${(o.left+o.right)/2-ox-d/2}px;top:${base-xh/2-d/2}px"></div>`}
+   if(part==='Counter'){const o=$(wd,'.o').getBoundingClientRect(),d=xh*(wt>600?.32:.42);h+=`<div class="ctr" style="width:${d}px;height:${d}px;left:${(o.left+o.right)/2-ox-d/2}px;top:${base-xh/2-d/2}px"></div>`}
    if(part==='Serif'){const H=$(wd,'.H').getBoundingClientRect(),d=fs*.34;h+=`<div class="ring" style="width:${d}px;height:${d}px;left:${H.left-ox+fs*.1-d/2}px;top:${base-d/2}px"></div><div class="ring" style="width:${d}px;height:${d}px;left:${H.left-ox+fs*.1-d/2}px;top:${base-cap-d/2}px"></div>`}
    out(el,'marks',h);
    const d=D[part];out(el,'say',`<b>${part}.</b> `+(typeof d==='function'?d():d));
@@ -471,6 +472,9 @@ window.VIZ['type']=[
 .vz-type-spacing .ld{font-size:16px;color:#14261D}
 .vz-type-spacing .ms{font-size:15px;line-height:1.5;border-right:2.5px solid #E8722C;padding-right:4px}
 .vz-type-spacing .stg>.lab{margin-bottom:4px}
+.vz-type-spacing .g2{grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr))}
+.vz-type-spacing .wide{grid-column:1/-1}
+.vz-type-spacing .ld,.vz-type-spacing .ms{margin-bottom:12px}
 </style>
 <div class="g2">
  <div class="stg paper"><div class="lab">1 · Tracking</div><div class="tk-h" data-o="tkh0">Market day</div><div class="tk-l">New orders · 3 waiting</div>
@@ -487,15 +491,15 @@ window.VIZ['type']=[
   <label class="sl"><span class="h">Line height <span class="v" data-o="lv"></span></span><input type="range" name="lh" min="0.9" max="2.2" step="0.05" value="1.1"></label>
   <div class="row"><span class="pill" data-o="lp"></span></div>
   <p class="sm" style="margin-top:8px">Leading (line height in CSS) is the space between lines. Each green band is one line’s box. Body text reads best at 1.4 to 1.6. Big headlines want about 1.0 to 1.15.</p></div>
- <div class="stg paper"><div class="lab">4 · Measure and widows</div>
+ <div class="stg paper wide"><div class="lab">4 · Measure and widows</div>
   <div class="ms" data-o="ms"></div>
-  <label class="sl"><span class="h">Line length <span class="v" data-o="mv"></span></span><input type="range" name="mw" min="140" max="600" step="2" value="600"></label>
+  <label class="sl"><span class="h">Line length <span class="v" data-o="mv"></span></span><input type="range" name="mw" min="140" max="600" step="2" value="560"></label>
   <div class="row"><span class="pill" data-o="mp"></span><span class="pill" data-o="wp"></span></div>
   <div class="row" style="margin-top:8px"><button class="tb" data-act="pretty" aria-pressed="false">Fix widows (text-wrap: pretty)</button></div>
   <p class="sm" style="margin-top:8px">Measure is line length, counted in characters. 45 to 75 reads best. A widow (or orphan) is one lonely word left on the last line. It looks like a mistake.</p></div>
 </div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const T='Snap a photo of any receipt. We read it, sort it into the right category and add it to today’s total, so your books are done before dinner.';
   const ms=$(el,'[data-o=ms]');ms.innerHTML=T.split(' ').map(w=>`<span>${w}</span>`).join(' ');
   let pretty=false;
@@ -526,12 +530,13 @@ window.VIZ['type']=[
  try:'Change the base and the ratio and watch the ladder rebuild. Tap a weight. Then flip the card between Flat and Scaled.',
  html:`<div class="vz1 vz-type-scale">${KIT}<style>
 .vz-type-scale .lad{display:grid;gap:2px}
-.vz-type-scale .rw{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:baseline;gap:10px;border-bottom:1.5px dashed rgba(20,38,29,.25);padding:2px 0}
+.vz-type-scale .rw{display:grid;grid-template-columns:126px minmax(0,1fr);align-items:baseline;gap:10px;border-bottom:1.5px dashed rgba(20,38,29,.25);padding:2px 0}
 .vz-type-scale .rw .t{white-space:nowrap;overflow:hidden;line-height:1.2;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
 .vz-type-scale .wl{display:grid;gap:4px}
-.vz-type-scale .wl button{display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;text-align:left;border:2px solid transparent;border-radius:10px;background:transparent;padding:2px 8px;min-height:44px;cursor:pointer;color:#14261D}
+.vz-type-scale .wl button{display:grid;grid-template-columns:128px minmax(0,1fr);align-items:center;text-align:left;border:2px solid transparent;border-radius:10px;background:transparent;padding:2px 8px;min-height:44px;cursor:pointer;color:#14261D}
 .vz-type-scale .wl button[aria-pressed=true]{border-color:#14261D;background:#D6E59A}
 .vz-type-scale .wl .s{font-family:Inter,sans-serif;font-size:24px;line-height:1.1;white-space:nowrap;overflow:hidden}
+.vz-type-scale .v{font-size:11px}
 .vz-type-scale .hc{background:#FFFDF7;border:2.5px solid #14261D;border-radius:14px;padding:18px;box-shadow:4px 4px 0 #14261D;color:#14261D}
 </style>
 <div class="g2">
@@ -552,10 +557,10 @@ window.VIZ['type']=[
  </div>
 </div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const W=[[300,'Light'],[400,'Regular'],[500,'Medium'],[600,'Semibold'],[700,'Bold'],[800,'Extra bold'],[900,'Black']];
   let ratio=1.25,wt=800,flat=false,disp='Bricolage Grotesque';
-  out(el,'wl',W.map(w=>`<button data-w="${w[0]}" aria-pressed="${w[0]===wt}"><span class="v" style="justify-self:start">${w[0]} ${w[1]}</span><span class="s" style="font-weight:${w[0]}">Sales today</span></button>`).join(''));
+  out(el,'wl',W.map(w=>`<button data-w="${w[0]}" aria-pressed="${w[0]===wt}"><span class="v" style="justify-self:start">${w[0]} ${w[1]}</span><span class="s" style="font-weight:${w[0]}">Sales</span></button>`).join(''));
   const fam=f=>`'${f}',${f==='Fraunces'?'Georgia,serif':'system-ui,sans-serif'}`;
   function draw(){const b=+$(el,'[name=base]').value,sz=n=>Math.round(b*Math.pow(ratio,n)*10)/10;out(el,'bv',b+'px');
    const R=[['display',5],['h1',4],['h2',3],['h3',2],['large',1],['body',0],['caption',-1]];
@@ -578,7 +583,7 @@ window.VIZ['type']=[
 .vz-type-numbers .tbl div{display:flex;justify-content:space-between;gap:12px;border-bottom:1.5px dashed rgba(20,38,29,.25);padding:2px 0}
 .vz-type-numbers .tbl span:first-child{font-size:15px;font-weight:500;color:#4A5A4F;align-self:center}
 .vz-type-numbers .op{font-family:'Bricolage Grotesque',sans-serif;color:#14261D}
-.vz-type-numbers .mag{height:104px;overflow:hidden;border:2px solid #14261D;border-radius:10px;background:#F4F0E5;padding:8px}
+.vz-type-numbers .mag{height:116px;overflow:hidden;border:2px solid #14261D;border-radius:10px;background:#F4F0E5;padding:8px}
 .vz-type-numbers .mag div{transform:scale(2.6);transform-origin:0 0;width:38%;font-size:13px;line-height:1.35}
 </style>
 <div class="g2">
@@ -588,11 +593,11 @@ window.VIZ['type']=[
  <div class="stg paper"><div class="row" style="justify-content:space-between;margin-bottom:10px"><span class="lab">Optical size</span><div class="seg" data-g="op"><button data-v="ok" aria-pressed="true">Matched</button><button data-v="bad">Swapped</button></div></div>
   <div class="op" data-o="big" style="font-size:52px;font-weight:800;line-height:1;letter-spacing:-.01em">Sold out</div>
   <div class="lab" style="margin:10px 0 4px">13px text, magnified</div>
-  <div class="mag"><div class="op" data-o="small">Delivery in two days. Pay when it arrives.</div></div>
+  <div class="mag"><div class="op" data-o="small">Delivery in two days. Pay on arrival.</div></div>
   <p class="sm" data-o="os" style="margin-top:8px"></p></div>
 </div>
 </div>`,
- init(el){
+ init(el){if(once(el))return;
   const items=['Rice 50kg','Palm oil 5L','Garri 10kg'];let p=[61100,11850,8790];let mode='proportional-nums';
   const fmt=n=>'&#8358;'+n.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
   function nums(){out(el,'tbl',items.map((t,i)=>`<div><span>${t}</span><span style="font-variant-numeric:${mode}">${fmt(p[i])}</span></div>`).join(''));
@@ -766,7 +771,7 @@ window.DRILLS['intent']=[
  face:`<div style="width:230px;display:grid;gap:6px"><div style="justify-self:end;background:#14261D;color:#F4F0E5;border-radius:12px 12px 2px 12px;padding:8px 10px;font-size:12px">Make a landing page</div><div style="background:#FFFDF7;border:2px solid #14261D;border-radius:12px 12px 12px 2px;padding:8px 10px;font-size:12px">Here is your landing page!<div style="margin-top:6px;height:46px;border-radius:8px;background:linear-gradient(135deg,#6D4AFF,#A63AE0)"></div></div></div>`,
  opts:['A first draft: raw material','A brief: the direction','Taste: the final answer','Curation: the best pick'],ok:0,why:'The first draft is raw material, never the answer. Your job starts when it arrives: judge it, direct it, refine it.'},
 {id:'i-n5',type:'name',level:2,q:'The right button has its icon centred and its corners even. Caring about details like this is called…',
- face:ROW(`<div style="display:flex;align-items:flex-start;gap:4px;border:2px solid #14261D;border-radius:12px 6px 12px 6px;padding:7px 12px 9px 9px;font-weight:700;font-size:13px;background:#E8722C"><svg width="14" height="14" viewBox="0 0 14 14" style="margin-top:4px" aria-hidden="true"><path d="M7 2v10M2 7h10" stroke="#14261D" stroke-width="2"/></svg>Add</div>`,`<div style="display:flex;align-items:center;gap:6px;border:2px solid #14261D;border-radius:10px;padding:8px 12px;font-weight:700;font-size:13px;background:#E8722C"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" stroke="#14261D" stroke-width="2"/></svg>Add</div>`),
+ face:ROW(`<div style="display:flex;align-items:flex-start;gap:4px;border:2px solid #14261D;border-radius:14px 4px 14px 4px;padding:6px 12px 10px 8px;font-weight:700;font-size:13px;background:#E8722C"><svg width="14" height="14" viewBox="0 0 14 14" style="margin-top:7px" aria-hidden="true"><path d="M7 2v10M2 7h10" stroke="#14261D" stroke-width="2"/></svg>Add</div>`,`<div style="display:flex;align-items:center;gap:6px;border:2px solid #14261D;border-radius:10px;padding:8px 12px;font-weight:700;font-size:13px;background:#E8722C"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" stroke="#14261D" stroke-width="2"/></svg>Add</div>`),
  opts:['Craft','Curation','Constraint','Default'],ok:0,why:'Craft is the care spent on details most people never consciously notice, but always feel. Uneven corners and a dropped icon read as “cheap” before anyone can say why.'},
 {id:'i-n6',type:'name',level:2,q:'Every choice here is what the tool does when you say nothing. That is called…',
  face:`<div style="width:220px;padding:14px;border-radius:8px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12);font-family:Arial,sans-serif;color:#111"><div style="font-size:16px;font-weight:700">Settings</div><div style="font-size:12px;color:#666;margin:4px 0 10px">Manage your preferences</div><div style="background:#3B82F6;color:#fff;border-radius:6px;padding:7px;font-size:13px;text-align:center">Save changes</div></div>`,
