@@ -91,6 +91,8 @@
       --wf-terra: var(--orange-9);
       --wf-terra-deep: var(--orange-10);
       --wf-terra-tint: var(--orange-3);
+      --wf-terra-text: #B23A00; /* brand colour as small text: darkened until it passes AA on cream */
+      --wf-blue-text: #1F5FC4;
 
       --wf-green: var(--grass-9);
       --wf-green-dark: var(--grass-11);
@@ -212,7 +214,7 @@
     }
     .wf-logo__badge {
       background: var(--wf-terra);
-      color: #FFFFFF;
+      color: var(--wf-on-terra, #FFFFFF);
       font-family: var(--wf-f-disp);
       font-weight: 800;
       font-size: 13px;
@@ -353,7 +355,7 @@
       background: var(--wf-surface);
       border-color: var(--wf-border);
       box-shadow: 2px 2px 0 var(--wf-border);
-      color: var(--wf-terra);
+      color: var(--wf-terra-text, var(--wf-terra));
     }
     .sidebar-link__tag {
       font-family: var(--wf-f-mono);
@@ -362,7 +364,7 @@
       padding: 2px 6px;
       border-radius: var(--wf-r-pill);
       background: var(--wf-terra-tint);
-      color: var(--wf-terra-deep);
+      color: var(--wf-terra-text, var(--wf-terra-deep));
       flex-shrink: 0;
       white-space: nowrap !important;
       line-height: 1.1;
@@ -479,7 +481,7 @@
       border-radius: var(--wf-r-pill);
       border: var(--wf-bw) solid var(--wf-border);
       background: var(--wf-terra);
-      color: #FFFFFF;
+      color: var(--wf-on-terra, #FFFFFF);
       text-decoration: none;
       box-shadow: var(--wf-shadow);
       cursor: pointer;
@@ -537,10 +539,12 @@
       color: var(--wf-ink);
       white-space: nowrap !important;
     }
-    .mono-tag--terra { background: var(--wf-terra-tint); color: var(--wf-terra); }
+    .mono-tag--terra { background: var(--wf-terra-tint); color: var(--wf-terra-text, var(--wf-terra)); }
     .mono-tag--green { background: var(--wf-green-tint); color: var(--wf-green); }
     .mono-tag--gold { background: var(--wf-gold-tint); color: var(--amber-11); }
-    .mono-tag--blue { background: var(--wf-blue-tint); color: var(--blue-9); }
+    .mono-tag--blue { background: var(--wf-blue-tint); color: var(--wf-blue-text, var(--blue-9)); }
+    html.dark .mono-tag--terra, html.dark .sidebar-link.active { color: var(--wf-terra); }
+    html.dark .mono-tag--blue { color: var(--blue-9); }
 
     /* Toast Cards */
     .wf-toast {
@@ -579,7 +583,8 @@
     .wf-toast--error { background: linear-gradient(var(--wf-danger-tint), var(--wf-danger-tint)), var(--wf-surface); }
     .wf-toast--error .wf-toast__meta { color: var(--wf-danger); }
     .wf-toast--info { background: linear-gradient(var(--wf-blue-tint), var(--wf-blue-tint)), var(--wf-surface); }
-    .wf-toast--info .wf-toast__meta { color: var(--blue-9); }
+    .wf-toast--info .wf-toast__meta { color: var(--wf-blue-text, var(--blue-9)); }
+    html.dark .wf-toast--info .wf-toast__meta { color: var(--blue-9); }
     /* caution's dark-brown meta is low-contrast on the dark toast — use bright gold in dark mode */
     .dark .wf-toast--caution .wf-toast__meta, [data-theme="dark"] .wf-toast--caution .wf-toast__meta { color: var(--wf-gold); }
 
@@ -692,11 +697,11 @@
     }
     .terminal-tab.active {
       background: var(--wf-terra);
-      color: #FFFFFF;
+      color: var(--wf-on-terra, #FFFFFF);
       box-shadow: 2px 2px 0 var(--wf-border);
     }
     .terminal-code {
-      background: #001230;
+      background: var(--wf-code-bg, #001230);
       color: #F8FAFC;
       padding: 16px;
       border-radius: var(--wf-r-md);
@@ -781,7 +786,7 @@
       right: 20px;
       z-index: 990;
       background: var(--wf-terra);
-      color: #FFFFFF;
+      color: var(--wf-on-terra, #FFFFFF);
       border: var(--wf-bw) solid var(--wf-border);
       border-radius: var(--wf-r-pill);
       padding: 12px 20px;
@@ -1037,7 +1042,7 @@
               <i class="ph-bold ph-copy ph-sm"></i> Copy
             </button>
           </div>
-          <div style="display:flex; align-items:center; gap:10px; background:#001230; padding:12px 16px; border-radius:var(--wf-r-md); border:var(--wf-bw-thin) solid var(--wf-border); font-family:var(--wf-f-mono); font-size:13px; overflow-x:auto;">
+          <div style="display:flex; align-items:center; gap:10px; background:var(--wf-code-bg, #001230); padding:12px 16px; border-radius:var(--wf-r-md); border:var(--wf-bw-thin) solid var(--wf-border); font-family:var(--wf-f-mono); font-size:13px; overflow-x:auto;">
             <span style="color:var(--wf-terra); font-weight:700;">$</span>
             <code id="cli-command-display" style="color:#F8FAFC; white-space:nowrap;">npm install @designmaven/design-system @phosphor-icons/react</code>
           </div>
@@ -1271,7 +1276,7 @@
               Small Pill
             </button>
           </div>
-          <pre style="background:#001230; color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">import { Button } from "@designmaven/design-system";
+          <pre style="background:var(--wf-code-bg, #001230); color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">import { Button } from "@designmaven/design-system";
 import { Lightning } from "@phosphor-icons/react";
 
 &lt;Button variant="primary" size="md"&gt;
@@ -1535,12 +1540,12 @@ import { Lightning } from "@phosphor-icons/react";
         <div class="grid-2">
           <div class="sandbox-card">
             <h3 style="font-family:var(--wf-f-disp); font-size:16px; font-weight:800; margin-bottom:8px;">1. Import Tokens</h3>
-            <pre style="background:#001230; color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">import "@designmaven/design-system/tokens.css";</pre>
+            <pre style="background:var(--wf-code-bg, #001230); color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">import "@designmaven/design-system/tokens.css";</pre>
           </div>
 
           <div class="sandbox-card">
             <h3 style="font-family:var(--wf-f-disp); font-size:16px; font-weight:800; margin-bottom:8px;">2. Use Tailwind Utilities</h3>
-            <pre style="background:#001230; color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">&lt;button className="bg-terra text-white font-display font-bold border-2.5 border-forest shadow-wf rounded-full px-5 py-2.5 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5"&gt;
+            <pre style="background:var(--wf-code-bg, #001230); color:#CBD5E1; padding:12px; border-radius:var(--wf-r-sm); font-family:var(--wf-f-mono); font-size:12px; overflow-x:auto;">&lt;button className="bg-terra text-white font-display font-bold border-2.5 border-forest shadow-wf rounded-full px-5 py-2.5 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5"&gt;
   Action
 &lt;/button&gt;</pre>
           </div>
@@ -1708,8 +1713,10 @@ import { Lightning } from "@phosphor-icons/react";
       git: "git clone https://github.com/Aleemcode/warm-fusion.git"
     };
 
-    // 10 Rich Curated Presets
+    // Curated presets. On mavenbuilderacademy.com.ng the course palette (Maven Builder) is the default.
+    const DEFAULT_PRESET = 'maven';
     const presets = {
+      maven: { name: "Maven Builder", ground: "#F4F0E5", surface: "#FFFDF7", ink: "#14261D", terra: "#E8722C", green: "#2F7A4F", gold: "#D6E59A", bw: "2.5px", shadow: "5px", radius: "16px", ink2: "#33463B", muted: "#4A5A4F", onTerra: "#14261D", terraText: "#A34612", codeBg: "#0E1C15" },
       classic: { name: "brilliantroots™", ground: "#F9F6F0", surface: "#FFFFFF", ink: "#001F51", terra: "#FB5707", green: "#1BC67F", gold: "#FFCB66", bw: "2.5px", shadow: "5px", radius: "16px" },
       swiss: { name: "Swiss Studio", ground: "#F8F7F4", surface: "#FFFFFF", ink: "#1E2022", terra: "#E63946", green: "#2A9D8F", gold: "#E9C46A", bw: "2px", shadow: "4px", radius: "12px" },
       nordic: { name: "Nordic Pine", ground: "#F4F1DE", surface: "#FFFFFF", ink: "#0D2818", terra: "#DDA15E", green: "#588157", gold: "#E07A5F", bw: "2.5px", shadow: "6px", radius: "18px" },
@@ -1853,6 +1860,15 @@ import { Lightning } from "@phosphor-icons/react";
       renderCode();
     }
 
+    // darken a brand colour until it reads as small text on the page ground (WCAG AA 4.5:1, with a little margin)
+    function readableOn(fg, bg) {
+      const rgb = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+      const lum = c => { const v = c.map(x => { x/=255; return x<=.03928 ? x/12.92 : Math.pow((x+.055)/1.055,2.4); }); return .2126*v[0]+.7152*v[1]+.0722*v[2]; };
+      let c = rgb(fg); const lb = lum(rgb(bg));
+      for (let i = 0; i < 40; i++) { const l = lum(c); if ((Math.max(l,lb)+.05)/(Math.min(l,lb)+.05) >= 4.8) break; c = c.map(x => Math.round(x*0.94)); }
+      return '#' + c.map(x => x.toString(16).padStart(2,'0')).join('');
+    }
+
     function applyPreset(name) {
       document.querySelectorAll('.preset-btn').forEach(btn => {
         if (btn.dataset.preset === name) btn.classList.add('active');
@@ -1868,6 +1884,16 @@ import { Lightning } from "@phosphor-icons/react";
       updateToken('--wf-surface', p.surface);
       updateInk(p.ink);
       updateToken('--wf-terra', p.terra);
+      // optional per-preset text tones (the Maven palette needs forest-tinted greys and dark text on terracotta for AA contrast)
+      const rs = document.documentElement.style;
+      if (!isDarkMode) {
+        p.ink2 ? rs.setProperty('--wf-ink-2', p.ink2) : rs.removeProperty('--wf-ink-2');
+        p.muted ? rs.setProperty('--wf-muted', p.muted) : rs.removeProperty('--wf-muted');
+      }
+      rs.setProperty('--wf-on-terra', p.onTerra || '#FFFFFF');
+      rs.setProperty('--slate-12', p.ink);
+      p.codeBg ? rs.setProperty('--wf-code-bg', p.codeBg) : rs.removeProperty('--wf-code-bg');
+      rs.setProperty('--wf-terra-text', p.terraText || readableOn(p.terra, p.ground));
       updateToken('--wf-green', p.green);
       updateToken('--wf-gold', p.gold);
       updatePhysics('bw', parseFloat(p.bw));
@@ -1919,10 +1945,10 @@ import { Lightning } from "@phosphor-icons/react";
     function generateControlsTemplate(prefix) {
       return `
         <div style="margin-bottom:16px;">
-          <span style="font-family:var(--wf-f-disp); font-size:12px; font-weight:700; text-transform:uppercase; color:var(--wf-muted); display:block; margin-bottom:8px;">10 Curated Brand Presets</span>
+          <span style="font-family:var(--wf-f-disp); font-size:12px; font-weight:700; text-transform:uppercase; color:var(--wf-muted); display:block; margin-bottom:8px;">11 Curated Brand Presets</span>
           <div style="display:flex; flex-wrap:wrap; gap:6px;">
             ${Object.keys(presets).map(k => `
-              <button class="preset-btn terminal-tab ${k==='classic'?'active':''}" data-preset="${k}" onclick="applyPreset('${k}')">${presets[k].name}</button>
+              <button class="preset-btn terminal-tab ${k===DEFAULT_PRESET?'active':''}" data-preset="${k}" onclick="applyPreset('${k}')">${presets[k].name}</button>
             `).join('')}
           </div>
         </div>
@@ -2415,7 +2441,7 @@ module.exports = {
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('inline-studio-controls').innerHTML = generateControlsTemplate('inline');
       document.getElementById('modal-studio-controls').innerHTML = generateControlsTemplate('modal');
-      renderCode();
+      applyPreset(DEFAULT_PRESET);
     });
   </script>
 
