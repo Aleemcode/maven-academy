@@ -199,10 +199,10 @@ function pageTaste(sl){const l=by[sl];if(!l||!l.dials)return pageStart();const i
   <div class="chips-row"><span class="pill">${l.vocab.length} terms</span>${VZ.length?`<span class="pill">${VZ.length} explainer${VZ.length>1?'s':''}</span>`:''}<span class="pill">${l.dials.length} dials</span><span class="pill">${nDr} drills</span><span class="pill">${l.check.length}-point checklist</span></div></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-craft="${sl}">Craft your taste</button></div></div>`;
  h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>What it is</h2></div><div class="two"><div class="prose"><p>${l.what}</p></div><div class="why"><div class="eyebrow">Why it matters with AI</div><p style="margin:6px 0 0;font-size:16px">${l.why}</p></div></div></section>`;
- if(VZ.length)h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>See it</h2><p>Every term, shown. Touch everything.</p></div><div class="vizs">${VZ.map((v,i)=>`<article class="viz" id="viz-${esc(v.id)}" tabindex="-1" aria-labelledby="vzt-${i}">
-  <div class="viz-h">${(v.terms||[]).length?`<div class="eyebrow">${v.terms.map(esc).join(' · ')}</div>`:''}<h3 id="vzt-${i}">${esc(v.title)}</h3>${v.intro?`<p>${esc(v.intro)}</p>`:''}${v.try?`<p class="viz-try"><b>Try</b>${esc(v.try)}</p>`:''}</div>
-  <div class="viz-stage" data-vz="${i}">${v.html}</div></article>`).join('')}</div></section>`;
- h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>The language</h2><p>Say these words and AI listens.</p></div><div class="vocab">${l.vocab.map(([t,m])=>{const id=seeFor(t);return `<div class="term"><b>${esc(t)}</b><span>${esc(m)}</span>${id?`<button type="button" class="see" data-see="${esc(id)}" aria-label="See ${esc(t)} explained">See it <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>`:''}</div>`}).join('')}</div></section>`;
+ if(VZ.length)h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>See it</h2><p>Every term, shown. Touch everything.</p></div><div class="vizs">${VZ.map((v,i)=>`<article class="viz" id="viz-${esc(v.id)}" data-vopen="${i}">
+  <div class="viz-h">${(v.terms||[]).length?`<div class="eyebrow">${v.terms.map(esc).join(' · ')}</div>`:''}<h3>${esc(v.title)}</h3>${v.intro?`<p>${esc(v.intro)}</p>`:''}</div>
+  <div class="viz-go">${v.try?`<p class="viz-try"><b>Try</b>${esc(v.try)}</p>`:''}<button type="button" class="btn pri" data-vopen="${i}" aria-label="Open the demo: ${esc(v.title)}">Open the demo <span aria-hidden="true">→</span></button></div></article>`).join('')}</div></section>`;
+ h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>The language</h2><p>Say these words and AI listens.</p></div><div class="vocab">${l.vocab.map(([t,m])=>{const id=seeFor(t);return `<div class="term"><b>${esc(t)}</b><span>${esc(m)}</span>${id?`<button type="button" class="see" data-see="${esc(id)}" aria-haspopup="dialog" aria-label="See ${esc(t)} explained">See it <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button>`:''}</div>`}).join('')}</div></section>`;
  h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>Slop vs craft</h2><p>Same job, two levels of intent.</p></div><div class="cmp"><div class="side-c slop"><div class="lab"><span>SLOP · NOBODY DECIDED</span><span>✕</span></div><div class="stage">${l.compare.slop}</div></div><div class="side-c craft"><div class="lab"><span>CRAFT · INTENTIONAL</span><span>✓</span></div><div class="stage">${l.compare.craft}</div></div></div><ul class="diffs">${l.compare.diffs.map(d=>`<li>${d}</li>`).join('')}</ul></section>`;
  h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>Play with the dials</h2><p>Try every option and watch what changes.</p></div><p class="play-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span>Play freely. This won’t change your Taste Card — use <b>Craft your taste</b> for that.</span></p><div class="play"><div class="dials" id="dials">${dialsHTML(l,false,P)}</div><div class="pv-wrap"><div class="pv" id="pv"></div><div class="pv-cap"><span>LIVE PREVIEW</span><button class="btn sm ghost" id="resetD" style="min-height:30px;padding:2px 8px">Reset dials</button></div></div></div></section>`;
  h+=`<section class="sec"><div class="sec-h"><span class="n">${num()}</span><h2>Rules of thumb</h2></div><div class="rules"><div class="col do"><h3>Do</h3><ul>${l.rules.do.map(r=>`<li>${r}</li>`).join('')}</ul></div><div class="col dont"><h3>Don’t</h3><ul>${l.rules.dont.map(r=>`<li>${r}</li>`).join('')}</ul></div></div></section>`;
@@ -213,10 +213,10 @@ function pageTaste(sl){const l=by[sl];if(!l||!l.dials)return pageStart();const i
   <div style="margin-top:24px"><div class="eyebrow" style="margin-bottom:8px">Go deeper</div><div class="srcs">${l.sources.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('')}</div></div></section>`;
  h+=`<div class="pager">${prev?`<a class="btn" href="#/t/${prev.slug}">← ${prev.title}</a>`:'<span></span>'}${next?`<a class="btn ink" href="#/t/${next.slug}">${next.title} →</a>`:`<a class="btn ink" href="#/movements">Design movements →</a>`}</div>`;
  $('#page').innerHTML=h;
- /* explainers: init each in isolation so one broken viz never breaks the page */
- document.querySelectorAll('.viz-stage[data-vz]').forEach(el=>{const v=VZ[+el.dataset.vz];if(v&&typeof v.init==='function'){try{v.init(el)}catch(e){console.error('[Taste Lab] explainer "'+v.id+'" failed to start:',e)}}});
- document.querySelectorAll('[data-see]').forEach(b=>b.onclick=()=>{const c=document.getElementById('viz-'+b.dataset.see);if(!c)return;
-  c.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});c.focus({preventScroll:true});c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash')});
+ /* explainers open in a roomy modal (one at a time, initialised fresh each time) */
+ VZL=VZ;
+ document.querySelectorAll('.vizs [data-vopen]').forEach(n=>n.addEventListener('click',e=>{e.stopPropagation();openViz(+n.dataset.vopen,e.currentTarget.closest('.viz').querySelector('button'))}));
+ document.querySelectorAll('[data-see]').forEach(b=>b.onclick=()=>{const i=VZ.findIndex(v=>v.id===b.dataset.see);if(i>=0)openViz(i,b)});
  /* the playground (P) — never writes the Taste Card (S) */
  const pv=$('#pv');const upd=()=>{renderPreview(pv,sl,P);$('#mineBrief').textContent=l.brief.map(b=>fill(b,sl,P)).join('\n')};upd();
  bindDials($('#dials'),upd,'play');
@@ -357,6 +357,16 @@ function trainKeys(e){if(e.metaKey||e.ctrlKey||e.altKey)return false;const k=e.k
  else{let i=/^[1-9]$/.test(k)?+k-1:'abcd'.indexOf(lk);if(i>=0&&i<d.opts.length)a=String(i)}
  if(a===null)return false;e.preventDefault();answer(a);return true}
 /* keep Tab inside whichever dialog is open */
+/* explainer modal */
+let VZL=[],vzI=0,vzOpener=null;
+function drawViz(){const v=VZL[vzI];if(!v)return;
+ $('#vEye').textContent=(v.terms||[]).join(' · ');$('#vTitle').textContent=v.title;
+ const b=$('#vBody');b.innerHTML=`<div class="v-intro">${v.intro?`<p>${esc(v.intro)}</p>`:''}${v.try?`<p class="viz-try"><b>Try</b>${esc(v.try)}</p>`:''}</div><div class="v-stage viz-stage">${v.html}</div>`;b.scrollTop=0;
+ const st=b.querySelector('.v-stage');if(typeof v.init==='function'){try{v.init(st)}catch(e){console.error('[Taste Lab] explainer "'+v.id+'" failed to start:',e)}}
+ $('#vCount').textContent=`Demo ${vzI+1} of ${VZL.length}`;$('#vPrev').disabled=vzI===0;$('#vNext').hidden=vzI===VZL.length-1}
+function openViz(i,opener){if(!VZL[i])return;vzI=i;vzOpener=opener||document.activeElement;drawViz();
+ $('#vScrim').classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>$('#vClose').focus(),40)}
+function closeViz(){$('#vScrim').classList.remove('open');$('#vBody').innerHTML='';document.body.style.overflow='';const o=vzOpener;if(o&&document.contains(o))o.focus()}
 function trapTab(e){const sc=[...document.querySelectorAll('.scrim.open')].pop();if(!sc)return;
  const f=[...sc.querySelectorAll('button:not([disabled]):not([hidden]),a[href],input:not([disabled]),textarea,select,[tabindex]:not([tabindex="-1"])')].filter(x=>x.offsetParent!==null||x===document.activeElement);if(!f.length)return;
  const first=f[0],last=f[f.length-1];if(!sc.contains(document.activeElement)){e.preventDefault();first.focus();return}
@@ -397,11 +407,12 @@ function drawPv(){const pv=$('#mPv');if(step===CRAFT.length){pv.innerHTML='';ret
 $('#rail').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;step=+b.dataset.s;seen.add(step);drawCraft();$('#mStep').scrollTop=0};
 $('#mNext').onclick=()=>{step=Math.min(CRAFT.length,step+1);seen.add(step);drawCraft();$('#mStep').scrollTop=0};
 $('#mBack').onclick=()=>{step=Math.max(0,step-1);drawCraft();$('#mStep').scrollTop=0};
-$('#mClose').onclick=closeCraft;$('#dClose').onclick=closeDetail;
+$('#mClose').onclick=closeCraft;$('#vClose').onclick=closeViz;$('#vPrev').onclick=()=>{if(vzI>0){vzI--;drawViz()}};$('#vNext').onclick=()=>{if(vzI<VZL.length-1){vzI++;drawViz()}};
+$('#vScrim').addEventListener('click',e=>{if(e.target.id==='vScrim')closeViz()});$('#dClose').onclick=closeDetail;
 $('#scrim').addEventListener('click',e=>{if(e.target.id==='scrim')closeCraft()});
 $('#dScrim').addEventListener('click',e=>{if(e.target.id==='dScrim')closeDetail()});
 document.addEventListener('keydown',e=>{if(e.key==='Tab')return trapTab(e);const tOpen=$('#tScrim').classList.contains('open');
- if(e.key==='Escape'){if(tOpen)closeTrain();else if($('#dScrim').classList.contains('open'))closeDetail();else if($('#scrim').classList.contains('open'))closeCraft();else closeSide();return}
+ if(e.key==='Escape'){if($('#vScrim').classList.contains('open'))closeViz();else if(tOpen)closeTrain();else if($('#dScrim').classList.contains('open'))closeDetail();else if($('#scrim').classList.contains('open'))closeCraft();else closeSide();return}
  if(tOpen)trainKeys(e)});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-craft]');if(b){e.preventDefault();openCraft(b.dataset.craft||(route().v==='t'?route().id:null))}});
 $('#craftTop').onclick=()=>openCraft(route().v==='t'?route().id:null);
