@@ -666,7 +666,7 @@ window.DRILLS['type']=[
  ok:1,why:'Hierarchy uses size, weight and colour to say what to read first. When everything is the same, quiet or loud, nothing leads.'},
 {id:'t-p3',type:'pick',level:3,q:'Which set of sizes comes from one type scale?',
  opts:[`<div style="display:flex;align-items:baseline;gap:6px;font-family:Inter,sans-serif">${[12,15,19,24,30].map(s=>`<span style="font-size:${s}px">Aa</span>`).join('')}</div>`,`<div style="display:flex;align-items:baseline;gap:6px;font-family:Inter,sans-serif">${[14,15,16,17,30].map(s=>`<span style="font-size:${s}px">Aa</span>`).join('')}</div>`,`<div style="display:flex;align-items:baseline;gap:6px;font-family:Inter,sans-serif">${[12,13,22,23,30].map(s=>`<span style="font-size:${s}px">Aa</span>`).join('')}</div>`],
- ok:0,why:'In the first set each size is the one before times 1.25, so every step is clear and even. Sizes that are almost the same (15, 16, 17) look like mistakes, not choices.'},
+ ok:0,why:'In the right set each size is the one before times 1.25, so every step is clear and even. Sizes that are almost the same (15, 16, 17) look like mistakes, not choices.'},
 {id:'t-f1',type:'fix',level:1,q:'This paragraph is hard to read. What is the best fix?',
  face:F(`<div style="font-size:13px;line-height:1.5;text-align:center">Snap a photo of any receipt. We read it, sort it into the right category and add it to today’s total, so your books are done before dinner every day.</div>`),
  opts:['Left-align it','Make it bold','Centre the heading too'],ok:0,why:'Centred text starts every line in a new place, so the eye has to hunt. Left-align anything longer than two lines.'},

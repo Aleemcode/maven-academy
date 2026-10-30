@@ -294,12 +294,16 @@ function updateFab(){const r=route();const sl=r.v==='t'&&by[r.id]&&by[r.id].dial
  f.setAttribute('aria-label',`Train your eye${sl?': '+by[sl].title:': mixed drill'}. ${s.right} of ${s.total} drills right.`)}
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 let TR={list:[],i:0,res:{},sl:null,ans:null,done:false,opener:null};
+/* show answer options in a fresh order each round, so position never gives the answer away */
+function mixOpts(d){if(d.type==='ab')return d;
+ if(!Array.isArray(d.opts))return d;const idx=shuffle(d.opts.map((_,i)=>i));return Object.assign({},d,{opts:idx.map(i=>d.opts[i]),ok:idx.indexOf(+d.ok)})}
 function mixedList(){const pool=learned.filter(s=>by[s]&&by[s].dials);const src=pool.length?pool:CRAFT.map(l=>l.slug);return{list:shuffle(src.flatMap(drillsFor)).slice(0,10),fromLearned:!!pool.length,n:src.length}}
 function openTrain(sl,opener){TR.opener=opener||document.activeElement;TR.sl=sl||null;startTrain();
  $('#tScrim').classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>{const b=$('#tBody .t-opts button');(b||$('#tClose')).focus()},60)}
 function startTrain(list){let eye='Train your eye',title;
  if(TR.sl){TR.list=list||drillsFor(TR.sl);title=by[TR.sl].title}
  else{const m=mixedList();TR.list=list||m.list;title='Mixed drill';eye+=m.fromLearned?` · from ${m.n} learned taste${m.n>1?'s':''}`:' · from every taste'}
+ TR.list=TR.list.map(mixOpts);
  if(list)eye+=' · retry';
  $('#tEye').textContent=eye;$('#tTitle').textContent=title;TR.i=0;TR.res={};TR.ans=null;TR.done=false;drawTrain()}
 function closeTrain(){$('#tScrim').classList.remove('open');document.body.style.overflow='';updateFab();const o=TR.opener;if(o&&document.contains(o))o.focus();else $('#fab').focus()}
