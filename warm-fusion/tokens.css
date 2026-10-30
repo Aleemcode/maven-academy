@@ -1,0 +1,426 @@
+/* ============================================================
+   DMAVEN DESIGN SYSTEM — WARM FUSION CANONICAL TOKENS
+   Semantic 12-Step Radix Color Architecture + Tactile Physics
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* — Radix Colors: 12-Step Scales (Light Mode) — */
+  /* Sand (Neutral Warmth / Canvas & Surfaces) */
+  --sand-1: #FDFDFC;
+  --sand-2: #F9F6F0;  /* Canonical DMaven Ground */
+  --sand-3: #F1ECE0;  /* Canonical DMaven Raised Wash */
+  --sand-4: #EAE5D9;
+  --sand-5: #E1DBD0;
+  --sand-6: #D5CFC3;
+  --sand-7: #C4BCAD;
+  --sand-8: #ABA291;
+  --sand-9: #8D8472;
+  --sand-10: #807765;
+  --sand-11: #5E5646; /* Muted label text */
+  --sand-12: #211D15;
+
+  /* Slate (Structural DMaven Ink & Brutalist Frame) */
+  --slate-1: #FBFCFD;
+  --slate-2: #F8F9FA;
+  --slate-3: #F1F3F5;
+  --slate-4: #ECEEF0;
+  --slate-5: #E6E8EB;
+  --slate-6: #DFE3E6;
+  --slate-7: #D7DBDF;
+  --slate-8: #C1C8CD;
+  --slate-9: #889096;
+  --slate-10: #7E868C;
+  --slate-11: #27456D; /* Secondary Ink */
+  --slate-12: #001F51; /* DMaven High-Contrast Ink & 2.5px Border */
+
+  /* Orange (Primary CTA & Energy Accent) */
+  --orange-1: #FEFCFB;
+  --orange-2: #FFF7ED;
+  --orange-3: #FFF0EA; /* Accent Tint */
+  --orange-4: #FED7AA;
+  --orange-5: #FDBA74;
+  --orange-6: #FB923C;
+  --orange-7: #F97316;
+  --orange-8: #EA580C;
+  --orange-9: #FB5707; /* Canonical DMaven Terra CTA */
+  --orange-10: #D44200; /* Active / Press */
+  --orange-11: #9A3412;
+  --orange-12: #431407;
+
+  /* Grass / Mint (Emerald Growth & Success) */
+  --grass-1: #FBFEFB;
+  --grass-2: #F3FCF3;
+  --grass-3: #E8F9F1; /* Growth Tint */
+  --grass-4: #DCF5DC;
+  --grass-5: #CCEECC;
+  --grass-6: #B7E2B7;
+  --grass-7: #9BD19D;
+  --grass-8: #6EB771;
+  --grass-9: #1BC67F; /* Canonical DMaven Green */
+  --grass-10: #00A862;
+  --grass-11: #006634; /* Dark Forest Green */
+  --grass-12: #14311C;
+
+  /* Amber / Gold (Warm Gold & Prestige) */
+  --amber-1: #FEFDFB;
+  --amber-2: #FEFBE8;
+  --amber-3: #FFF8E8; /* Gold Tint */
+  --amber-4: #FDE68A;
+  --amber-5: #FCD34D;
+  --amber-6: #FBBF24;
+  --amber-7: #F59E0B;
+  --amber-8: #D97706;
+  --amber-9: #FFCB66; /* Canonical DMaven Gold */
+  --amber-10: #B45309;
+  --amber-11: #78350F;
+  --amber-12: #451A03;
+
+  /* Blue (Brilliant Blue & Info) */
+  --blue-1: #FBFDFF;
+  --blue-2: #F4FAFF;
+  --blue-3: #EEF4FF; /* Blue Tint */
+  --blue-4: #D5ECFD;
+  --blue-5: #C2E2FC;
+  --blue-6: #ACD4FA;
+  --blue-7: #8EC0F6;
+  --blue-8: #5EA1EE;
+  --blue-9: #3B86FE; /* Canonical DMaven Blue */
+  --blue-10: #2563EB;
+  --blue-11: #1D4ED8;
+  --blue-12: #0F172A;
+
+  /* Crimson / Ruby (Danger & Errors) */
+  --crimson-1: #FFFCFD;
+  --crimson-2: #FFF7F8;
+  --crimson-3: #FFEBE1; /* Danger Tint */
+  --crimson-4: #FFDBDE;
+  --crimson-5: #FFCACC;
+  --crimson-6: #FBB3B7;
+  --crimson-7: #F4939A;
+  --crimson-8: #E56571;
+  --crimson-9: #E11D48; /* Canonical DMaven Danger */
+  --crimson-10: #BE123C;
+  --crimson-11: #9F1239;
+  --crimson-12: #4C0519;
+
+  /* — Semantic DMaven Warm Fusion Aliases — */
+  --wf-ground: var(--sand-2);
+  --wf-ground-2: var(--sand-3);
+  --wf-surface: #FFFFFF;
+  --wf-forest: var(--slate-12);
+  --wf-pine: #0A2D6E;
+
+  --wf-ink: var(--slate-12);
+  --wf-ink-2: var(--slate-11);
+  --wf-muted: var(--sand-11);
+  --wf-ink-inv: #F8FAFC;
+  --wf-ink-inv-2: #CBD5E1;
+
+  --wf-terra: var(--orange-9);
+  --wf-terra-deep: var(--orange-10);
+  --wf-terra-tint: var(--orange-3);
+
+  --wf-green: var(--grass-9);
+  --wf-green-dark: var(--grass-11);
+  --wf-green-tint: var(--grass-3);
+
+  --wf-gold: var(--amber-9);
+  --wf-gold-dark: var(--amber-11);
+  --wf-gold-tint: var(--amber-3);
+
+  --wf-blue: var(--blue-9);
+  --wf-blue-tint: var(--blue-3);
+
+  --wf-danger: var(--crimson-9);
+  --wf-danger-tint: var(--crimson-3);
+
+  /* — Category Chips — */
+  --wf-lime: var(--grass-3);
+  --wf-sky: var(--blue-3);
+  --wf-pink: #FCE7F3;
+  --wf-peach: var(--orange-3);
+
+  /* — Structure: The Brutalist Bone — */
+  --wf-border: var(--slate-12);
+  --wf-bw: 2.5px;
+  --wf-bw-thin: 2px;
+  --wf-shadow: 5px 5px 0 var(--wf-border);
+  --wf-shadow-sm: 3px 3px 0 var(--wf-border);
+  --wf-shadow-lg: 8px 8px 0 var(--wf-border);
+
+  /* — Radius: The Warm Swiss Curve — */
+  --wf-r-xl: 22px; 
+  --wf-r-lg: 16px; 
+  --wf-r-md: 12px; 
+  --wf-r-sm: 8px; 
+  --wf-r-pill: 9999px;
+
+  /* — Typography — */
+  --wf-f-disp: "Bricolage Grotesque", -apple-system, sans-serif;
+  --wf-f-body: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --wf-f-mono: "Space Mono", ui-monospace, Menlo, monospace;
+  --wf-f-ar: "Amiri", serif;
+
+  /* — Motion & Transitions — */
+  --wf-dur: 200ms;
+  --wf-dur-fast: 120ms;
+  --wf-ease: cubic-bezier(.2,.7,.3,1);
+}
+
+/* — Dark Mode Semantics (Radix Inverse) — */
+.dark, [data-theme="dark"] {
+  color-scheme: dark;
+  --sand-1: #111110;
+  --sand-2: #191918;
+  --sand-3: #222221;
+  --sand-11: #B4B4AD;
+  --sand-12: #EEEEEC;
+
+  --slate-1: #111315;
+  --slate-2: #15191C;
+  --slate-3: #1D2328;
+  --slate-11: #9BA1A6;
+  --slate-12: #ECEDEE;
+
+  --wf-ground: #0D1117;
+  --wf-ground-2: #161B22;
+  --wf-surface: #1B2129;
+  --wf-border: #ECEDEE;
+  --wf-ink: #ECEDEE;
+  --wf-ink-2: #9BA1A6;
+  --wf-shadow: 5px 5px 0 #ECEDEE;
+  --wf-shadow-sm: 3px 3px 0 #ECEDEE;
+  --wf-shadow-lg: 8px 8px 0 #ECEDEE;
+}
+
+/* Base Body Styles */
+body {
+  background: var(--wf-ground);
+  color: var(--wf-ink);
+  font-family: var(--wf-f-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   CORE COMPONENT UTILITY CLASSES
+   ============================================================ */
+
+/* Tactile Buttons (Zero Text Break) */
+.wf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--wf-f-disp);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 10px 22px;
+  border-radius: var(--wf-r-pill);
+  border: var(--wf-bw) solid var(--wf-border);
+  background: var(--wf-terra);
+  color: #FFFFFF;
+  text-decoration: none;
+  box-shadow: var(--wf-shadow);
+  cursor: pointer;
+  white-space: nowrap !important;
+  user-select: none;
+  transition: transform var(--wf-dur) var(--wf-ease), box-shadow var(--wf-dur) var(--wf-ease), background var(--wf-dur);
+}
+
+.wf-btn:hover {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: var(--wf-shadow-lg);
+}
+
+.wf-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--wf-border);
+}
+
+.wf-btn--secondary {
+  background: var(--wf-surface);
+  color: var(--wf-ink);
+}
+
+.wf-btn--forest {
+  background: var(--wf-forest);
+  color: #FFFFFF;
+}
+
+.wf-btn--gold {
+  background: var(--wf-gold);
+  color: var(--wf-forest);
+}
+
+.wf-btn--green {
+  background: var(--wf-green);
+  color: #FFFFFF;
+}
+
+.wf-btn--danger {
+  background: var(--wf-danger);
+  color: #FFFFFF;
+}
+.wf-btn--danger:hover {
+  background: #BE123C;
+}
+
+.wf-btn--sm {
+  padding: 7px 15px;
+  font-size: 13px;
+  box-shadow: var(--wf-shadow-sm);
+}
+
+/* Badges & Tags */
+.mono-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--wf-f-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: var(--wf-r-pill);
+  border: var(--wf-bw-thin) solid var(--wf-border);
+  background: var(--wf-surface);
+  color: var(--wf-ink);
+  white-space: nowrap;
+}
+
+.mono-tag--terra { background: var(--wf-terra-tint); color: var(--wf-terra-deep); }
+.mono-tag--green { background: var(--wf-green-tint); color: var(--wf-green-dark); }
+.mono-tag--gold { background: var(--wf-gold-tint); color: var(--wf-gold-dark); }
+.mono-tag--blue { background: var(--wf-blue-tint); color: var(--wf-pine); }
+
+/* Structural Cards */
+.wf-card {
+  background: var(--wf-surface);
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-lg);
+  box-shadow: var(--wf-shadow);
+  padding: 22px;
+  transition: transform var(--wf-dur) var(--wf-ease), box-shadow var(--wf-dur) var(--wf-ease);
+}
+
+.wf-card--interactive:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--wf-shadow-lg);
+}
+
+.wf-card--forest {
+  background: var(--wf-forest);
+  color: var(--wf-ink-inv);
+  border-color: var(--wf-forest);
+}
+
+/* Form Controls Suite */
+.wf-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  background: var(--wf-surface);
+  font-family: var(--wf-f-body);
+  font-size: 14px;
+  color: var(--wf-ink);
+  outline: none;
+  transition: border-color var(--wf-dur), box-shadow var(--wf-dur);
+}
+.wf-input:focus {
+  border-color: var(--wf-terra);
+  box-shadow: 0 0 0 3px rgba(251, 87, 7, 0.18);
+}
+.wf-input--error {
+  border-color: var(--wf-danger);
+  background: #FFF5F5;
+}
+.wf-input--error:focus {
+  border-color: var(--wf-danger);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.18);
+}
+.wf-input--success {
+  border-color: var(--wf-green);
+  background: #F4FDF8;
+}
+.wf-input--success:focus {
+  border-color: var(--wf-green);
+  box-shadow: 0 0 0 3px rgba(27, 198, 127, 0.18);
+}
+.wf-input:disabled {
+  opacity: 0.6;
+  background: var(--wf-ground-2);
+  cursor: not-allowed;
+}
+
+.wf-select {
+  width: 100%;
+  padding: 10px 42px 10px 14px;
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-md);
+  background-color: var(--wf-surface);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23001F51' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 16px) center;
+  background-size: 16px;
+  font-family: var(--wf-f-body);
+  font-size: 14px;
+  color: var(--wf-ink);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color var(--wf-dur), box-shadow var(--wf-dur);
+}
+.wf-select:focus {
+  border-color: var(--wf-terra);
+  box-shadow: 0 0 0 3px rgba(251, 87, 7, 0.18);
+}
+
+/* Feedback Toast Cards */
+.wf-toast {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: var(--wf-bw) solid var(--wf-border);
+  border-radius: var(--wf-r-lg);
+  padding: 14px 18px;
+  box-shadow: var(--wf-shadow);
+  background: var(--wf-surface);
+}
+
+.wf-toast__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--wf-f-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wf-toast__body {
+  font-family: var(--wf-f-body);
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--wf-ink);
+}
+
+.wf-toast--success { background: #E1F8EC; border-color: var(--wf-border); }
+.wf-toast--success .wf-toast__meta { color: #006634; }
+
+.wf-toast--caution { background: #FFF8E8; border-color: var(--wf-border); }
+.wf-toast--caution .wf-toast__meta { color: #916100; }
+
+.wf-toast--error { background: #FFEBE1; border-color: var(--wf-border); }
+.wf-toast--error .wf-toast__meta { color: #9F1239; }
+
+.wf-toast--info { background: #EEF4FF; border-color: var(--wf-border); }
+.wf-toast--info .wf-toast__meta { color: #0A2D6E; }

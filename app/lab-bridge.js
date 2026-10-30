@@ -100,12 +100,12 @@
   }
   function mount() {
     var css = document.createElement("style");
-    css.textContent = ".mab-pill{position:fixed;right:14px;bottom:14px;z-index:2147483000;display:flex;align-items:center;gap:10px;background:#FFFDF7;color:#14261D;border:2.5px solid #14261D;border-radius:999px;box-shadow:3px 3px 0 #14261D;padding:5px 14px 5px 5px;font:600 13px/1.2 'Instrument Sans',system-ui,sans-serif;text-decoration:none;transition:transform .12s,box-shadow .12s}" +
+    css.textContent = ".mab-pill{position:fixed;left:14px;bottom:14px;z-index:90;display:flex;align-items:center;gap:10px;background:#FFFDF7;color:#14261D;border:2.5px solid #14261D;border-radius:999px;box-shadow:3px 3px 0 #14261D;padding:5px 14px 5px 5px;font:600 13px/1.2 'Instrument Sans',system-ui,sans-serif;text-decoration:none;transition:transform .12s,box-shadow .12s}" +
       ".mab-pill:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #14261D}.mab-pill:focus-visible{outline:3px solid #3B82C4;outline-offset:2px}" +
       ".mab-pill img{width:28px;height:28px;border-radius:50%;background:#F4F0E5;border:2px solid #14261D;padding:3px}" +
       ".mab-pill b{display:block;font-weight:700;font-size:13.5px}.mab-pill small{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#53625A;font-weight:600}" +
       ".mab-pill small::before{content:'';width:7px;height:7px;border-radius:50%;background:#2F7A4F}.mab-pill[data-s=saving] small::before{background:#C9902E}.mab-pill[data-s=offline] small::before{background:#A3361A}" +
-      "@media (max-width:600px){.mab-pill{right:10px;bottom:10px;padding:4px 4px}.mab-pill span{display:none}}@media print{.mab-pill{display:none}}";
+      (APP==="taste-lab"?".side{padding-bottom:88px!important}":"")+"@media (max-width:600px){.mab-pill{left:10px;bottom:10px;padding:4px 4px}.mab-pill span{display:none}}@media print{.mab-pill{display:none}}";
     document.head.appendChild(css);
     pill = document.createElement("a");
     pill.className = "mab-pill"; pill.href = "/app"; pill.setAttribute("aria-label", "Back to Maven student home");
