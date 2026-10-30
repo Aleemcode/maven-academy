@@ -1,4 +1,4 @@
-// GET /api/lab-boot?app=taste-lab|prompt-lab  →  a tiny script loaded first by each lab page.
+// GET /app/lab-boot?app=taste-lab|prompt-lab (vercel.json rewrites it here; it must live under /app so the Path=/app session cookie is sent)
 // It confirms the visitor is a logged-in student on the roster (via their session cookie) and hands the
 // lab their saved work, so it's restored before the lab's own code runs. Otherwise it sends them to log in.
 
