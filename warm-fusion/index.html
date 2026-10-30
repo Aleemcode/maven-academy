@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Warm Fusion Design System · By Design Maven Studio</title>
   <meta name="description" content="Design Maven's design system that tones down the harshness of neo-brutalism with warm colors, mild corner radius, controllable tactile physics, and 12-step Radix semantic tokens." />
 
@@ -1513,6 +1513,15 @@ import { Lightning } from "@phosphor-icons/react";
           </div>
           <pre class="terminal-code" id="code-display"></pre>
         </div>
+        <div class="mab-files">
+          <p class="mab-files__t"><i class="ph-bold ph-link"></i> Or give your AI a link instead</p>
+          <p class="mab-files__p">These are the default Warm Fusion files, hosted here so they never move. Paste a link into Claude, Cursor or any coding agent and tell it to follow the file.</p>
+          <ul class="mab-files__list">
+            <li><a href="/warm-fusion/SKILL.md">mavenbuilderacademy.com.ng/warm-fusion/SKILL.md</a><span>Design rules and components for AI</span></li>
+            <li><a href="/warm-fusion/tokens.css">mavenbuilderacademy.com.ng/warm-fusion/tokens.css</a><span>CSS tokens</span></li>
+            <li><a href="/warm-fusion/tailwind.preset.js">mavenbuilderacademy.com.ng/warm-fusion/tailwind.preset.js</a><span>Tailwind preset</span></li>
+          </ul>
+        </div>
       </section>
 
       <!-- 16. Integration: Tailwind & CSS Tokens -->
@@ -2411,6 +2420,13 @@ module.exports = {
   </script>
 
 <style>
+  .mab-files{margin-top:18px;padding:16px 18px;background:var(--wf-surface);border:2.5px solid var(--wf-border);border-radius:var(--wf-r-md,16px);box-shadow:4px 4px 0 var(--wf-border)}
+  .mab-files__t{font-family:var(--wf-f-disp);font-weight:800;font-size:16px;color:var(--wf-ink);margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .mab-files__p{font-size:14px;line-height:1.5;color:var(--wf-ink-2);margin:0 0 10px;max-width:62ch}
+  .mab-files__list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .mab-files__list li{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+  .mab-files__list a{font-family:var(--wf-f-mono);font-size:13px;font-weight:700;color:var(--wf-ink);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+  .mab-files__list span{font-size:13px;color:var(--wf-muted)}
   .mab-course{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:22px;padding:18px 20px;background:var(--wf-surface,#fff);border:var(--wf-bw,2.5px) solid var(--wf-border,#14261D);border-radius:var(--wf-r-lg,14px);box-shadow:var(--wf-shadow,5px 5px 0 #14261D);text-align:left}
   .mab-course > div{flex:1 1 320px;min-width:0}
   .mab-course__t{font-family:var(--wf-f-disp);font-weight:800;font-size:19px;line-height:1.2;color:var(--wf-ink);margin:10px 0 4px}
