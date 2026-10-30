@@ -274,8 +274,13 @@ textarea{resize:vertical}
 .v-head{min-width:0}.v-head .eyebrow{font-size:10.5px;letter-spacing:1.5px;line-height:1.5}
 .v-body{overflow:auto;padding:20px clamp(16px,3vw,32px) 28px;display:grid;gap:16px;align-content:start;min-height:0}
 .v-intro{max-width:72ch}.v-intro p{margin:0 0 8px;font-size:16px;color:var(--muted)}.v-intro .viz-try{color:var(--ink);font-size:15px;display:flex;gap:8px;align-items:baseline}
-.v-stage{padding:0;background:none;overflow:visible;width:100%;max-width:1040px}
+.v-stage{padding:0;background:none;overflow:visible;width:100%}
 .vmodal .m-foot .count{text-align:center}
+.v-stage .v-std{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.v-main{display:grid;gap:14px;min-width:0;align-content:start}
+.v-notes{display:grid;gap:10px;align-content:start;min-width:0}
+.v-notes>.eyebrow{font-size:10.5px;letter-spacing:1.5px}
+@media (min-width:900px){.v-stage .v-std{grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:24px}.v-notes{position:sticky;top:0}}
 .viz{background:var(--paper);border:var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;scroll-margin-top:84px;min-width:0}
 .viz:focus{outline:none}
 .viz:focus-visible{outline:3px solid #3B82C4;outline-offset:3px}

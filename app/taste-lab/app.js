@@ -363,7 +363,23 @@ function drawViz(){const v=VZL[vzI];if(!v)return;
  $('#vEye').textContent=(v.terms||[]).join(' · ');$('#vTitle').textContent=v.title;
  const b=$('#vBody');b.innerHTML=`<div class="v-intro">${v.intro?`<p>${esc(v.intro)}</p>`:''}${v.try?`<p class="viz-try"><b>Try</b>${esc(v.try)}</p>`:''}</div><div class="v-stage viz-stage">${v.html}</div>`;b.scrollTop=0;
  const st=b.querySelector('.v-stage');if(typeof v.init==='function'){try{v.init(st)}catch(e){console.error('[Taste Lab] explainer "'+v.id+'" failed to start:',e)}}
+ standardLayout(st);
  $('#vCount').textContent=`Demo ${vzI+1} of ${VZL.length}`;$('#vPrev').disabled=vzI===0;$('#vNext').hidden=vzI===VZL.length-1}
+/* the demo standard: controls and sample on the left, the live explanation in a side panel on the right (stacked on phones).
+   Notes stay inside the explainer's own root, so its scoped queries keep working. */
+const NOTE_SEL='.note,.v2-note,.k-cap,.se-note,.dp-side,[data-o="say"]';
+function standardLayout(st){const root=[...st.children].find(e=>e.tagName==='DIV');if(!root)return;
+ const kids=[...root.children].filter(c=>c.tagName!=='STYLE'&&c.tagName!=='SCRIPT');
+ let notes=kids.filter(c=>c.matches(NOTE_SEL));
+ /* several notes that each belong to their own section stay where they are */
+ if(notes.length>1&&notes.some(n=>n.matches('.k-cap'))){const first=kids.indexOf(notes[0]);if(kids.slice(first).some(c=>!notes.includes(c)))notes=[]}
+ /* otherwise accept one caption sitting beside the sample inside a pair */
+ if(!notes.length){const all=[...root.querySelectorAll(NOTE_SEL)].filter(n=>!n.parentElement.closest(NOTE_SEL));if(all.length===1&&all[0].textContent.trim().length>20)notes=all}
+ if(!notes.length||(notes.length===kids.length&&notes.every(n=>n.parentElement===root)))return;
+ const main=document.createElement('div'),side=document.createElement('div');main.className='v-main';side.className='v-notes';
+ side.innerHTML='<div class="eyebrow">What you’re seeing</div>';
+ notes.forEach(n=>side.appendChild(n));kids.forEach(c=>{if(!notes.includes(c))main.appendChild(c)});
+ root.append(main,side);root.classList.add('v-std')}
 function openViz(i,opener){if(!VZL[i])return;vzI=i;vzOpener=opener||document.activeElement;drawViz();
  $('#vScrim').classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>$('#vClose').focus(),40)}
 function closeViz(){$('#vScrim').classList.remove('open');$('#vBody').innerHTML='';document.body.style.overflow='';const o=vzOpener;if(o&&document.contains(o))o.focus()}
