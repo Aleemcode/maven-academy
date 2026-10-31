@@ -105,7 +105,7 @@
 
   <div class="top" style="margin-top:24px"><section class="next" id="next" aria-label="Next session"><div class="skel" style="height:160px;opacity:.15;grid-column:1/-1"></div></section></div>
 
-  <div class="sec-h"><h2 class="sec">Your six sessions</h2><p>Times are Nigeria time (WAT).</p></div>
+  <div class="sec-h"><h2 class="sec" id="sesH">Your sessions</h2><p>Times are Nigeria time (WAT).</p></div>
   <div class="sessions" id="sessions"></div>
 
   <div class="two">
@@ -146,6 +146,7 @@
   const part = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   document.getElementById("hello").textContent = `${part}, ${first(me.full_name)}.`;
   const held = sessions.filter(s => stateOf(s) === "done").length;
+  document.getElementById("sesH").textContent = sessions.length ? `Your ${sessions.length} sessions` : "Your sessions";
   document.getElementById("kick").textContent = `Cohort ${me.cohort || 1} · ${held} of ${sessions.length || 6} sessions done`;
   document.getElementById("lead").textContent = held >= sessions.length && sessions.length
     ? "The live sessions are done. Keep building; the labs and the board stay open to you."

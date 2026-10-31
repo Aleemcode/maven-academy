@@ -63,7 +63,7 @@
     return `<article class="cert" aria-label="Certificate of completion for ${esc(full_name)}"><i class="band" aria-hidden="true"></i>
       <div class="c-top"><img src="/assets/brand/maven-mark-dark.svg" alt=""><div><b>Maven Builder Academy</b><small>DESIGN MAVEN STUDIO</small></div></div>
       <div class="c-mid"><span class="c-kick">Certificate of completion</span><div class="c-name">${esc(full_name)}</div>
-        <p class="c-body">completed the <b>Builder Intensive</b> (Cohort ${esc(cohort || 1)}): six live sessions on AI fluency, design language, system thinking and shipping with taste, and presented${project_name ? ` <b>${esc(project_name)}</b>` : " their build"} at Demo Day.</p></div>
+        <p class="c-body">completed the <b>Builder Intensive</b> (Cohort ${esc(cohort || 1)}): live sessions on AI fluency, design language, system thinking and shipping with taste, and presented${project_name ? ` <b>${esc(project_name)}</b>` : " their build"} at Demo Day.</p></div>
       <div class="c-foot"><div class="sig"><div class="hand">Aleem Akinyoola</div><span>Facilitator · ${esc(longDate(certified_at))}</span></div>
         <div class="ver">Verify this certificate<b>${esc(c)}</b>${esc(location.host)}/app/certificate</div></div></article>`;
   }

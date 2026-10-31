@@ -39,7 +39,12 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
 .sform{padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
 .sform h3{grid-column:1/-1;font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
 .sform .full{grid-column:1/-1}
-.sform .act{grid-column:1/-1;display:flex;gap:10px;align-items:center}
+.sform .act{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sform .act .sp{flex:1}
+.sess-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}
+.sess-top p{margin:0}
+.btn.danger{color:#A3361A}
+.sform.new{outline:3px solid var(--lime,#D6E59A);outline-offset:3px}
 @media (max-width:700px){.sform{grid-template-columns:1fr}}
 .fbs{display:flex;flex-direction:column;gap:16px}
 .fb{padding:18px}
@@ -190,7 +195,8 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
   const toLocal = d => { if (!d) return ""; const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Lagos", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(d)).map(x => [x.type, x.value])); return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}`; };
   const fromLocal = v => v ? new Date(v + ":00+01:00").toISOString() : null;
   function sess() {
-    document.getElementById("sess").innerHTML = sessions.map(s => `<form class="card sform" data-n="${s.n}" novalidate>
+    const STAGES = [["idea","Idea"],["system","System"],["prototype","Prototype"],["live","Live"],["refined","Refined"],["demo","Demo"]];
+    document.getElementById("sess").innerHTML = `<div class="sess-top"><p class="hint">${sessions.length} sessions. Students see changes as soon as you save. A class that runs over two evenings? Use “Add a session after this” on the first one.</p></div>` + sessions.map(s => `<form class="card sform${s.n === justAdded ? " new" : ""}" data-n="${s.n}" novalidate>
       <h3><span class="chip ${new Date(s.starts_at) < new Date() ? "lime" : ""}">S${s.n}</span>${esc(s.title)}</h3>
       <label class="f">Title<input class="in" type="text" name="title" maxlength="120" value="${esc(s.title)}"></label>
       <label class="f">Students ship<input class="in" type="text" name="ship" maxlength="300" value="${esc(s.ship || "")}"></label>
@@ -198,7 +204,11 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
       <label class="f">Ends (WAT)<input class="in" type="datetime-local" name="ends_at" value="${toLocal(s.ends_at)}"></label>
       <label class="f full">Google Meet link<input class="in" type="url" name="meet_url" placeholder="https://meet.google.com/…" value="${esc(s.meet_url || "")}"></label>
       <label class="f full">Replay link<small>Google Drive, YouTube (unlisted) or anywhere students can watch.</small><input class="in" type="url" name="replay_url" placeholder="https://drive.google.com/…" value="${esc(s.replay_url || "")}"></label>
-      <div class="act"><button class="btn pri sm" type="submit">Save session ${s.n}</button><span class="hint" data-msg></span></div></form>`).join("");
+      <label class="f">Project stage<small>The stage students’ projects should reach by this session.</small><select class="in" name="stage">${STAGES.map(([v, t]) => `<option value="${v}"${s.stage === v ? " selected" : ""}>${t}</option>`).join("")}</select></label>
+      <div class="act"><button class="btn pri sm" type="submit">Save session ${s.n}</button><span class="hint" data-msg></span><span class="sp"></span>
+        <button class="btn sm" type="button" data-add="${s.n}"><i class="ph ph-plus"></i>Add a session after this</button>
+        <button class="btn sm danger" type="button" data-del="${s.n}"><i class="ph ph-trash"></i>Remove</button></div></form>`).join("");
+    justAdded = 0;
   }
   document.getElementById("sess").addEventListener("submit", async e => {
     e.preventDefault(); const f = e.target, msg = f.querySelector("[data-msg]");
@@ -206,9 +216,33 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
     const meet = url("meet_url"), replay = url("replay_url");
     if (meet === false || replay === false) { msg.textContent = "Links must start with https://"; return; }
     if (!f.title.value.trim() || !f.starts_at.value) { msg.textContent = "Title and start time are needed."; return; }
-    const { error } = await sb.from("cohort_sessions").update({ title: f.title.value.trim(), ship: f.ship.value.trim() || null, starts_at: fromLocal(f.starts_at.value), ends_at: fromLocal(f.ends_at.value), meet_url: meet, replay_url: replay }).eq("n", +f.dataset.n);
+    const { error } = await sb.from("cohort_sessions").update({ title: f.title.value.trim(), ship: f.ship.value.trim() || null, starts_at: fromLocal(f.starts_at.value), ends_at: fromLocal(f.ends_at.value), meet_url: meet, replay_url: replay, stage: f.stage.value }).eq("n", +f.dataset.n);
     msg.textContent = error ? "Couldn’t save. Try again." : "Saved. Students see it now.";
     if (!error) { const { data } = await sb.from("cohort_sessions").select("*").order("n"); sessions = data || sessions; }
+  });
+
+  let justAdded = 0, armed = 0;
+  const reloadSessions = async () => { const { data } = await sb.from("cohort_sessions").select("*").order("n"); sessions = data || sessions; sess(); };
+  document.getElementById("sess").addEventListener("click", async e => {
+    const add = e.target.closest("[data-add]"), del = e.target.closest("[data-del]");
+    if (add) {
+      const n = +add.dataset.add, s = sessions.find(x => x.n === n);
+      const start = new Date(new Date(s.starts_at).getTime() + 24 * 3600 * 1000).toISOString();
+      add.disabled = true;
+      const { data, error } = await sb.rpc("insert_session_after", { p_after: n, p_title: `${s.title} (part 2)`, p_starts: start, p_ends: null, p_stage: s.stage });
+      if (error) { add.disabled = false; toast(/too many/.test(error.message) ? "That’s the limit of 20 sessions." : "Couldn’t add the session. Try again."); return; }
+      justAdded = data; await reloadSessions();
+      const f = document.querySelector(`.sform[data-n="${data}"]`); if (f) { f.scrollIntoView({ block: "center" }); f.title.focus(); f.title.select(); }
+      toast(`Session ${data} added. Set its title and time, then save.`);
+    }
+    if (del) {
+      const n = +del.dataset.del;
+      if (armed !== n) { armed = n; del.innerHTML = '<i class="ph ph-warning"></i>Click again to remove'; setTimeout(() => { if (armed === n) { armed = 0; del.innerHTML = '<i class="ph ph-trash"></i>Remove'; } }, 4000); return; }
+      armed = 0; del.disabled = true;
+      const { error } = await sb.rpc("delete_session", { p_n: n });
+      if (error) { del.disabled = false; toast(/has feedback/.test(error.message) ? "Students already gave feedback on this session, so it can’t be removed. Rename it instead." : "Couldn’t remove it. Try again."); return; }
+      await reloadSessions(); toast(`Session removed. Later sessions moved up by one.`);
+    }
   });
 
   // feedback
