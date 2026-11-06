@@ -42,8 +42,8 @@
   const TABS = [
     ["home", "/app", "ph-house", "Home"],
     ["board", "/app/board", "ph-kanban", "<span class=\"lg\">Project </span>Board"],
-    ["taste", "/app/taste-lab/", "ph-eye", "Taste Lab"],
-    ["prompt", "/app/prompt-lab/", "ph-sliders-horizontal", "Prompt Lab"]
+    ["lab", "/app/lab", "ph-flask", "Lab"],
+    ["learn", "/app/taste-lab/", "ph-graduation-cap", "Learn"]
   ];
 
   function shell(page, me) {

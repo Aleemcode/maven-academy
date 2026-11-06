@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lab · Maven Builder Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/maven-mark-dark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="/app/assets/app.css">
+<style>
+body{overflow-x:hidden}
+.labbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 20px;border-bottom:var(--bw) solid var(--forest);background:var(--cream)}
+.labbar h1{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.labbar h1 small{font:700 12px var(--mono);letter-spacing:.12em;color:var(--terra-d);text-transform:uppercase}
+.ltabs{display:flex;gap:6px;background:var(--paper);border:var(--bw) solid var(--forest);border-radius:999px;padding:4px}
+.ltabs button{display:inline-flex;align-items:center;gap:8px;border:0;background:none;border-radius:999px;padding:9px 16px;font-weight:700;font-size:15px;color:var(--ink-2);cursor:pointer;min-height:42px}
+.ltabs button .k{font:700 11px var(--mono);width:22px;height:22px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center}
+.ltabs button[aria-selected=true]{background:var(--forest);color:var(--cream)}
+.ltabs button.done .k{background:var(--lime);color:var(--forest);border-color:var(--forest)}
+.pane{display:none}
+.pane.on{display:block}
+.pane iframe{display:block;width:100%;border:0;background:var(--cream)}
+.out{max-width:880px;margin:0 auto;padding:24px 16px 80px;display:grid;gap:16px}
+.blk{background:var(--paper);border:var(--bw) solid var(--forest);border-radius:20px;padding:18px 20px;box-shadow:4px 4px 0 var(--forest)}
+.blk h2{font-family:var(--disp);font-weight:800;font-size:21px;letter-spacing:-.01em;margin-bottom:4px}
+.blk .hint{color:var(--muted);font-size:14.5px;margin-bottom:12px}
+.status{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.status{grid-template-columns:1fr}}
+.st{display:flex;gap:12px;align-items:flex-start;background:var(--cream);border:2px solid var(--forest);border-radius:14px;padding:12px 14px}
+.st i{font-size:24px;margin-top:2px}
+.st b{display:block;font-size:15.5px}
+.st span{font-size:14px;color:var(--ink-2)}
+.st a,.st button.lnk{background:none;border:0;padding:0;font-weight:700;color:var(--forest);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:2px solid var(--forest);background:var(--paper);border-radius:999px;padding:9px 15px;font-weight:700;font-size:14.5px;cursor:pointer;min-height:42px}
+.chips button[aria-pressed=true]{background:var(--lime);box-shadow:3px 3px 0 var(--forest)}
+.field{display:grid;gap:6px;margin-top:10px}
+.field label{font-weight:700;font-size:14.5px}
+.field input{border:2px solid var(--forest);border-radius:12px;padding:11px 12px;font:inherit;background:var(--paper)}
+pre.prompt{background:var(--forest);color:#E4EADF;border-radius:14px;padding:16px;font:13px/1.55 var(--mono);white-space:pre-wrap;word-break:break-word;max-height:420px;overflow:auto;margin-top:12px}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.share{display:none;margin-top:14px;border-top:2px dashed var(--hair,#C9C3B3);padding-top:14px}
+.share.on{display:block}
+.chk{display:flex;gap:10px;align-items:flex-start;margin-top:10px;font-size:14.5px}
+.lib-tabs{display:flex;gap:8px;margin-bottom:12px}
+.lib{display:grid;gap:10px}
+.item{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:2px solid var(--forest);border-radius:14px;padding:12px 14px;background:var(--cream)}
+.item b{display:block}
+.item span{font-size:13.5px;color:var(--ink-2)}
+.item .r{display:flex;gap:8px}
+.empty{color:var(--muted);font-size:14.5px;padding:8px 2px}
+</style>
+<script src="/assets/site-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/app/assets/maven.js"></script>
+</head>
+<body>
+<header id="shell"></header>
+<div class="labbar">
+  <h1>Lab <small>brief + taste = one prompt</small></h1>
+  <div class="ltabs" role="tablist" aria-label="Lab steps">
+    <button role="tab" id="t-brief" aria-controls="p-brief" aria-selected="true" data-t="brief"><span class="k">1</span>Brief</button>
+    <button role="tab" id="t-taste" aria-controls="p-taste" aria-selected="false" data-t="taste"><span class="k">2</span>Taste</button>
+    <button role="tab" id="t-output" aria-controls="p-output" aria-selected="false" data-t="output"><span class="k">3</span>Output</button>
+  </div>
+</div>
+<section class="pane on" id="p-brief" role="tabpanel" aria-labelledby="t-brief"><iframe id="fBrief" title="Brief: what to build" src="/app/prompt-lab/?embed=1"></iframe></section>
+<section class="pane" id="p-taste" role="tabpanel" aria-labelledby="t-taste"><iframe id="fTaste" title="Taste: how it looks" src="/app/taste-lab/?embed=1"></iframe></section>
+<section class="pane" id="p-output" role="tabpanel" aria-labelledby="t-output">
+  <div class="out">
+    <div class="blk">
+      <h2>Your build, in one prompt</h2>
+      <p class="hint">The brief says what to build. The taste says how it looks. Here they become one prompt for any AI.</p>
+      <div class="status" id="status"></div>
+    </div>
+    <div class="blk">
+      <h2>Which taste?</h2>
+      <p class="hint">Your crafted taste, a Taste Card you saved, or the course default.</p>
+      <div class="chips" id="tasteChips"></div>
+    </div>
+    <div class="blk">
+      <h2>Where will you run it?</h2>
+      <p class="hint">We adjust the first line for the tool. Everything else works anywhere.</p>
+      <div class="chips" id="toolChips"></div>
+    </div>
+    <div class="blk">
+      <h2>Your prompt</h2>
+      <div class="field"><label for="bName">Name this build</label><input id="bName" maxlength="120" placeholder="e.g. Zainab’s innerwear store"></div>
+      <pre class="prompt" id="prompt" aria-live="polite"></pre>
+      <div class="acts">
+        <button class="btn pri" id="copyB" type="button"><i class="ph ph-copy"></i>Copy prompt</button>
+        <button class="btn" id="dlB" type="button"><i class="ph ph-download-simple"></i>Download</button>
+        <button class="btn" id="saveB" type="button"><i class="ph ph-bookmark-simple"></i>Save to my builds</button>
+        <button class="btn" id="shareB" type="button" aria-expanded="false"><i class="ph ph-users-three"></i>Share with the community</button>
+      </div>
+      <div class="share" id="shareBox">
+        <div class="field"><label for="bAuthor">Your name, as others will see it</label><input id="bAuthor" maxlength="80"></div>
+        <label class="chk"><input type="checkbox" id="bOk"><span>I’m happy for other students to see this prompt, including my project idea and journey.</span></label>
+        <div class="acts"><button class="btn pri" id="shareGo" type="button">Share it</button></div>
+      </div>
+    </div>
+    <div class="blk">
+      <h2>Builds</h2>
+      <div class="lib-tabs chips" id="libTabs"><button type="button" data-l="mine" aria-pressed="true">My builds</button><button type="button" data-l="community" aria-pressed="false">Community</button></div>
+      <div class="lib" id="lib"></div>
+    </div>
+  </div>
+</section>
+<script>
+(async function () {
+  const { sb, boot, esc, toast, first } = MAB;
+  const { me, user } = await boot({ page: "lab" });
+  const $ = id => document.getElementById(id);
+  const readJ = k => { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } };
+  const TOOLS = [["aistudio", "Google AI Studio"], ["claude", "Claude"], ["antigravity", "Antigravity"], ["stitch", "Google Stitch"], ["any", "Works anywhere"]];
+  let tab = "brief", taste = null, tool = null, libTab = "mine", lastPrompt = "";
+  try { const q = new URLSearchParams(location.search).get("taste"); if (q) { taste = q; history.replaceState(null, "", location.pathname + location.hash); } } catch (e) {}
+
+  // ---- tabs ----
+  function fit() { document.querySelectorAll(".pane iframe").forEach(f => { const top = f.getBoundingClientRect().top + window.scrollY; f.style.height = Math.max(480, window.innerHeight - top) + "px"; }); }
+  function show(t) {
+    tab = t;
+    document.querySelectorAll(".ltabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.t === t));
+    document.querySelectorAll(".pane").forEach(p => p.classList.toggle("on", p.id === "p-" + t));
+    if (t === "output") renderOutput();
+    if (t === "taste") try { $("fTaste").contentWindow.postMessage({ mab: "lab-refresh" }, location.origin); } catch (e) {}
+    try { history.replaceState(null, "", "#" + t); } catch (e) {}
+    window.scrollTo(0, 0); fit();
+  }
+  document.querySelectorAll(".ltabs button").forEach(b => b.onclick = () => show(b.dataset.t));
+  window.addEventListener("resize", fit);
+  window.addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.mab === "lab-output") show("output"); });
+
+  // ---- output ----
+  function brief() { try { return $("fBrief").contentWindow.PL; } catch (e) { return null; } }
+  function tasteOptions() {
+    const d = readJ("tl2_prompts") || {}, pick = readJ("tl2_pick"), o = [];
+    if (d.current) o.push(["current", d.current.name === "My current taste" ? "My crafted taste" : d.current.name + " (crafted)"]);
+    (d.cards || []).forEach(c => o.push(["card:" + c.id, c.name || "Saved taste"]));
+    if (pick) o.push(["pick", (pick.name || "Community taste") + " · community"]);
+    o.push(["warm", "Warm Fusion (course default)"]);
+    return o;
+  }
+  function chips(host, opts, cur, onPick) {
+    host.innerHTML = opts.map(([v, l]) => `<button type="button" data-v="${esc(v)}" aria-pressed="${v === cur}">${esc(l)}</button>`).join("");
+    host.querySelectorAll("button").forEach(b => b.onclick = () => { onPick(b.dataset.v); });
+  }
+  function renderOutput() {
+    const pl = brief(), st = pl ? pl.state() : null;
+    const opts = tasteOptions();
+    if (!taste || !opts.some(o => o[0] === taste)) taste = opts[0][0];
+    if (!tool) tool = (st && st.tool) || "aistudio";
+    const hasBrief = st && (st.idea || "").trim(), hasJourney = st && (st.journey || "").trim();
+    const d = readJ("tl2_prompts") || {};
+    $("status").innerHTML =
+      `<div class="st"><i class="ph ${hasBrief && hasJourney ? "ph-check-circle" : "ph-warning-circle"}" style="color:${hasBrief && hasJourney ? "var(--ok-t,#2F7A4F)" : "var(--terra-d)"}"></i><div><b>Brief</b><span>${hasBrief ? esc(st.idea.slice(0, 90)) + (hasJourney ? "" : " · journey still empty") : "Not started yet."}</span><br><button class="lnk" type="button" data-go="brief">${hasBrief ? "Edit brief" : "Start the brief"}</button></div></div>` +
+      `<div class="st"><i class="ph ${d.current || (d.cards || []).length ? "ph-check-circle" : "ph-info"}" style="color:${d.current || (d.cards || []).length ? "var(--ok-t,#2F7A4F)" : "var(--ink-2)"}"></i><div><b>Taste</b><span>${d.current ? esc(d.current.name) + " is ready." : "Not crafted yet. The course default (Warm Fusion) is used."}</span><br><button class="lnk" type="button" data-go="taste">${d.current ? "Edit taste" : "Craft your taste"}</button></div></div>`;
+    $("status").querySelectorAll("[data-go]").forEach(b => b.onclick = () => show(b.dataset.go));
+    chips($("tasteChips"), opts, taste, v => { taste = v; renderOutput(); });
+    chips($("toolChips"), TOOLS, tool, v => { tool = v; renderOutput(); });
+    if (!$("bName").value && st && st.idea) $("bName").value = st.idea.trim().split(/[.!?\n]/)[0].slice(0, 80);
+    lastPrompt = pl ? (taste === "warm" ? pl.brief({ tool, taste: "none", preset: "warm" }) : pl.brief({ tool, taste })) : "The brief is still loading. Open the Brief tab once, then come back.";
+    $("prompt").textContent = lastPrompt;
+  }
+  $("copyB").onclick = async () => { try { await navigator.clipboard.writeText(lastPrompt); toast("Prompt copied. Paste it into " + (TOOLS.find(t => t[0] === tool) || [0, "your AI"])[1] + "."); } catch (e) { toast("Select the prompt and copy it."); } };
+  $("dlB").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([lastPrompt], { type: "text/markdown" })); a.download = (($("bName").value || "build").replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "build") + ".md"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); };
+  async function saveBuild(pub) {
+    const name = $("bName").value.trim();
+    if (!name) { $("bName").focus(); toast("Give your build a name first"); return false; }
+    const row = { name, tool, prompt: lastPrompt, is_public: !!pub, author: pub ? $("bAuthor").value.trim() : (me.full_name || "") };
+    const { error } = await sb.from("lab_builds").insert(row);
+    if (error) { toast("Couldn’t save. Try again."); return false; }
+    return true;
+  }
+  $("saveB").onclick = async () => { if (await saveBuild(false)) { toast("Saved to your builds"); libTab = "mine"; loadLib(); } };
+  $("shareB").onclick = () => { const on = !$("shareBox").classList.contains("on"); $("shareBox").classList.toggle("on", on); $("shareB").setAttribute("aria-expanded", on); if (!$("bAuthor").value) $("bAuthor").value = me.full_name || ""; };
+  $("shareGo").onclick = async () => {
+    if (!$("bOk").checked) { toast("Tick the box to confirm others can see it"); return; }
+    if (!$("bAuthor").value.trim()) { $("bAuthor").focus(); return; }
+    if (await saveBuild(true)) { toast("Shared with the community"); $("shareBox").classList.remove("on"); libTab = "community"; loadLib(); }
+  };
+
+  // ---- builds library ----
+  let rows = [];
+  async function loadLib() {
+    document.querySelectorAll("#libTabs button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === libTab));
+    let q = sb.from("lab_builds").select("id,name,author,tool,prompt,is_public,created_at,user_id").order("created_at", { ascending: false }).limit(100);
+    q = libTab === "mine" ? q.eq("user_id", user.id) : q.eq("is_public", true);
+    const { data, error } = await q;
+    rows = data || [];
+    const T = Object.fromEntries(TOOLS);
+    $("lib").innerHTML = error ? `<p class="empty">Couldn’t load builds right now.</p>` : rows.length ? rows.map((r, i) => `<div class="item"><div><b>${esc(r.name)}</b><span>${libTab === "community" ? "by " + esc(r.author || "a builder") + " · " : r.is_public ? "Shared · " : ""}${esc(T[r.tool] || "Any AI")} · ${new Date(r.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span></div><div class="r"><button class="btn sm" type="button" data-copy="${i}">Copy prompt</button>${r.user_id === user.id ? `<button class="btn sm" type="button" data-del="${i}" style="color:var(--terra-d)">Delete</button>` : ""}</div></div>`).join("")
+      : `<p class="empty">${libTab === "mine" ? "No saved builds yet. Save one above." : "No shared builds yet. Be the first to share yours."}</p>`;
+    $("lib").querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => { try { await navigator.clipboard.writeText(rows[+b.dataset.copy].prompt); toast("Prompt copied"); } catch (e) { toast("Couldn’t copy"); } });
+    $("lib").querySelectorAll("[data-del]").forEach(b => { let armed = false; b.onclick = async () => { if (!armed) { armed = true; b.textContent = "Tap again"; setTimeout(() => { armed = false; b.textContent = "Delete"; }, 3000); return; } const { error } = await sb.from("lab_builds").delete().eq("id", rows[+b.dataset.del].id); toast(error ? "Couldn’t delete" : "Deleted"); loadLib(); }; });
+  }
+  document.querySelectorAll("#libTabs button").forEach(b => b.onclick = () => { libTab = b.dataset.l; loadLib(); });
+
+  const start = (location.hash || "").replace("#", "");
+  show(["brief", "taste", "output"].includes(start) ? start : "brief");
+  loadLib();
+})();
+</script>
+</body>
+</html>

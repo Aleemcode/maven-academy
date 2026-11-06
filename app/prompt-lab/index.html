@@ -29,6 +29,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .btn.primary{background:var(--terra)}
 .btn:focus-visible,.opt:focus-visible,.chip:focus-visible{outline:3px solid #3B82C4;outline-offset:2px}
 .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;min-height:calc(100vh - 60px)}
+/* embedded inside the Maven Lab: Brief tab = what to build only */
+.embed .top,.embed .right,.embed #g3,.embed #g4,.embed #g5,.embed .intro .steps{display:none!important}
+.embed .wrap{grid-template-columns:minmax(0,1fr);min-height:0;max-width:820px;margin:0 auto}
+.embed .left{border-right:none}
 .left{padding:24px 24px 80px;border-right:2.5px solid var(--line)}
 .right{position:sticky;top:60px;height:calc(100vh - 60px);overflow:auto;padding:24px;background:#EFEADC;display:flex;flex-direction:column;gap:18px}
 .intro{background:var(--forest);color:var(--cream);border:2.5px solid var(--line);border-radius:22px;padding:22px;box-shadow:5px 5px 0 var(--terra);margin-bottom:22px}
@@ -151,6 +155,7 @@ const sw=(c,b='#14261D')=>`<span style="display:block;width:34px;height:34px;bor
 const tile=(s)=>`<span style="display:block;width:56px;height:34px;background:#fff;${s}"></span>`;
 const word=(t,s)=>`<span style="font-size:20px;line-height:1;${s}">${t}</span>`;
 
+const EMBED=/[?&]embed=1/.test(location.search);if(EMBED)document.documentElement.classList.add('embed');
 // ---------- data ----------
 const PRESETS={
  warm:{name:'Warm Fusion',theme:'light',bg:'cream',accent:'terra',radius:'round',border:'bold',shadow:'hard',head:'Bricolage Grotesque',body:'Instrument Sans',hweight:'800',track:'tight',anim:['slide'],timing:'easeout',micro:['press','hover','focus'],avoid:['gradients','emoji','blur','purple']},
@@ -251,7 +256,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 function renderControls(){
  const host=document.getElementById('groups');
  const T=tasteChosen();
- host.innerHTML=G.map((g,gi)=>{const covered=T&&['g3','g4','g5'].includes(g.id);const secs=covered?g.secs.filter(x=>x.k==='taste'):g.secs;return `<section class="group" id="${g.id}"><div class="ghead"><span class="n">0${gi+1}</span><h2>${g.title}</h2></div>${secs.map(sec=>{
+ host.innerHTML=G.map((g,gi)=>{const covered=T&&['g3','g4','g5'].includes(g.id);const secs=(covered?g.secs.filter(x=>x.k==='taste'):g.secs).filter(x=>!(EMBED&&x.k==='tool'));return `<section class="group" id="${g.id}"><div class="ghead"><span class="n">0${gi+1}</span><h2>${g.title}</h2></div>${secs.map(sec=>{
   let body='';
   if(sec.type==='text')body=`<input type="text" data-k="${sec.k}" placeholder="${esc(sec.ph)}" value="${esc(S[sec.k]||'')}">`;
   else if(sec.type==='area')body=`<textarea rows="5" data-k="${sec.k}" placeholder="${esc(sec.ph)}">${esc(S[sec.k]||'')}</textarea>`;
@@ -373,6 +378,9 @@ document.getElementById('copyTop').onclick=copy;
 document.getElementById('dlBtn').onclick=()=>{const blob=new Blob([buildBrief()],{type:'text/markdown'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='build-brief.md';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 document.getElementById('resetBtn').onclick=()=>{reset();refresh(true)};
 
+if(EMBED){const h=document.querySelector('.intro h1'),pp=document.querySelector('.intro p'),k=document.querySelector('.intro .kick');if(k)k.textContent='Step 1 · Brief';if(h)h.textContent='What are you building?';if(pp)pp.textContent='Describe your product, its pages and the main journey. The look comes from the Taste tab, and the Output tab joins them into one prompt.'}
+/* the Lab's Output tab asks for the brief with a chosen tool and taste */
+window.PL={brief(o){o=o||{};const keep=JSON.stringify(S);try{if(o.tool)S.tool=o.tool;if(o.taste)S.taste=o.taste;if(o.preset){applyPreset(o.preset);S.custom=false}return buildBrief()}finally{S=JSON.parse(keep)}},state(){return JSON.parse(JSON.stringify(S))}};
 renderControls();update();
 </script>
 </body>

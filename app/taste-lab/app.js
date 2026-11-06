@@ -7,6 +7,7 @@ const CRAFT=L.filter(l=>l.dials);
 const by=Object.fromEntries(L.map(l=>[l.slug,l]));
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const EMBED=/[?&]embed=1/.test(location.search);if(EMBED)document.documentElement.classList.add('embed');
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 /* admin */
@@ -76,7 +77,7 @@ let exportT=null;function queueExport(){clearTimeout(exportT);exportT=setTimeout
 function exportTastes(){try{
  const cards=mine.map(t=>{const st=merge(defaults(),(t.spec&&t.spec.state)||{});const meta={name:t.name,author:t.author,project:t.project,summary:t.summary};return{id:t.id,name:t.name||'Untitled taste',author:t.author||'',project:t.project||'',summary:t.summary||'',prompt:buildPrompt(meta,st),mini:miniCard(st,1)}});
  const crafted=localStorage.getItem('tl2_state')!==null;
- const current=crafted?{name:'My current taste',prompt:buildPrompt({name:'My current taste',author:store.get('tl2_author','')},S),mini:miniCard(S,1)}:null;
+ const nm=(typeof meta!=='undefined'&&meta.name)||'My current taste';const current=crafted?{name:nm,prompt:buildPrompt({name:nm,author:store.get('tl2_author',''),project:(typeof meta!=='undefined'&&meta.project)||'',summary:(typeof meta!=='undefined'&&meta.summary)||''},S),mini:miniCard(S,1)}:null;
  store.set('tl2_prompts',{v:1,at:Date.now(),current,cards})}catch(e){console.warn('[Taste Lab] export',e)}}
 function buildPrompt(meta,st){st=st||S;const out=[];
  out.push('# Design taste: '+(meta.name||'Untitled taste'));
@@ -268,11 +269,11 @@ function openDetail(t,src){const st=merge(defaults(),(t.spec&&t.spec.state)||{})
  $('#dEye').textContent=src==='mine'?'My taste':'Community taste · by '+(t.author||'a builder');$('#dTitle').textContent=t.name;
  const prompt=buildPrompt(meta,st),tokens=buildTokens(meta,st);
  $('#dBody').innerHTML=`<div class="two"><div style="border:var(--line);border-radius:16px;overflow:hidden;min-height:260px;display:flex">${miniCard(st,1)}</div><div>${t.summary?`<p style="font-size:17px;margin-top:0">${esc(t.summary)}</p>`:''}<div style="font-size:14px;color:#4A5A4F">${esc(t.author||'')}${t.project?' · for '+esc(t.project):''}</div>
-  <div class="acts-row"><button class="btn pri" id="dCopy">Copy prompt</button><button class="btn" id="dTok">Copy tokens</button><button class="btn ink" id="dUse">Use in Prompt Lab</button><button class="btn lime" id="dRemix">Remix in crafter</button>${src==='mine'&&!t.published?'<button class="btn ink" id="dPub">Publish to community</button>':''}${canDel?'<button class="btn ghost" id="dDel" style="color:#A3361A">Delete</button>':''}</div></div></div>
+  <div class="acts-row"><button class="btn pri" id="dCopy">Copy prompt</button><button class="btn" id="dTok">Copy tokens</button><button class="btn ink" id="dUse">Use in the Lab</button><button class="btn lime" id="dRemix">Remix in crafter</button>${src==='mine'&&!t.published?'<button class="btn ink" id="dPub">Publish to community</button>':''}${canDel?'<button class="btn ghost" id="dDel" style="color:#A3361A">Delete</button>':''}</div></div></div>
   <div class="out-tabs"><button class="btn sm ink" data-o="p">Prompt</button><button class="btn sm" data-o="t">Tokens (JSON)</button></div><textarea class="out" id="dOut" readonly aria-label="Output">${esc(prompt)}</textarea>`;
  $('#dCopy').onclick=()=>copy(prompt,'Prompt copied. Paste it into your AI tool.');$('#dTok').onclick=()=>copy(tokens,'Tokens copied');
  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-o]').forEach(x=>x.classList.toggle('ink',x===b));$('#dOut').value=b.dataset.o==='p'?prompt:tokens});
- $('#dUse').onclick=()=>{if(src==='mine'){exportTastes();location.href='/app/prompt-lab/?taste='+encodeURIComponent('card:'+t.id)}else{store.set('tl2_pick',{name:t.name||'Community taste',author:t.author||'',prompt,mini:miniCard(st,1)});location.href='/app/prompt-lab/?taste=pick'}};
+ $('#dUse').onclick=()=>{if(src==='mine'){exportTastes();location.href='/app/lab?taste='+encodeURIComponent('card:'+t.id)+'#output'}else{store.set('tl2_pick',{name:t.name||'Community taste',author:t.author||'',prompt,mini:miniCard(st,1)});location.href='/app/lab?taste=pick#output'}};
  $('#dRemix').onclick=()=>{S=st;save();closeDetail();openCraft(null,{name:src==='mine'?t.name:t.name+' (remix)',author:src==='mine'?t.author:store.get('tl2_author',''),project:t.project,summary:t.summary})};
  const pub=$('#dPub');if(pub)pub.onclick=async()=>{pub.disabled=true;pub.textContent='Publishing…';const r=await publish(meta,st);if(r){t.published=r.id;store.set('tl2_mine',mine),queueExport();toast('Published with your name');closeDetail();pageLibrary()}else{pub.disabled=false;pub.textContent='Publish to community'}};
  const del=$('#dDel');if(del){let armed=false;del.onclick=async()=>{if(!armed){armed=true;del.textContent='Tap again to delete';del.style.background='var(--blush)';setTimeout(()=>{armed=false;del.textContent='Delete';del.style.background=''},3000);return}
@@ -401,25 +402,26 @@ let step=0,meta={name:'',author:store.get('tl2_author',''),project:'',summary:''
 function openCraft(startSlug,m){if(m)meta=Object.assign({name:'',author:'',project:'',summary:''},m);
  step=startSlug?Math.max(0,CRAFT.findIndex(l=>l.slug===startSlug)):0;seen=new Set([step]);
  $('#scrim').classList.add('open');document.body.style.overflow='hidden';drawCraft();setTimeout(()=>$('#mClose').focus(),50)}
-function closeCraft(){$('#scrim').classList.remove('open');document.body.style.overflow='';const r=route();if(r.v==='t')pageTaste(r.id)}
+function closeCraft(){if(EMBED)return;$('#scrim').classList.remove('open');document.body.style.overflow='';const r=route();if(r.v==='t')pageTaste(r.id)}
 function drawCraft(){const N=CRAFT.length;const fin=step===N;
  $('#rail').innerHTML=CRAFT.map((l,i)=>`<button type="button" class="${i===step?'on':''} ${seen.has(i)?'seen':''}" data-s="${i}"><span class="k">${seen.has(i)&&i!==step?'✓':i+1}</span>${l.title}</button>`).join('')+`<button type="button" class="${fin?'on':''}" data-s="${N}"><span class="k">★</span>Name &amp; save</button>`;
  $('#mBody').classList.toggle('final',fin);
  if(!fin){const l=CRAFT[step];const gl=G.find(g=>g[0]===l.group)[1];
   $('#mStep').innerHTML=`<div class="eyebrow">${gl} · step ${step+1} of ${N}</div><h3>${l.title}</h3><p class="tg">${l.tagline} <a href="#/t/${l.slug}" id="mLearn" style="font-weight:700">Learn this taste →</a></p><div class="dials" id="mDials">${dialsHTML(l,true,S)}</div>`;
-  bindDials($('#mDials'),()=>drawPv(),'craft');$('#mLearn').onclick=()=>closeCraft()}
+  bindDials($('#mDials'),()=>drawPv(),'craft');if(EMBED){$('#mLearn').target='_top';$('#mLearn').href='/app/taste-lab/#/t/'+l.slug}else $('#mLearn').onclick=()=>closeCraft()}
  else{$('#mStep').innerHTML=`<div class="eyebrow">Final step</div><h3>Name your taste</h3><p class="tg">Copy it into your AI tool, keep it in your library, or publish it with your name.</p>
   <div class="form-g"><label>Taste name<input class="fld" id="fName" maxlength="80" placeholder="e.g. Market-day warmth" value="${esc(meta.name)}"></label><label>Your name<input class="fld" id="fAuthor" maxlength="80" placeholder="e.g. Aleem Akinyoola" value="${esc(meta.author)}"></label><label class="full">Project it’s for<input class="fld" id="fProj" maxlength="120" placeholder="e.g. Kobo, a sales tracker for market traders" value="${esc(meta.project)}"></label><label class="full">One-line summary (optional)<input class="fld" id="fSum" maxlength="300" placeholder="Warm, confident and fast. Built for one-hand use at the stall." value="${esc(meta.summary)}"></label></div>
   <div style="border:var(--line);border-radius:16px;overflow:hidden;margin-top:16px;min-height:230px;display:flex">${miniCard(S,1)}</div>
   <div class="out-tabs"><button class="btn sm ${outMode==='p'?'ink':''}" data-om="p">Prompt</button><button class="btn sm ${outMode==='t'?'ink':''}" data-om="t">Tokens (JSON)</button></div><textarea class="out" id="mOut" readonly aria-label="Generated output"></textarea>
-  <div class="acts-row"><button class="btn pri" id="aCopy">Copy prompt</button><button class="btn" id="aTok">Copy tokens</button><button class="btn lime" id="aSave">Save to my library</button><button class="btn ink" id="aPub">Save &amp; publish with my name</button></div>`;
+  <div class="acts-row"><button class="btn pri" id="aCopy">Copy prompt</button><button class="btn" id="aTok">Copy tokens</button>${EMBED?'<button class="btn ink" id="aOut">Send to Output →</button>':''}<button class="btn lime" id="aSave">Save to my library</button><button class="btn ink" id="aPub">Save &amp; publish with my name</button></div>`;
   const sync=()=>{meta.name=$('#fName').value.trim();meta.author=$('#fAuthor').value.trim();meta.project=$('#fProj').value.trim();meta.summary=$('#fSum').value.trim();store.set('tl2_author',meta.author);$('#mOut').value=outMode==='p'?buildPrompt(meta):buildTokens(meta)};
   ['#fName','#fAuthor','#fProj','#fSum'].forEach(s=>$(s).oninput=sync);sync();
   document.querySelectorAll('[data-om]').forEach(b=>b.onclick=()=>{outMode=b.dataset.om;document.querySelectorAll('[data-om]').forEach(x=>x.classList.toggle('ink',x===b));sync()});
+  const ao=$('#aOut');if(ao)ao.onclick=()=>{save();exportTastes();try{parent.postMessage({mab:'lab-output',from:'taste'},location.origin)}catch(e){}};
   $('#aCopy').onclick=()=>copy(buildPrompt(meta),'Prompt copied. Paste it into your AI tool.');$('#aTok').onclick=()=>copy(buildTokens(meta),'Tokens copied');
   const need=()=>{if(!meta.name){$('#fName').focus();toast('Give your taste a name first');return false}return true};
   const local=()=>{const t={id:'local-'+Date.now(),created_at:new Date().toISOString(),name:meta.name,author:meta.author,project:meta.project,summary:meta.summary,spec:{v:1,state:JSON.parse(JSON.stringify(S))}};mine.unshift(t);store.set('tl2_mine',mine),queueExport();renderNav();return t};
-  $('#aSave').onclick=()=>{if(!need())return;local();toast('Saved to your library');closeCraft();location.hash='#/library';libTab='mine';pageLibrary()};
+  $('#aSave').onclick=()=>{if(!need())return;local();toast('Saved to your library');if(EMBED)return;closeCraft();location.hash='#/library';libTab='mine';pageLibrary()};
   $('#aPub').onclick=async()=>{if(!need())return;if(!meta.author){$('#fAuthor').focus();toast('Add your name so builders know who crafted it');return}const b=$('#aPub');b.disabled=true;b.textContent='Publishing…';
    const t=local();const r=await publish(meta,t.spec.state);if(r){t.published=r.id;store.set('tl2_mine',mine),queueExport();toast('Published. Other builders can now remix it.');closeCraft();libTab='community';location.hash='#/library';pageLibrary()}else{b.disabled=false;b.textContent='Save & publish with my name'}}}
  drawPv();
@@ -449,5 +451,5 @@ $('#menuBtn').onclick=()=>{$('#side').classList.add('open');$('#veil').classList
 function go(){const r=route();closeSide();renderNav();
  if(r.v==='t')pageTaste(r.id);else if(r.v==='movements')pageMovements();else if(r.v==='resources')pageResources();else if(r.v==='library'){pageLibrary();if(libTab==='community'&&community===null)loadCommunity()}else pageStart();
  updateFab();window.scrollTo(0,0)}
-window.addEventListener('hashchange',go);go();exportTastes();
+window.addEventListener('hashchange',go);go();exportTastes();if(EMBED){openCraft();window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data&&e.data.mab==='lab-refresh')drawCraft()})}
 })();

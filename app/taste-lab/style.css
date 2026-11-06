@@ -379,3 +379,9 @@ textarea{resize:vertical}
 @media (max-width:420px){.pk.n3{grid-template-columns:minmax(0,1fr)}}
 @media (hover:none){.t-foot .count{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* embedded inside the Maven Lab (Brief · Taste · Output): only the crafter shows */
+.embed .app,.embed #fab{display:none!important}
+.embed #scrim{display:flex;padding:0;background:var(--cream)}
+.embed #scrim .modal{width:100%;height:100%;border-radius:0;border:0;box-shadow:none;animation:none}
+.embed #mClose{display:none}
