@@ -8,6 +8,11 @@ const by=Object.fromEntries(L.map(l=>[l.slug,l]));
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const EMBED=/[?&]embed=1/.test(location.search);if(EMBED)document.documentElement.classList.add('embed');
+const LEARN=/[?&]embed=learn/.test(location.search);
+/* the labs always live inside the class app: opened on their own, they move into it */
+if(!EMBED&&!LEARN&&window.top===window){location.replace('/app/learn'+location.hash);return}
+const goTop=url=>{(window.top||window).location.href=url};
+if(LEARN){const bb=document.querySelector('.side .brand b');if(bb)bb.textContent='Learn';const bm=document.querySelector('.side .brand .mk');if(bm)bm.textContent='L'}
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 /* admin */
@@ -273,7 +278,7 @@ function openDetail(t,src){const st=merge(defaults(),(t.spec&&t.spec.state)||{})
   <div class="out-tabs"><button class="btn sm ink" data-o="p">Prompt</button><button class="btn sm" data-o="t">Tokens (JSON)</button></div><textarea class="out" id="dOut" readonly aria-label="Output">${esc(prompt)}</textarea>`;
  $('#dCopy').onclick=()=>copy(prompt,'Prompt copied. Paste it into your AI tool.');$('#dTok').onclick=()=>copy(tokens,'Tokens copied');
  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-o]').forEach(x=>x.classList.toggle('ink',x===b));$('#dOut').value=b.dataset.o==='p'?prompt:tokens});
- $('#dUse').onclick=()=>{if(src==='mine'){exportTastes();location.href='/app/lab?taste='+encodeURIComponent('card:'+t.id)+'#output'}else{store.set('tl2_pick',{name:t.name||'Community taste',author:t.author||'',prompt,mini:miniCard(st,1)});location.href='/app/lab?taste=pick#output'}};
+ $('#dUse').onclick=()=>{if(src==='mine'){exportTastes();goTop('/app/lab?taste='+encodeURIComponent('card:'+t.id)+'#output')}else{store.set('tl2_pick',{name:t.name||'Community taste',author:t.author||'',prompt,mini:miniCard(st,1)});goTop('/app/lab?taste=pick#output')}};
  $('#dRemix').onclick=()=>{S=st;save();closeDetail();openCraft(null,{name:src==='mine'?t.name:t.name+' (remix)',author:src==='mine'?t.author:store.get('tl2_author',''),project:t.project,summary:t.summary})};
  const pub=$('#dPub');if(pub)pub.onclick=async()=>{pub.disabled=true;pub.textContent='Publishing…';const r=await publish(meta,st);if(r){t.published=r.id;store.set('tl2_mine',mine),queueExport();toast('Published with your name');closeDetail();pageLibrary()}else{pub.disabled=false;pub.textContent='Publish to community'}};
  const del=$('#dDel');if(del){let armed=false;del.onclick=async()=>{if(!armed){armed=true;del.textContent='Tap again to delete';del.style.background='var(--blush)';setTimeout(()=>{armed=false;del.textContent='Delete';del.style.background=''},3000);return}
@@ -408,7 +413,7 @@ function drawCraft(){const N=CRAFT.length;const fin=step===N;
  $('#mBody').classList.toggle('final',fin);
  if(!fin){const l=CRAFT[step];const gl=G.find(g=>g[0]===l.group)[1];
   $('#mStep').innerHTML=`<div class="eyebrow">${gl} · step ${step+1} of ${N}</div><h3>${l.title}</h3><p class="tg">${l.tagline} <a href="#/t/${l.slug}" id="mLearn" style="font-weight:700">Learn this taste →</a></p><div class="dials" id="mDials">${dialsHTML(l,true,S)}</div>`;
-  bindDials($('#mDials'),()=>drawPv(),'craft');if(EMBED){$('#mLearn').target='_top';$('#mLearn').href='/app/taste-lab/#/t/'+l.slug}else $('#mLearn').onclick=()=>closeCraft()}
+  bindDials($('#mDials'),()=>drawPv(),'craft');if(EMBED){$('#mLearn').target='_top';$('#mLearn').href='/app/learn#/t/'+l.slug}else $('#mLearn').onclick=()=>closeCraft()}
  else{$('#mStep').innerHTML=`<div class="eyebrow">Final step</div><h3>Name your taste</h3><p class="tg">Copy it into your AI tool, keep it in your library, or publish it with your name.</p>
   <div class="form-g"><label>Taste name<input class="fld" id="fName" maxlength="80" placeholder="e.g. Market-day warmth" value="${esc(meta.name)}"></label><label>Your name<input class="fld" id="fAuthor" maxlength="80" placeholder="e.g. Aleem Akinyoola" value="${esc(meta.author)}"></label><label class="full">Project it’s for<input class="fld" id="fProj" maxlength="120" placeholder="e.g. Kobo, a sales tracker for market traders" value="${esc(meta.project)}"></label><label class="full">One-line summary (optional)<input class="fld" id="fSum" maxlength="300" placeholder="Warm, confident and fast. Built for one-hand use at the stall." value="${esc(meta.summary)}"></label></div>
   <div style="border:var(--line);border-radius:16px;overflow:hidden;margin-top:16px;min-height:230px;display:flex">${miniCard(S,1)}</div>
@@ -440,8 +445,8 @@ $('#dScrim').addEventListener('click',e=>{if(e.target.id==='dScrim')closeDetail(
 document.addEventListener('keydown',e=>{if(e.key==='Tab')return trapTab(e);const tOpen=$('#tScrim').classList.contains('open');
  if(e.key==='Escape'){if($('#vScrim').classList.contains('open'))closeViz();else if(tOpen)closeTrain();else if($('#dScrim').classList.contains('open'))closeDetail();else if($('#scrim').classList.contains('open'))closeCraft();else closeSide();return}
  if(tOpen)trainKeys(e)});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-craft]');if(b){e.preventDefault();openCraft(b.dataset.craft||(route().v==='t'?route().id:null))}});
-$('#craftTop').onclick=()=>openCraft(route().v==='t'?route().id:null);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-craft]');if(b){e.preventDefault();if(LEARN){const sl=b.dataset.craft||(route().v==='t'?route().id:'');goTop('/app/lab'+(sl?'?step='+encodeURIComponent(sl):'')+'#taste');return}openCraft(b.dataset.craft||(route().v==='t'?route().id:null))}});
+$('#craftTop').onclick=()=>{const sl=route().v==='t'?route().id:null;if(LEARN){goTop('/app/lab'+(sl?'?step='+encodeURIComponent(sl):'')+'#taste');return}openCraft(sl)};
 
 /* mobile nav */
 function closeSide(){$('#side').classList.remove('open');$('#veil').classList.remove('open')}
@@ -451,5 +456,5 @@ $('#menuBtn').onclick=()=>{$('#side').classList.add('open');$('#veil').classList
 function go(){const r=route();closeSide();renderNav();
  if(r.v==='t')pageTaste(r.id);else if(r.v==='movements')pageMovements();else if(r.v==='resources')pageResources();else if(r.v==='library'){pageLibrary();if(libTab==='community'&&community===null)loadCommunity()}else pageStart();
  updateFab();window.scrollTo(0,0)}
-window.addEventListener('hashchange',go);go();exportTastes();if(EMBED){openCraft();window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data&&e.data.mab==='lab-refresh')drawCraft()})}
+window.addEventListener('hashchange',()=>{go();if(LEARN)try{parent.history.replaceState(null,'',parent.location.pathname+location.hash)}catch(e){}});go();exportTastes();if(EMBED){openCraft(new URLSearchParams(location.search).get('step')||null);window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data&&e.data.mab==='lab-refresh')drawCraft()})}
 })();

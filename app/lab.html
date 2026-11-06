@@ -68,7 +68,7 @@ pre.prompt{background:var(--forest);color:#E4EADF;border-radius:14px;padding:16p
   </div>
 </div>
 <section class="pane on" id="p-brief" role="tabpanel" aria-labelledby="t-brief"><iframe id="fBrief" title="Brief: what to build" src="/app/prompt-lab/?embed=1"></iframe></section>
-<section class="pane" id="p-taste" role="tabpanel" aria-labelledby="t-taste"><iframe id="fTaste" title="Taste: how it looks" src="/app/taste-lab/?embed=1"></iframe></section>
+<section class="pane" id="p-taste" role="tabpanel" aria-labelledby="t-taste"><iframe id="fTaste" title="Taste: how it looks"></iframe></section>
 <section class="pane" id="p-output" role="tabpanel" aria-labelledby="t-output">
   <div class="out">
     <div class="blk">
@@ -117,6 +117,7 @@ pre.prompt{background:var(--forest);color:#E4EADF;border-radius:14px;padding:16p
   const readJ = k => { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } };
   const TOOLS = [["aistudio", "Google AI Studio"], ["claude", "Claude"], ["antigravity", "Antigravity"], ["stitch", "Google Stitch"], ["any", "Works anywhere"]];
   let tab = "brief", taste = null, tool = null, libTab = "mine", lastPrompt = "";
+  { const st = new URLSearchParams(location.search).get("step"); document.getElementById("fTaste").src = "/app/taste-lab/?embed=1" + (st ? "&step=" + encodeURIComponent(st) : ""); if (st) try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {} }
   try { const q = new URLSearchParams(location.search).get("taste"); if (q) { taste = q; history.replaceState(null, "", location.pathname + location.hash); } } catch (e) {}
 
   // ---- tabs ----

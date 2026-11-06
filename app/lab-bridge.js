@@ -101,7 +101,7 @@
     pill.setAttribute("data-s", s);
   }
   function mount() {
-    if (/[?&]embed=1/.test(location.search)) return; // inside the Maven Lab: no floating home pill
+    if (/[?&]embed=/.test(location.search)) return; // inside the Maven Lab: no floating home pill
     var css = document.createElement("style");
     css.textContent = ".mab-pill{position:fixed;left:14px;bottom:14px;z-index:90;display:flex;align-items:center;gap:10px;background:#FFFDF7;color:#14261D;border:2.5px solid #14261D;border-radius:999px;box-shadow:3px 3px 0 #14261D;padding:5px 14px 5px 5px;font:600 13px/1.2 'Instrument Sans',system-ui,sans-serif;text-decoration:none;transition:transform .12s,box-shadow .12s}" +
       ".mab-pill:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #14261D}.mab-pill:focus-visible{outline:3px solid #3B82C4;outline-offset:2px}" +

@@ -43,7 +43,7 @@
     ["home", "/app", "ph-house", "Home"],
     ["board", "/app/board", "ph-kanban", "<span class=\"lg\">Project </span>Board"],
     ["lab", "/app/lab", "ph-flask", "Lab"],
-    ["learn", "/app/taste-lab/", "ph-graduation-cap", "Learn"]
+    ["learn", "/app/learn", "ph-graduation-cap", "Learn"]
   ];
 
   function shell(page, me) {

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learn · Maven Builder Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/maven-mark-dark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="/app/assets/app.css">
+<style>
+body{overflow:hidden}
+#learnFrame{display:block;width:100%;border:0;border-top:var(--bw) solid var(--forest);background:var(--cream)}
+</style>
+<script src="/assets/site-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/app/assets/maven.js"></script>
+</head>
+<body>
+<header id="shell"></header>
+<iframe id="learnFrame" title="Learn: the 18 tastes, demos and drills"></iframe>
+<script>
+(async function () {
+  await MAB.boot({ page: "learn" });
+  const f = document.getElementById("learnFrame");
+  const fit = () => { f.style.height = Math.max(420, window.innerHeight - f.getBoundingClientRect().top) + "px"; };
+  f.src = "/app/taste-lab/?embed=learn" + (location.hash || "");
+  fit(); window.addEventListener("resize", fit);
+})();
+</script>
+</body>
+</html>

@@ -156,6 +156,7 @@ const tile=(s)=>`<span style="display:block;width:56px;height:34px;background:#f
 const word=(t,s)=>`<span style="font-size:20px;line-height:1;${s}">${t}</span>`;
 
 const EMBED=/[?&]embed=1/.test(location.search);if(EMBED)document.documentElement.classList.add('embed');
+if(!EMBED&&window.top===window)location.replace('/app/lab#brief');
 // ---------- data ----------
 const PRESETS={
  warm:{name:'Warm Fusion',theme:'light',bg:'cream',accent:'terra',radius:'round',border:'bold',shadow:'hard',head:'Bricolage Grotesque',body:'Instrument Sans',hweight:'800',track:'tight',anim:['slide'],timing:'easeout',micro:['press','hover','focus'],avoid:['gradients','emoji','blur','purple']},
