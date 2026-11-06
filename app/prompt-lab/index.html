@@ -117,10 +117,10 @@ textarea:focus,input[type=text]:focus{outline:3px solid var(--terra);outline-off
 <div class="wrap">
 <main class="left" id="controls">
   <section class="intro">
-    <span class="kick">Skeleton + skin = brief</span>
+    <span class="kick">Skeleton + taste = one brief</span>
     <h1>Direct the design. Don’t leave it to a guess.</h1>
-    <p>Click your choices. Each one tells you what it means. Your brief builds itself on the right. Copy it into Stitch, Freebuff, Claude or any AI.</p>
-    <div class="steps"><a href="#g1">1 · Project</a><a href="#g2">2 · Layout</a><a href="#g3">3 · Style</a><a href="#g4">4 · Type</a><a href="#g5">5 · Motion</a><a href="#g6">6 · Finish</a></div>
+    <p>Describe what you’re building, pick its pages, then choose a look, or bring in your Taste Card from the Taste Lab. One brief builds itself on the right. Copy it once into Google AI Studio, Claude or any AI.</p>
+    <div class="steps"><a href="#g1">1 · Project</a><a href="#g2">2 · Pages</a><a href="#g3">3 · Style</a><a href="#g4">4 · Type</a><a href="#g5">5 · Motion</a><a href="#g6">6 · Finish</a></div>
   </section>
   <div id="groups"></div>
 </main>
@@ -165,34 +165,39 @@ const PRESETS={
 const BG={cream:['Cream','#F4F0E5','#FFFDF7','#14261D'],white:['White','#FFFFFF','#FFFFFF','#111111'],gray:['Gray','#F3F4F6','#FFFFFF','#1F2937'],slate:['Slate','#F1F5F9','#FFFFFF','#0F172A'],stone:['Stone','#F5F5F4','#FFFFFF','#1C1917'],lilac:['Lilac','#F1ECFF','#FFFFFF','#2A1F55'],night:['Night','#0B0F0D','#151A17','#ECEFEA'],forest:['Forest','#14261D','#1E3226','#F4F0E5']};
 const ACC={terra:['Terracotta','#E8722C','#14261D'],lime:['Lime','#C7E36B','#14261D'],black:['Black','#111111','#FFFFFF'],blue:['Blue','#2563EB','#FFFFFF'],indigo:['Indigo','#4F46E5','#FFFFFF'],violet:['Violet','#7C3AED','#FFFFFF'],emerald:['Emerald','#10B981','#06281C'],rose:['Rose','#E11D48','#FFFFFF']};
 
+const KINDS={
+ store:{name:'Online store',note:'People browse, pick and pay.',pages:[['Home','Best sellers, categories, one clear offer.'],['Product list','Grid of products with prices and filters.'],['Product page','Photos, price, size and colour, add to cart.'],['Cart','Items, quantities, total in ₦.'],['Checkout','Delivery details and payment.'],['Order confirmed','Thank you, order number, next steps.'],['My orders','Past orders and their status.'],['Contact / WhatsApp','A quick way to ask questions.']],def:['Home','Product list','Product page','Cart','Checkout','Order confirmed']},
+ booking:{name:'Booking or services',note:'People pick a service and a time.',pages:[['Home','What you offer and who it is for.'],['Services / courses','Each service with price and length.'],['Service detail','Everything about one service.'],['Book a time','Pick a date and time slot.'],['Booking confirmed','Date, time, what happens next.'],['About','Who is behind it, why trust them.'],['FAQ','Short answers to common questions.'],['Contact','Phone, WhatsApp, location.']],def:['Home','Services / courses','Book a time','Booking confirmed']},
+ landing:{name:'Landing page',note:'One page that explains and converts.',pages:[['Hero','Big promise and one main button.'],['Problem','The pain your audience feels.'],['How it works','Three simple steps.'],['Features / benefits','What they get, in plain words.'],['Social proof','Testimonials, logos, numbers.'],['Pricing','Plans and what is included.'],['FAQ','Answers that remove doubt.'],['Final call to action','Ask again, clearly.'],['Footer','Links, contact, socials.']],def:['Hero','How it works','Features / benefits','Social proof','FAQ','Final call to action','Footer']},
+ website:{name:'Website (several pages)',note:'A business or organisation site.',pages:[['Home','Who you are and what you do.'],['About','Your story and team.'],['Services','What you offer, with prices if you can.'],['Gallery / work','Photos or past work.'],['Blog / articles','Posts that build trust.'],['Contact','Form, WhatsApp, map.']],def:['Home','About','Services','Contact']},
+ webapp:{name:'Web app or tool',note:'People sign in and get something done.',pages:[['Sign in','Simple sign-in (faked for the prototype).'],['Dashboard','Overview of what matters most.'],['List','All items, searchable.'],['Detail','Everything about one item.'],['Create / edit','The main form.'],['Results / report','What the tool produces.'],['Settings','Profile and preferences.'],['Empty first use','What a new user sees before any data.']],def:['Dashboard','List','Detail','Create / edit','Empty first use']},
+ portfolio:{name:'Portfolio',note:'Show your work and get hired.',pages:[['Home / intro','Who you are, what you do, in one line.'],['Selected work','Your best projects as cards.'],['Case study','One project: problem, process, result.'],['About','Your story, skills, tools.'],['Contact','How to hire you.']],def:['Home / intro','Selected work','Case study','Contact']},
+ other:{name:'Something else',note:'Describe it in your journey.',pages:[],def:[]}
+};
+function readJ(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+function tasteOpts(){const d=readJ('tl2_prompts')||{},pick=readJ('tl2_pick');const o=[['none','No, pick a style here','Use the style, type and motion choices below.']];
+ if(d.current)o.push(['current','My current taste','The taste you are crafting in the Taste Lab right now.']);
+ (d.cards||[]).forEach(c=>o.push(['card:'+c.id,c.name||'Untitled taste',(c.summary||'A Taste Card you saved')+(c.project?' · for '+c.project:'')]));
+ if(pick)o.push(['pick',pick.name||'Community taste','A community taste by '+(pick.author||'a builder')+'.']);
+ return o}
+function tasteChosen(){if(!S.taste||S.taste==='none')return null;const d=readJ('tl2_prompts')||{};
+ if(S.taste==='current')return d.current||null;if(S.taste==='pick')return readJ('tl2_pick');
+ return (d.cards||[]).find(c=>'card:'+c.id===S.taste)||null}
+const optsOf=sec=>typeof sec.opts==='function'?sec.opts():sec.opts;
 const G=[
  {id:'g1',title:'Your project',secs:[
-  {k:'idea',type:'text',title:'What are you building?',help:'One or two sentences. Who is it for, and what do they want to get done?',ph:'A bank app screen where people send money to friends quickly and safely.'},
-  {k:'journey',type:'area',title:'The journey (your skeleton)',help:'Paste the screens and what-ifs from your wireframe, one per line. This is what stops the AI guessing.',ph:'1 Home → 2 Transfer → 3 Account number + bank → 4 Name shows → 5 Amount → 6 Review → 7 PIN → 8 Processing → 9 Success / Failed\nWhat if: wrong PIN → “2 tries left”\nWhat if: network drops → “Pending”, never charge twice'},
-  {k:'tool',type:'single',title:'Where will you paste this?',help:'Different AI tools like slightly different wording. We adjust the brief for you.',opts:[
-   ['stitch','Google Stitch','Makes screens from a prompt. Great for designing first.'],['freebuff','Freebuff','Builds and ships a working web app.'],['claude','Claude','Thinks and builds. Good for long briefs.'],['antigravity','Antigravity','Google’s coding agent.'],['any','Any AI','A general brief that works anywhere.']]}
+  {k:'idea',type:'text',title:'What are you building?',help:'One or two sentences. Who is it for, and what do they want to get done?',ph:'An online store where women in Lagos buy innerwear in their size and pay without chatting first.'},
+  {k:'kind',type:'single',title:'What kind of product is it?',help:'This only suggests pages. Nothing here limits what the AI can build.',opts:Object.entries(KINDS).map(([k,v])=>[k,v.name,v.note])},
+  {k:'journey',type:'area',title:'The main journey (your skeleton)',help:'Paste the steps and what-ifs from your wireframe, one per line. This is what stops the AI guessing.',ph:'Home → Shop by category → Product (pick size + colour) → Cart → Checkout → Order confirmed on WhatsApp\nWhat if: size out of stock → “Notify me”\nWhat if: cart empty → show best sellers'},
+  {k:'tool',type:'single',title:'Where will you paste this?',help:'We adjust the first line of the brief for the tool. The rest works anywhere.',opts:[
+   ['aistudio','Google AI Studio','Builds a working app in Build mode. Our class tool.'],['claude','Claude','Thinks and builds. Good for long briefs.'],['antigravity','Antigravity','Google’s coding agent, in a project folder.'],['stitch','Google Stitch','Designs screens only, no code.'],['any','Any AI','A general brief that works anywhere.']]}
  ]},
- {id:'g2',title:'Layout',secs:[
-  {k:'platform',type:'single',title:'Platform',help:'Where will people use it?',opts:[['web','Web','A website or web app, on a laptop or browser.',word('▭','font-size:30px')],['mobile','Mobile','A phone app. Thumbs, small screens, one column.',word('▯','font-size:30px')]]},
-  {k:'screen',type:'single',title:'Screen type',help:'What kind of screen is this? Each type has a job.',opts:[
-   ['hero','Landing hero','The first thing visitors see. Big headline, one main button.',col(box(52,7)+box(40,5)+box(22,8,'background:#E8722C'),4)],
-   ['dashboard','Dashboard','An overview of numbers and recent activity.',row(box(12,30)+col(row(box(16,12)+box(16,12)+box(16,12))+box(52,14),3),3)],
-   ['form','Form / checkout','Where people type details or pay.',col(box(52,7,'opacity:.3')+box(52,7,'opacity:.3')+box(30,8,'background:#E8722C'),4)],
-   ['list','List / feed','Many similar items in a scroll.',col(box(56,7)+box(56,7)+box(56,7)+box(56,7),3)],
-   ['detail','Detail page','Everything about one item.',row(box(26,32)+col(box(28,6)+box(24,4)+box(20,4),4),4)],
-   ['onboarding','Onboarding','Welcome steps for new users.',col(box(30,22)+row('<span style="width:5px;height:5px;border-radius:3px;background:#14261D"></span><span style="width:5px;height:5px;border-radius:3px;background:#14261D;opacity:.3"></span><span style="width:5px;height:5px;border-radius:3px;background:#14261D;opacity:.3"></span>',4,'justify-content:center'),5,'align-items:center')],
-   ['success','Success / receipt','Confirms something worked.',col('<span style="width:22px;height:22px;border-radius:50%;background:#D6E59A;border:2px solid #14261D;display:block"></span>'+box(40,6),5,'align-items:center')],
-   ['settings','Profile / settings','Account details and preferences.',col(row('<span style="width:14px;height:14px;border-radius:50%;background:#14261D;display:block"></span>'+box(30,6),4,'align-items:center')+box(52,6,'opacity:.4')+box(52,6,'opacity:.4'),4)]]},
-  {k:'arrange',type:'single',title:'Arrangement',help:'How the content is laid out on the screen.',opts:[
-   ['single','Single column','One thing under another. Best on mobile.',col(box(26,8)+box(26,8)+box(26,8),3)],
-   ['cards','Cards','Content in separate boxes.',box(30,30,'opacity:.7')],
-   ['grid','2×2 grid','Four equal boxes.',col(row(box(14,14)+box(14,14))+row(box(14,14)+box(14,14)),3)],
-   ['table','Table','Rows and columns, like a spreadsheet.',col(row(box(10,6)+box(10,6)+box(10,6)+box(10,6))+row(box(10,6)+box(10,6)+box(10,6)+box(10,6))+row(box(10,6)+box(10,6)+box(10,6)+box(10,6)),3)],
-   ['sideL','Sidebar left','Menu on the left, content on the right.',row(box(10,32)+box(30,32,'opacity:.5'),3)],
-   ['sideR','Sidebar right','Content left, extra info on the right.',row(box(30,32,'opacity:.5')+box(10,32),3)]]},
-  {k:'frame',type:'single',title:'Framing',help:'How the screen is presented in the preview.',opts:[['full','Full screen','Fills the whole screen.',box(52,32,'opacity:.6')],['browser','Browser','Shown inside a browser window.',col(box(52,6)+box(52,24,'opacity:.4'),0)],['phone','Phone','Shown inside a phone.',`<span style="display:block;width:22px;height:38px;border:3px solid #14261D;border-radius:6px"></span>`],['card','Card','Floating on a background.',`<span style="display:block;width:40px;height:26px;background:#fff;border:2px solid #14261D;border-radius:5px;box-shadow:3px 3px 0 #14261D"></span>`]]}
+ {id:'g2',title:'Pages & devices',secs:[
+  {k:'device',type:'single',title:'Where will people use it?',help:'Most Nigerian customers arrive on a phone. “Both” is the safe choice.',opts:[['both','Phone and laptop','Responsive: designed for phones first, still great on a laptop.',word('▯▭','font-size:26px')],['mobile','Mostly phones','One column, thumb-friendly, big tap targets.',word('▯','font-size:30px')],['web','Mostly laptops','Wide layouts, side menus, more on screen at once.',word('▭','font-size:30px')]]},
+  {k:'pages',type:'multi',title:'Pages to build',help:'Suggested for your kind of product. Tick what you need; add anything else in your journey or at the end.',opts:()=>KINDS[S.kind||'website'].pages.map(p=>[p[0],p[0],p[1]])}
  ]},
  {id:'g3',title:'Style · the skin',secs:[
+  {k:'taste',type:'single',title:'Use a Taste Card?',help:'Bring in a taste you crafted in the <a href="/app/taste-lab/#/library">Taste Lab</a>. It sets the style, type and motion, so you copy one brief, not two.',opts:()=>tasteOpts()},
   {k:'preset',type:'single',title:'Design language',help:'Start from a known style. It fills in everything below; then change any detail.',opts:Object.entries(PRESETS).map(([k,p])=>[k,p.name,{warm:'Cream, forest green, hard shadows. Warm and tactile.',minimal:'Black and white, quiet, lots of space.',playful:'Rounded, soft colours, friendly and fun.',material:'Google’s system. Cards, bold colour, clear motion.',apple:'Clean, light, generous space, gentle depth.',brutal:'Raw borders, hard shadows, loud and honest.',editorial:'Magazine feel. Elegant serif headings.',dark:'Dark background, glowing accent, focused.'}[k],presetVis(k)])},
   {k:'theme',type:'single',title:'Theme',help:'Light or dark. Dark works for night use and media apps.',opts:[['light','Light mode','Dark text on a light background.',tile('border:2px solid #14261D;border-radius:6px')],['dark','Dark mode','Light text on a dark background.',tile('background:#151A17;border-radius:6px')]]},
   {k:'bg',type:'single',title:'Background colour',help:'The colour behind everything. It sets the mood before anyone reads a word.',opts:Object.entries(BG).map(([k,v])=>[k,v[0],`Background ${v[1]}.`,sw(v[1])])},
@@ -226,27 +231,35 @@ function fontNote(f){return({'Bricolage Grotesque':'Characterful grotesque. Warm
 function presetVis(k){const p=PRESETS[k],b=BG[p.bg],a=ACC[p.accent];const r={sharp:0,soft:5,round:9,pill:18}[p.radius];const sh={none:'none',small:'0 2px 5px rgba(0,0,0,.2)',large:'0 6px 12px rgba(0,0,0,.25)',hard:'3px 3px 0 #14261D'}[p.shadow];const bd={none:'none',hair:'1px solid rgba(0,0,0,.2)',bold:'2px solid #14261D'}[p.border];return `<span style="display:flex;align-items:center;justify-content:center;width:62px;height:40px;background:${b[1]};border-radius:6px;border:1px solid rgba(0,0,0,.15)"><span style="display:block;width:34px;height:16px;background:${a[1]};border-radius:${r}px;box-shadow:${sh};border:${bd}"></span></span>`}
 
 // ---------- state ----------
-const DEFAULT={idea:'',journey:'',tool:'any',platform:'mobile',screen:'success',arrange:'single',frame:'phone',preset:'warm',hsize:'m',bsize:'m',dur:0.3,states:['loading','error','success'],extra:''};
+const DEFAULT={idea:'',kind:'website',journey:'',tool:'aistudio',device:'both',pages:['Home','About','Services','Contact'],taste:'none',preset:'warm',hsize:'m',bsize:'m',dur:0.3,states:['empty','loading','error','success'],extra:''};
 let S={};
 function applyPreset(k){const p=PRESETS[k];Object.assign(S,{preset:k,theme:p.theme,bg:p.bg,accent:p.accent,radius:p.radius,border:p.border,shadow:p.shadow,head:p.head,body:p.body,hweight:p.hweight,track:p.track,anim:[...p.anim],timing:p.timing,micro:[...p.micro],avoid:[...p.avoid]})}
 function reset(){S=JSON.parse(JSON.stringify(DEFAULT));applyPreset('warm')}
 try{const saved=JSON.parse(localStorage.getItem('mab_promptlab')||'null');if(saved)S=saved;else reset()}catch(e){reset()}
 if(!S.preset)reset();
+/* older saved briefs: move to the product-based setup */
+if(!S.kind){S.kind='website';S.pages=[...KINDS.website.def]}
+if(!S.device)S.device=S.platform==='web'?'web':'both';
+if(!S.tool||S.tool==='freebuff')S.tool='aistudio';
+if(!S.taste)S.taste='none';
+try{const q=new URLSearchParams(location.search).get('taste');if(q){S.taste=q;history.replaceState(null,'',location.pathname+location.hash)}}catch(e){}
+if(S.taste!=='none'&&!tasteChosen())S.taste='none';
 const save=()=>{try{localStorage.setItem('mab_promptlab',JSON.stringify(S))}catch(e){}};
 
 // ---------- render controls ----------
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function renderControls(){
  const host=document.getElementById('groups');
- host.innerHTML=G.map((g,gi)=>`<section class="group" id="${g.id}"><div class="ghead"><span class="n">0${gi+1}</span><h2>${g.title}</h2></div>${g.secs.map(sec=>{
+ const T=tasteChosen();
+ host.innerHTML=G.map((g,gi)=>{const covered=T&&['g3','g4','g5'].includes(g.id);const secs=covered?g.secs.filter(x=>x.k==='taste'):g.secs;return `<section class="group" id="${g.id}"><div class="ghead"><span class="n">0${gi+1}</span><h2>${g.title}</h2></div>${secs.map(sec=>{
   let body='';
   if(sec.type==='text')body=`<input type="text" data-k="${sec.k}" placeholder="${esc(sec.ph)}" value="${esc(S[sec.k]||'')}">`;
   else if(sec.type==='area')body=`<textarea rows="5" data-k="${sec.k}" placeholder="${esc(sec.ph)}">${esc(S[sec.k]||'')}</textarea>`;
   else if(sec.type==='range')body=`<div class="range"><input type="range" min="${sec.min}" max="${sec.max}" step="${sec.step}" value="${S[sec.k]}" data-k="${sec.k}" aria-label="${sec.title}"><output id="o-${sec.k}">${S[sec.k]}s</output></div>`;
-  else body=`<div class="opts" role="group" aria-label="${sec.title}">${sec.opts.map(o=>{const on=sec.type==='multi'?(S[sec.k]||[]).includes(o[0]):S[sec.k]===o[0];return `<button type="button" class="opt" data-k="${sec.k}" data-v="${esc(o[0])}" data-t="${sec.type}" data-why="${esc(o[2])}" aria-pressed="${on}">${o[3]?`<span class="vis" aria-hidden="true">${o[3]}</span>`:''}<span class="lbl">${esc(o[1])}</span></button>`}).join('')}</div><div class="why" id="why-${sec.k}">${whyFor(sec)}</div>`;
-  return `<div class="sec"><div class="sech"><h3>${sec.title}</h3>${sec.type==='multi'?'<span class="multi">pick any</span>':''}</div><p class="help">${sec.help}</p>${body}</div>`}).join('')}</section>`).join('');
+  else body=`<div class="opts" role="group" aria-label="${sec.title}">${optsOf(sec).map(o=>{const on=sec.type==='multi'?(S[sec.k]||[]).includes(o[0]):S[sec.k]===o[0];return `<button type="button" class="opt" data-k="${sec.k}" data-v="${esc(o[0])}" data-t="${sec.type}" data-why="${esc(o[2])}" aria-pressed="${on}">${o[3]?`<span class="vis" aria-hidden="true">${o[3]}</span>`:''}<span class="lbl">${esc(o[1])}</span></button>`}).join('')}</div><div class="why" id="why-${sec.k}">${whyFor(sec)}</div>`;
+  return `<div class="sec"><div class="sech"><h3>${sec.title}</h3>${sec.type==='multi'?'<span class="multi">pick any</span>':''}</div><p class="help">${sec.help}</p>${body}</div>`}).join('')}${covered?`<div class="sec"><p class="help"><b>Your Taste Card “${esc(T.name||'taste')}” covers ${g.id==='g3'?'colour, corners, borders and shadow':g.id==='g4'?'typography':'motion and micro-interactions'}.</b> Switch the Taste Card to “No” in step 3 to choose these here instead.</p></div>`:''}</section>`}).join('');
 }
-function whyFor(sec){if(!sec.opts)return'';const v=sec.type==='multi'?(S[sec.k]||[]):[S[sec.k]];const picked=sec.opts.filter(o=>v.includes(o[0]));if(!picked.length)return '<b>Nothing picked.</b> That’s fine; the AI will choose.';return picked.map(o=>`<b>${esc(o[1])}:</b> ${esc(o[2])}`).join(' &nbsp;·&nbsp; ')}
+function whyFor(sec){if(!sec.opts)return'';const v=sec.type==='multi'?(S[sec.k]||[]):[S[sec.k]];const picked=optsOf(sec).filter(o=>v.includes(o[0]));if(!picked.length)return '<b>Nothing picked.</b> That’s fine; the AI will choose.';return picked.map(o=>`<b>${esc(o[1])}:</b> ${esc(o[2])}`).join(' &nbsp;·&nbsp; ')}
 
 document.addEventListener('click',e=>{
  const b=e.target.closest('.opt');if(!b)return;
@@ -257,13 +270,13 @@ document.addEventListener('click',e=>{
  if(['bg','accent','radius','border','shadow','head','body','hweight','track','theme'].includes(k))S.custom=true;
  if(k==='preset')S.custom=false;
  if(k==='theme'){if(v==='dark'&&!['night','forest'].includes(S.bg))S.bg='night';if(v==='light'&&['night','forest'].includes(S.bg))S.bg='cream'}
- if(k==='platform')S.frame=v==='mobile'?'phone':'browser';
+ if(k==='kind')S.pages=[...KINDS[v].def];
  refresh(true);
 });
 document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.k;if(!k)return;S[k]=e.target.type==='range'?parseFloat(e.target.value):e.target.value;if(e.target.type==='range')document.getElementById('o-'+k).textContent=S[k]+'s';update()});
 
 function refresh(controls){if(controls){const y=window.scrollY;renderControls();window.scrollTo(0,y)}update()}
-function update(){save();renderPreview();document.getElementById('out').textContent=buildBrief();document.getElementById('pvName').textContent=PRESETS[S.preset].name+(S.custom?' (customised)':'')}
+function update(){save();renderPreview();document.getElementById('out').textContent=buildBrief();const T=tasteChosen();document.getElementById('pvName').textContent=T?'Taste: '+(T.name||'your taste'):PRESETS[S.preset].name+(S.custom?' (customised)':'')}
 
 // ---------- preview ----------
 function renderPreview(){
@@ -284,64 +297,71 @@ function renderPreview(){
  const copy=screenCopy();
  const st=(i)=>(S.anim||[]).includes('stagger')?`animation-delay:${(i*0.08).toFixed(2)}s`:'';
  const card=`<div class="pv" style="${vars}"><div class="pv-card pv-anim" style="${st(0)}"><span class="pv-eyebrow pv-anim" style="${st(1)}">${copy.e}</span><div class="pv-h pv-anim" style="${st(2)}">${copy.h}</div><p class="pv-p pv-anim" style="${st(3)}">${copy.p}</p><div class="pv-row pv-anim" style="${st(4)}"><span class="pv-btn">${copy.b}</span><span class="pv-btn2">${copy.b2}</span></div></div></div>`;
- let framed=card;
- if(S.frame==='browser')framed=`<div class="pv-browser"><div class="pv-bar"><i></i><i></i><i></i></div>${card}</div>`;
- if(S.frame==='phone')framed=`<div class="pv-phone">${card}</div>`;
- if(S.frame==='card')framed=`<div style="border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.18)">${card}</div>`;
+ const TC=tasteChosen();const FR=S.device==='web'?'browser':'phone';
+ const inner=TC&&TC.mini?`<div style="border-radius:inherit;overflow:hidden;display:flex;height:100%">${TC.mini}</div>`:card;let framed=inner;
+ if(FR==='browser')framed=`<div class="pv-browser"><div class="pv-bar"><i></i><i></i><i></i></div>${inner}</div>`;
+ if(FR==='phone')framed=`<div class="pv-phone">${inner}</div>`;
  const stage=document.getElementById('stage');
- stage.style.background=S.frame==='full'?b[1]:'#EFEADC';
- stage.innerHTML=`<div class="pv-frame ${S.platform==='mobile'?'mobile':''}">${framed}</div>`;
+ stage.style.background='#EFEADC';
+ stage.innerHTML=`<div class="pv-frame ${FR==='phone'?'mobile':''}">${framed}</div>`;
 }
 function shade(hex){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const f=.62;return '#'+[r,g,b].map(x=>Math.round(x*f).toString(16).padStart(2,'0')).join('')}
-function screenCopy(){return({hero:{e:'New',h:'Send money in seconds',p:'Fast, safe transfers to any Nigerian bank.',b:'Get started',b2:'Learn more'},dashboard:{e:'Overview',h:'₦248,500.00',p:'Available balance · 3 transfers this week',b:'Transfer',b2:'Statement'},form:{e:'Step 2 of 3',h:'How much?',p:'Amount, plus a short note for Tunde.',b:'Continue',b2:'Back'},list:{e:'Recent',h:'Your transfers',p:'Tunde A. · ₦5,000 · Today',b:'See all',b2:'Filter'},detail:{e:'Receipt',h:'₦5,000 to Tunde',p:'GTBank · 0123456789 · 25 Oct, 8:41pm',b:'Share',b2:'Report'},onboarding:{e:'Welcome',h:'Banking that feels easy',p:'Three quick steps and you’re in.',b:'Next',b2:'Skip'},success:{e:'Transfer sent',h:'₦5,000 is on its way',p:'To Tunde Adeyemi, GTBank. Receipt saved.',b:'Share receipt',b2:'Done'},settings:{e:'Account',h:'Aleem A.',p:'Security · Notifications · Limits',b:'Edit profile',b2:'Log out'}})[S.screen]}
+function screenCopy(){return({store:{e:'New in',h:'Soft cotton sets, in your size',p:'Free delivery in Lagos on orders over ₦25,000.',b:'Shop now',b2:'Sizes'},booking:{e:'Book a class',h:'Learn Qur’an with a teacher, live',p:'Pick a time that works. 45-minute sessions.',b:'Book a time',b2:'See courses'},landing:{e:'For busy founders',h:'Ship your idea this month',p:'A clear plan, live help, and a product you can show.',b:'Join the cohort',b2:'How it works'},website:{e:'Since 2018',h:'Clean homes, every time',p:'Trusted cleaners across Ibadan. Book in two minutes.',b:'Get a quote',b2:'Our services'},webapp:{e:'Overview',h:'₦248,500 this month',p:'12 orders · 3 waiting for delivery',b:'New order',b2:'Reports'},portfolio:{e:'Product designer',h:'I design calm, useful apps',p:'Selected work for fintech and education brands.',b:'See my work',b2:'Contact'},other:{e:'Welcome',h:'Your product, done with taste',p:'Describe it in your journey and the AI builds it.',b:'Start building',b2:'See how'}})[S.kind||'website']}
 
 // ---------- brief ----------
-const L=(sec,v)=>{const g=G.flatMap(x=>x.secs).find(s=>s.k===sec);const o=g&&g.opts&&g.opts.find(o=>o[0]===v);return o?o[1]:v};
+const L=(sec,v)=>{const g=G.flatMap(x=>x.secs).find(s=>s.k===sec);const o=g&&g.opts&&optsOf(g).find(o=>o[0]===v);return o?o[1]:v};
 function buildBrief(){
- const b=BG[S.bg],a=ACC[S.accent],p=PRESETS[S.preset];
- const toolLine={stitch:'Design this screen in Google Stitch.',freebuff:'Build this as a working web page.',claude:'Design and build this screen as a single HTML file.',antigravity:'Build this screen as a working front-end.',any:'Design this screen.'}[S.tool];
- const lines=[];
- lines.push(`# Design brief: ${L('screen',S.screen)} (${S.platform==='mobile'?'mobile app':'web'})`);
- lines.push('');
- lines.push(`${toolLine} Follow every decision below exactly. Do not invent a different style.`);
- lines.push('');
- lines.push('## What we are building');
- lines.push(S.idea?.trim()||'[Describe the product: who it is for and what they want to get done.]');
- lines.push('');
- lines.push('## The journey (build these steps, in this order)');
- lines.push(S.journey?.trim()||'[Paste your screens and what-ifs from your wireframe.]');
- lines.push('');
- lines.push('## Layout');
- lines.push(`- Platform: ${S.platform==='mobile'?'Mobile (390px wide, thumb-friendly, one column, tap targets at least 44px)':'Web (desktop first, responsive down to 390px)'}`);
- lines.push(`- Screen type: ${L('screen',S.screen)}`);
- lines.push(`- Arrangement: ${L('arrange',S.arrange)}`);
- lines.push(`- Framing: ${L('frame',S.frame)}`);
- lines.push('');
- lines.push(`## Design language: ${p.name}${S.custom?' (customised)':''}`);
- lines.push(`- Theme: ${S.theme==='dark'?'Dark':'Light'}`);
- lines.push(`- Background: ${b[0]} ${b[1]}; cards/surfaces ${b[2]}; text ${b[3]}`);
- lines.push(`- Accent (main buttons, highlights only): ${a[0]} ${a[1]} with ${a[2]} text on it`);
- lines.push(`- Corners: ${L('radius',S.radius)} (${{sharp:'0px',soft:'8px',round:'16px cards, 12px buttons',pill:'16px cards, fully rounded buttons'}[S.radius]})`);
- lines.push(`- Borders: ${{none:'none',hair:'1px subtle line',bold:'2.5px solid, same colour as text'}[S.border]}`);
- lines.push(`- Shadow: ${{none:'none, flat',small:'small soft shadow',large:'large soft shadow',hard:'hard offset shadow 5px 5px 0, no blur'}[S.shadow]}`);
- lines.push('');
- lines.push('## Typography');
- lines.push(`- Headings: ${S.head}, ${L('hweight',S.hweight).toLowerCase()} (${S.hweight}), ${L('track',S.track).toLowerCase()} letter spacing, ${L('hsize',S.hsize)}`);
- lines.push(`- Body & UI: ${S.body}, ${L('bsize',S.bsize)}`);
- lines.push('- Use one type scale. Never invent new sizes. Use Google Fonts.');
- lines.push('');
- lines.push('## Motion');
- const an=(S.anim||[]).map(x=>L('anim',x)).join(', ');
- lines.push(`- Entrance: ${an||'none'}${an?`, ${S.dur}s, ${L('timing',S.timing).toLowerCase()} easing`:''}`);
- if((S.micro||[]).length)lines.push(`- Micro-interactions: ${(S.micro).map(x=>({press:'buttons sink into their shadow when pressed',hover:'cards and buttons lift slightly on hover',focus:'clear focus ring for keyboard users',loading:'buttons show a spinner while working',success:'a checkmark draws itself on success',skeleton:'skeleton placeholders while data loads'})[x]).join('; ')}`);
- lines.push('- Respect “reduce motion” settings.');
- lines.push('');
- if((S.states||[]).length){lines.push('## States to design (not just the happy path)');(S.states).forEach(s=>lines.push(`- ${L('states',s)}: ${G[5].secs[0].opts.find(o=>o[0]===s)[2]}`));lines.push('')}
- if((S.avoid||[]).length){lines.push('## Never');(S.avoid).forEach(s=>lines.push(`- ${G[5].secs[1].opts.find(o=>o[0]===s)[2]}`));lines.push('')}
- if(S.extra?.trim()){lines.push('## Also');lines.push(S.extra.trim());lines.push('')}
- lines.push('## Quality bar');
- lines.push('- Text contrast at least 4.5:1. Real, specific text (no lorem ipsum).');
- lines.push('- Consistent spacing on an 8px scale. One clear main action per screen.');
+ const b=BG[S.bg],a=ACC[S.accent],p=PRESETS[S.preset],K=KINDS[S.kind||'website'],T=tasteChosen();
+ const toolLine={aistudio:'Build this as a working web app in Google AI Studio (Build mode).',claude:'Build this as a working web app.',antigravity:'Build this as a working web app in this project folder.',stitch:'Design these screens in Google Stitch (design only, no code).',any:'Build this as a working product.'}[S.tool]||'Build this as a working product.';
+ const lines=[],P=(...x)=>lines.push(...x);
+ P(`# Build brief: ${(S.idea||'').trim().split(/[.!?\n]/)[0].slice(0,80)||K.name}`,'');
+ P(`${toolLine} Follow the journey and the look below. Where this brief is silent, choose what serves the user best, and tell me what you chose.`,'');
+ P('## What we are building');
+ P(S.idea?.trim()||'[Describe the product: who it is for and what they want to get done.]');
+ P(`Type of product: ${K.name}.`,'');
+ P('## Who uses it, and where');
+ P({both:'People use it on phones and laptops. Design for phones first (390px wide, one column, tap targets at least 44px), then make it work beautifully on a laptop.',mobile:'People use it mostly on phones: 390px wide, one column, tap targets at least 44px, the main action within thumb reach.',web:'People use it mostly on laptops: make good use of a wide screen, and keep it working on phones too.'}[S.device||'both'],'');
+ P('## The main journey (build this first, end to end)');
+ P(S.journey?.trim()||'[Paste the steps and what-ifs from your wireframe.]','');
+ const pages=(S.pages||[]);
+ if(pages.length){P('## Pages');pages.forEach(pg=>{const d=(K.pages.find(x=>x[0]===pg)||[])[1];P(`- ${pg}${d?': '+d:''}`)});P('')}
+ P('## Layout');
+ P('- Choose the layout that best serves each page: a grid for many items, one column for forms and checkout, clear sections on long pages.');
+ P('- Keep navigation, header and footer the same on every page. One clear main action per page.','');
+ if(T){
+  P(`## Look and feel: ${T.name||'my taste'} (my Taste Card)`);
+  P('Apply this taste to every page. It replaces your default style. Where it gives a value, use that value exactly.','');
+  const body=String(T.prompt||'').split('\n');const start=body.findIndex(l=>/^Apply this taste/.test(l));
+  P(...(start>=0?body.slice(start+1):body).map(l=>l.replace(/^## /,'### ')));P('');
+ }else{
+  P(`## Look and feel: ${p.name}${S.custom?' (customised)':''}`);
+  P(`- Theme: ${S.theme==='dark'?'Dark':'Light'}`);
+  P(`- Background: ${b[0]} ${b[1]}; cards/surfaces ${b[2]}; text ${b[3]}`);
+  P(`- Accent (main buttons, highlights only): ${a[0]} ${a[1]} with ${a[2]} text on it`);
+  P(`- Corners: ${L('radius',S.radius)} (${{sharp:'0px',soft:'8px',round:'16px cards, 12px buttons',pill:'16px cards, fully rounded buttons'}[S.radius]})`);
+  P(`- Borders: ${{none:'none',hair:'1px subtle line',bold:'2.5px solid, same colour as text'}[S.border]}`);
+  P(`- Shadow: ${{none:'none, flat',small:'small soft shadow',large:'large soft shadow',hard:'hard offset shadow 5px 5px 0, no blur'}[S.shadow]}`,'');
+  P('## Typography');
+  P(`- Headings: ${S.head}, ${L('hweight',S.hweight).toLowerCase()} (${S.hweight}), ${L('track',S.track).toLowerCase()} letter spacing, ${L('hsize',S.hsize)}`);
+  P(`- Body & UI: ${S.body}, ${L('bsize',S.bsize)}`);
+  P('- Use one type scale. Never invent new sizes. Use Google Fonts.','');
+  P('## Motion');
+  const an=(S.anim||[]).map(x=>L('anim',x)).join(', ');
+  P(`- Entrance: ${an||'none'}${an?`, ${S.dur}s, ${L('timing',S.timing).toLowerCase()} easing`:''}`);
+  if((S.micro||[]).length)P(`- Micro-interactions: ${(S.micro).map(x=>({press:'buttons sink into their shadow when pressed',hover:'cards and buttons lift slightly on hover',focus:'clear focus ring for keyboard users',loading:'buttons show a spinner while working',success:'a checkmark draws itself on success',skeleton:'skeleton placeholders while data loads'})[x]).join('; ')}`);
+  P('- Respect “reduce motion” settings.','');
+ }
+ if((S.states||[]).length){P('## States to design (not just the happy path)');(S.states).forEach(x=>P(`- ${L('states',x)}: ${G[5].secs[0].opts.find(o=>o[0]===x)[2]}`));P('')}
+ if((S.avoid||[]).length&&!T){P('## Never');(S.avoid).forEach(x=>P(`- ${G[5].secs[1].opts.find(o=>o[0]===x)[2]}`));P('')}
+ if(S.extra?.trim()){P('## Also',S.extra.trim(),'')}
+ P('## Content');
+ P('- Real, specific text for a Nigerian audience: real names, prices in Naira (₦). Never lorem ipsum.');
+ P('- For this prototype, fake the data: no real login, payment or AI. A “Pay” button can lead to a success screen.','');
+ P('## Quality bar');
+ P('- Text contrast at least 4.5:1. Consistent spacing on an 8px scale.');
+ if(S.tool==='aistudio')P('- The project must build with Vite (npm run build) so it can be deployed to Vercel: index.html must load the entry file with <script type="module" src="/index.tsx"><\/script>.');
+ P('','## How to work with me');
+ P('Build the first 3 steps of the journey, then stop and show me. After that I will ask for one change at a time.');
  return lines.join('\n');
 }
 
@@ -350,7 +370,7 @@ async function copy(){const t=buildBrief();try{await navigator.clipboard.writeTe
 function flash(m){const c=document.getElementById('copied');c.textContent=m;setTimeout(()=>c.textContent='',2200)}
 document.getElementById('copyBtn').onclick=copy;
 document.getElementById('copyTop').onclick=copy;
-document.getElementById('dlBtn').onclick=()=>{const blob=new Blob([buildBrief()],{type:'text/markdown'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='design-brief.md';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+document.getElementById('dlBtn').onclick=()=>{const blob=new Blob([buildBrief()],{type:'text/markdown'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='build-brief.md';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 document.getElementById('resetBtn').onclick=()=>{reset();refresh(true)};
 
 renderControls();update();

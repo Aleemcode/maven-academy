@@ -29,6 +29,8 @@
   set.call(ls, OWNER, M.email || "");
   var state = M.state || {};
   Object.keys(state).forEach(function (k) { if (SYNC.test(k) && !dirty[k] && state[k] != null) set.call(ls, k, state[k]); });
+  // Prompt Lab: bring in Taste Cards from the Taste Lab when this browser doesn't have them yet
+  Object.keys(M.taste || {}).forEach(function (k) { if (/^tl2_(prompts|pick)$/.test(k) && get.call(ls, k) == null) set.call(ls, k, M.taste[k]); });
   // anything saved here before the account existed gets uploaded once
   for (var j = 0; j < ls.length; j++) { var k1 = ls.key(j); if (SYNC.test(k1) && !(k1 in state)) dirty[k1] = 1; }
 

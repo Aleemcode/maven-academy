@@ -36,7 +36,16 @@ module.exports = async (req, res) => {
     if (!g.ok) return js(`window.__MAB={app:${JSON.stringify(app)},state:{},offline:true};`);
     const gate = await g.json();
     if (!gate) return js(`location.replace("/app");throw new Error("not on roster");`);
-    const data = JSON.stringify({ app, name: gate.name, email: gate.email, state: gate.state || {} }).replace(/</g, "\\u003c");
+    // The Prompt Lab also gets the student's Taste Cards, so a crafted taste can join the build brief.
+    const taste = {};
+    if (app === "prompt-lab") {
+      try {
+        const t = await fetch(`${SB_URL}/rest/v1/rpc/lab_gate`, { method: "POST", headers: { apikey: SB_KEY, Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify({ p_app: "taste-lab" }) });
+        const st = ((t.ok ? await t.json() : null) || {}).state || {};
+        ["tl2_prompts", "tl2_pick"].forEach(k => { if (st[k] != null) taste[k] = st[k]; });
+      } catch (e) { /* the brief still works without them */ }
+    }
+    const data = JSON.stringify({ app, name: gate.name, email: gate.email, state: gate.state || {}, taste }).replace(/</g, "\\u003c");
     return js(`window.__MAB=${data};`);
   } catch (e) {
     return js(`window.__MAB={app:${JSON.stringify(app)},state:{},offline:true};`);

@@ -17,7 +17,7 @@ const ADMIN=store.get('tl2_admin','');
 function defaults(){const s={};CRAFT.forEach(l=>{s[l.slug]={};l.dials.forEach(d=>{s[l.slug][d.k]=Array.isArray(d.def)?d.def.slice():d.def})});return s}
 let S=merge(defaults(),store.get('tl2_state',{}));
 function merge(base,over){for(const sl in over){if(!base[sl])continue;for(const k in over[sl]){if(k in base[sl])base[sl][k]=over[sl][k]}}return base}
-const save=()=>store.set('tl2_state',S);
+const save=()=>{store.set('tl2_state',S);queueExport()};
 /* playground: what learners play with on lesson pages. Never touches S (the crafted taste). */
 let P=merge(defaults(),store.get('tl2_play',{}));
 const saveP=()=>store.set('tl2_play',P);
@@ -71,6 +71,13 @@ function miniCard(st,scale){const t=tok(st);const s=scale||1;
  </div></div>`}
 
 /* prompt + tokens output */
+/* share tastes with the Prompt Lab (same site): one combined build brief, no double copy-paste */
+let exportT=null;function queueExport(){clearTimeout(exportT);exportT=setTimeout(exportTastes,400)}
+function exportTastes(){try{
+ const cards=mine.map(t=>{const st=merge(defaults(),(t.spec&&t.spec.state)||{});const meta={name:t.name,author:t.author,project:t.project,summary:t.summary};return{id:t.id,name:t.name||'Untitled taste',author:t.author||'',project:t.project||'',summary:t.summary||'',prompt:buildPrompt(meta,st),mini:miniCard(st,1)}});
+ const crafted=localStorage.getItem('tl2_state')!==null;
+ const current=crafted?{name:'My current taste',prompt:buildPrompt({name:'My current taste',author:store.get('tl2_author','')},S),mini:miniCard(S,1)}:null;
+ store.set('tl2_prompts',{v:1,at:Date.now(),current,cards})}catch(e){console.warn('[Taste Lab] export',e)}}
 function buildPrompt(meta,st){st=st||S;const out=[];
  out.push('# Design taste: '+(meta.name||'Untitled taste'));
  out.push((meta.project?'Project: '+meta.project+' · ':'')+'Crafted by '+(meta.author||'a builder')+' with the MAB Taste Lab');
@@ -261,14 +268,15 @@ function openDetail(t,src){const st=merge(defaults(),(t.spec&&t.spec.state)||{})
  $('#dEye').textContent=src==='mine'?'My taste':'Community taste · by '+(t.author||'a builder');$('#dTitle').textContent=t.name;
  const prompt=buildPrompt(meta,st),tokens=buildTokens(meta,st);
  $('#dBody').innerHTML=`<div class="two"><div style="border:var(--line);border-radius:16px;overflow:hidden;min-height:260px;display:flex">${miniCard(st,1)}</div><div>${t.summary?`<p style="font-size:17px;margin-top:0">${esc(t.summary)}</p>`:''}<div style="font-size:14px;color:#4A5A4F">${esc(t.author||'')}${t.project?' · for '+esc(t.project):''}</div>
-  <div class="acts-row"><button class="btn pri" id="dCopy">Copy prompt</button><button class="btn" id="dTok">Copy tokens</button><button class="btn lime" id="dRemix">Remix in crafter</button>${src==='mine'&&!t.published?'<button class="btn ink" id="dPub">Publish to community</button>':''}${canDel?'<button class="btn ghost" id="dDel" style="color:#A3361A">Delete</button>':''}</div></div></div>
+  <div class="acts-row"><button class="btn pri" id="dCopy">Copy prompt</button><button class="btn" id="dTok">Copy tokens</button><button class="btn ink" id="dUse">Use in Prompt Lab</button><button class="btn lime" id="dRemix">Remix in crafter</button>${src==='mine'&&!t.published?'<button class="btn ink" id="dPub">Publish to community</button>':''}${canDel?'<button class="btn ghost" id="dDel" style="color:#A3361A">Delete</button>':''}</div></div></div>
   <div class="out-tabs"><button class="btn sm ink" data-o="p">Prompt</button><button class="btn sm" data-o="t">Tokens (JSON)</button></div><textarea class="out" id="dOut" readonly aria-label="Output">${esc(prompt)}</textarea>`;
  $('#dCopy').onclick=()=>copy(prompt,'Prompt copied. Paste it into your AI tool.');$('#dTok').onclick=()=>copy(tokens,'Tokens copied');
  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-o]').forEach(x=>x.classList.toggle('ink',x===b));$('#dOut').value=b.dataset.o==='p'?prompt:tokens});
+ $('#dUse').onclick=()=>{if(src==='mine'){exportTastes();location.href='/app/prompt-lab/?taste='+encodeURIComponent('card:'+t.id)}else{store.set('tl2_pick',{name:t.name||'Community taste',author:t.author||'',prompt,mini:miniCard(st,1)});location.href='/app/prompt-lab/?taste=pick'}};
  $('#dRemix').onclick=()=>{S=st;save();closeDetail();openCraft(null,{name:src==='mine'?t.name:t.name+' (remix)',author:src==='mine'?t.author:store.get('tl2_author',''),project:t.project,summary:t.summary})};
- const pub=$('#dPub');if(pub)pub.onclick=async()=>{pub.disabled=true;pub.textContent='Publishing…';const r=await publish(meta,st);if(r){t.published=r.id;store.set('tl2_mine',mine);toast('Published with your name');closeDetail();pageLibrary()}else{pub.disabled=false;pub.textContent='Publish to community'}};
+ const pub=$('#dPub');if(pub)pub.onclick=async()=>{pub.disabled=true;pub.textContent='Publishing…';const r=await publish(meta,st);if(r){t.published=r.id;store.set('tl2_mine',mine),queueExport();toast('Published with your name');closeDetail();pageLibrary()}else{pub.disabled=false;pub.textContent='Publish to community'}};
  const del=$('#dDel');if(del){let armed=false;del.onclick=async()=>{if(!armed){armed=true;del.textContent='Tap again to delete';del.style.background='var(--blush)';setTimeout(()=>{armed=false;del.textContent='Delete';del.style.background=''},3000);return}
-  if(src==='mine'){mine=mine.filter(x=>x!==t);store.set('tl2_mine',mine);if(t.published&&keys[t.published])await rpc('delete_taste',{p_id:t.published,p_key:keys[t.published]})}
+  if(src==='mine'){mine=mine.filter(x=>x!==t);store.set('tl2_mine',mine),queueExport();if(t.published&&keys[t.published])await rpc('delete_taste',{p_id:t.published,p_key:keys[t.published]})}
   else{const ok=keys[t.id]?await rpc('delete_taste',{p_id:t.id,p_key:keys[t.id]}):await rpc('admin_delete_taste',{p_id:t.id,p_secret:ADMIN});if(!ok){toast('Couldn’t delete. Try again.');return}community=(community||[]).filter(x=>x.id!==t.id)}
   toast('Deleted');closeDetail();renderNav();pageLibrary()}}
  $('#dScrim').classList.add('open');document.body.style.overflow='hidden'}
@@ -410,10 +418,10 @@ function drawCraft(){const N=CRAFT.length;const fin=step===N;
   document.querySelectorAll('[data-om]').forEach(b=>b.onclick=()=>{outMode=b.dataset.om;document.querySelectorAll('[data-om]').forEach(x=>x.classList.toggle('ink',x===b));sync()});
   $('#aCopy').onclick=()=>copy(buildPrompt(meta),'Prompt copied. Paste it into your AI tool.');$('#aTok').onclick=()=>copy(buildTokens(meta),'Tokens copied');
   const need=()=>{if(!meta.name){$('#fName').focus();toast('Give your taste a name first');return false}return true};
-  const local=()=>{const t={id:'local-'+Date.now(),created_at:new Date().toISOString(),name:meta.name,author:meta.author,project:meta.project,summary:meta.summary,spec:{v:1,state:JSON.parse(JSON.stringify(S))}};mine.unshift(t);store.set('tl2_mine',mine);renderNav();return t};
+  const local=()=>{const t={id:'local-'+Date.now(),created_at:new Date().toISOString(),name:meta.name,author:meta.author,project:meta.project,summary:meta.summary,spec:{v:1,state:JSON.parse(JSON.stringify(S))}};mine.unshift(t);store.set('tl2_mine',mine),queueExport();renderNav();return t};
   $('#aSave').onclick=()=>{if(!need())return;local();toast('Saved to your library');closeCraft();location.hash='#/library';libTab='mine';pageLibrary()};
   $('#aPub').onclick=async()=>{if(!need())return;if(!meta.author){$('#fAuthor').focus();toast('Add your name so builders know who crafted it');return}const b=$('#aPub');b.disabled=true;b.textContent='Publishing…';
-   const t=local();const r=await publish(meta,t.spec.state);if(r){t.published=r.id;store.set('tl2_mine',mine);toast('Published. Other builders can now remix it.');closeCraft();libTab='community';location.hash='#/library';pageLibrary()}else{b.disabled=false;b.textContent='Save & publish with my name'}}}
+   const t=local();const r=await publish(meta,t.spec.state);if(r){t.published=r.id;store.set('tl2_mine',mine),queueExport();toast('Published. Other builders can now remix it.');closeCraft();libTab='community';location.hash='#/library';pageLibrary()}else{b.disabled=false;b.textContent='Save & publish with my name'}}}
  drawPv();
  $('#mCount').textContent=fin?'Ready to save':`${seen.size} of ${N} tastes visited · skip any you haven’t learned yet`;
  $('#mBar').style.width=Math.round(Math.min(step,N)/N*100)+'%';
@@ -441,5 +449,5 @@ $('#menuBtn').onclick=()=>{$('#side').classList.add('open');$('#veil').classList
 function go(){const r=route();closeSide();renderNav();
  if(r.v==='t')pageTaste(r.id);else if(r.v==='movements')pageMovements();else if(r.v==='resources')pageResources();else if(r.v==='library'){pageLibrary();if(libTab==='community'&&community===null)loadCommunity()}else pageStart();
  updateFab();window.scrollTo(0,0)}
-window.addEventListener('hashchange',go);go();
+window.addEventListener('hashchange',go);go();exportTastes();
 })();
