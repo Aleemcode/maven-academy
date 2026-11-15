@@ -10,3 +10,12 @@ window.MAVEN_SEATS_SHOW_FROM = 20;
 // Where "Join the next cohort" buttons point (e.g. on /warm-fusion). Keep this on the site's pricing/registration
 // section so every new cohort is sold through the website. Change it here once per cohort if the page moves.
 window.MAVEN_REGISTER_URL = "/#price";
+
+// Firebase web app settings for the student app (/app). These are public by design; access is controlled on the server.
+// Firebase console → Project settings → General → Your apps → Web app → SDK setup and configuration → Config.
+window.MAVEN_FIREBASE = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  appId: ""
+};

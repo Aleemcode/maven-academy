@@ -2,14 +2,12 @@
 // It confirms the visitor is a logged-in student on the roster (via their session cookie) and hands the
 // lab their saved work, so it's restored before the lab's own code runs. Otherwise it sends them to log in.
 
-const SB_URL = process.env.SUPABASE_URL || "https://besjzgmacljwltnzhbzn.supabase.co";
-const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlc2p6Z21hY2xqd2x0bnpoYnpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4NDM4ODEsImV4cCI6MjEwODQxOTg4MX0.rM6bZG1TNLyBNkNaY72-Vv06TJoc6qNcLvIyYqmSPs0";
+const { ready, db, cookie, auth, studentByUid } = require("./_fb");
 const APPS = ["taste-lab", "prompt-lab"];
 
-function cookie(req, name) {
-  const raw = req.headers.cookie || "";
-  const hit = raw.split(/;\s*/).find(c => c.startsWith(name + "="));
-  return hit ? decodeURIComponent(hit.slice(name.length + 1)) : "";
+async function labState(uid, app) {
+  const s = await db().collection("lab_state").where("user_id", "==", uid).where("app", "==", app).get();
+  const out = {}; s.docs.forEach(d => { const r = d.data(); out[r.key] = r.value; }); return out;
 }
 
 module.exports = async (req, res) => {
@@ -22,32 +20,25 @@ module.exports = async (req, res) => {
     res.end(body);
   };
   const toLogin = `location.replace("/app/login?next=" + encodeURIComponent("/app/${app}/"));throw new Error("login required");`;
+  const offline = `window.__MAB={app:${JSON.stringify(app)},state:{},offline:true};`;
 
   const token = cookie(req, "mab_at");
   if (!token) return js(toLogin);
+  if (!ready()) return js(offline);
 
+  let uid;
+  try { uid = (await auth().verifyIdToken(token)).uid; } catch (e) { return js(toLogin); }
   try {
-    const g = await fetch(`${SB_URL}/rest/v1/rpc/lab_gate`, {
-      method: "POST",
-      headers: { apikey: SB_KEY, Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ p_app: app })
-    });
-    if (g.status === 401 || g.status === 403) return js(toLogin);
-    if (!g.ok) return js(`window.__MAB={app:${JSON.stringify(app)},state:{},offline:true};`);
-    const gate = await g.json();
-    if (!gate) return js(`location.replace("/app");throw new Error("not on roster");`);
-    // The Prompt Lab also gets the student's Taste Cards, so a crafted taste can join the build brief.
+    const st = await studentByUid(uid);
+    if (!st) return js(`location.replace("/app");throw new Error("not on roster");`);
+    const state = await labState(uid, app);
     const taste = {};
     if (app === "prompt-lab") {
-      try {
-        const t = await fetch(`${SB_URL}/rest/v1/rpc/lab_gate`, { method: "POST", headers: { apikey: SB_KEY, Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify({ p_app: "taste-lab" }) });
-        const st = ((t.ok ? await t.json() : null) || {}).state || {};
-        ["tl2_prompts", "tl2_pick"].forEach(k => { if (st[k] != null) taste[k] = st[k]; });
-      } catch (e) { /* the brief still works without them */ }
+      try { const t = await labState(uid, "taste-lab"); ["tl2_prompts", "tl2_pick"].forEach(k => { if (t[k] != null) taste[k] = t[k]; }); } catch (e) { /* the brief still works without them */ }
     }
-    const data = JSON.stringify({ app, name: gate.name, email: gate.email, state: gate.state || {}, taste }).replace(/</g, "\\u003c");
+    const data = JSON.stringify({ app, name: st.full_name, email: st.email, state, taste }).replace(/</g, "\\u003c");
     return js(`window.__MAB=${data};`);
   } catch (e) {
-    return js(`window.__MAB={app:${JSON.stringify(app)},state:{},offline:true};`);
+    return js(offline);
   }
 };

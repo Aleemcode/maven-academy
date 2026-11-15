@@ -7,16 +7,15 @@
 (function () {
   "use strict";
   var M = window.__MAB || {}, APP = M.app;
-  var SB_URL = "https://besjzgmacljwltnzhbzn.supabase.co";
-  var SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlc2p6Z21hY2xqd2x0bnpoYnpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4NDM4ODEsImV4cCI6MjEwODQxOTg4MX0.rM6bZG1TNLyBNkNaY72-Vv06TJoc6qNcLvIyYqmSPs0";
-  var SK = "sb-besjzgmacljwltnzhbzn-auth-token";
+  var SB_URL = "https://besjzgmacljwltnzhbzn.supabase.co"; // old address the Taste Lab still calls; translated below
   var SYNC = { "taste-lab": /^tl2_(?!admin)/, "prompt-lab": /^mab_promptlab$/ }[APP];
   var ls; try { ls = window.localStorage; } catch (e) { ls = null; }
   var set = Storage.prototype.setItem, rem = Storage.prototype.removeItem, get = Storage.prototype.getItem;
   var toLogin = function () { location.replace("/app/login?next=" + encodeURIComponent("/app/" + APP + "/")); };
 
-  function readSession() { try { return JSON.parse(get.call(ls, SK)); } catch (e) { return null; } }
-  if (!ls || !SYNC || !readSession()) { toLogin(); return; }
+  // The class app keeps a fresh Firebase ID token in the mab_at cookie (Path=/app) while it is open.
+  function readToken() { var m = document.cookie.match(/(?:^|;\s*)mab_at=([^;]+)/); return m ? decodeURIComponent(m[1]) : ""; }
+  if (!ls || !SYNC || !readToken()) { toLogin(); return; }
 
   // ---- 2. restore -------------------------------------------------------
   var DIRTY = "mab_sync_dirty_" + APP, OWNER = "mab_sync_owner";
@@ -34,36 +33,30 @@
   // anything saved here before the account existed gets uploaded once
   for (var j = 0; j < ls.length; j++) { var k1 = ls.key(j); if (SYNC.test(k1) && !(k1 in state)) dirty[k1] = 1; }
 
-  // ---- 4. token ---------------------------------------------------------
-  var refreshing = null;
-  function token() {
-    var s = readSession();
-    if (!s || !s.access_token) { toLogin(); return Promise.reject(new Error("no_session")); }
-    if ((s.expires_at || 0) - 60 > Date.now() / 1000) return Promise.resolve(s.access_token);
-    if (refreshing) return refreshing;
-    refreshing = _fetch(SB_URL + "/auth/v1/token?grant_type=refresh_token", {
-      method: "POST", headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: s.refresh_token })
-    }).then(function (r) { if (!r.ok) throw new Error("refresh"); return r.json(); })
-      .then(function (n) {
-        if (!n.expires_at) n.expires_at = Math.floor(Date.now() / 1000) + (n.expires_in || 3600);
-        set.call(ls, SK, JSON.stringify(n));
-        var sec = location.protocol === "https:" ? "; Secure" : "";
-        document.cookie = "mab_at=" + n.access_token + "; Path=/app; Max-Age=" + (n.expires_in || 3600) + "; SameSite=Lax" + sec;
-        refreshing = null; return n.access_token;
-      }).catch(function (e) { refreshing = null; toLogin(); throw e; });
-    return refreshing;
-  }
-
+  // ---- 4. token + the Taste Lab's own database calls -------------------
+  function token() { var t = readToken(); if (!t) { toLogin(); return Promise.reject(new Error("no_session")); } return Promise.resolve(t); }
   var _fetch = window.fetch.bind(window);
+  function api(body) {
+    return token().then(function (t) {
+      return _fetch("/api/db", { method: "POST", keepalive: !!body.keepalive, headers: { "Content-Type": "application/json", Authorization: "Bearer " + t }, body: JSON.stringify(body) });
+    });
+  }
+  function reply(status, data) { return new Response(JSON.stringify(data), { status: status, headers: { "Content-Type": "application/json" } }); }
+  // The Taste Lab was written against the old REST address. Its three calls are answered by /api/db instead.
   window.fetch = function (input, init) {
     var u = typeof input === "string" ? input : (input && input.url) || "";
-    if (u.indexOf(SB_URL + "/rest/") !== 0) return _fetch(input, init);
-    return token().then(function (t) {
-      init = init || {};
-      var h = new Headers(init.headers || (input && input.headers) || {});
-      h.set("apikey", SB_KEY); h.set("Authorization", "Bearer " + t);
-      return _fetch(input, Object.assign({}, init, { headers: h }));
-    });
+    if (u.indexOf(SB_URL + "/rest/v1/") !== 0) return _fetch(input, init);
+    var path = u.slice((SB_URL + "/rest/v1/").length), method = ((init && init.method) || "GET").toUpperCase(), body = {};
+    try { body = init && init.body ? JSON.parse(init.body) : {}; } catch (e) {}
+    var q;
+    if (/^taste_cards/.test(path) && method === "GET") q = { op: "select", table: "taste_cards", cols: "id,created_at,name,author,project,summary,spec", order: { col: "created_at", asc: false }, limit: 200 };
+    else if (/^taste_cards/.test(path) && method === "POST") q = { op: "insert", table: "taste_cards", values: body };
+    else if (/^rpc\//.test(path)) q = { op: "rpc", fn: path.slice(4).split("?")[0], args: body };
+    else return Promise.resolve(reply(404, { message: "not found" }));
+    return api(q).then(function (r) { return r.json(); }).then(function (j) {
+      if (j.error) return reply(400, j.error);
+      return reply(200, j.data);
+    }).catch(function () { return reply(503, { message: "offline" }); });
   };
 
   // ---- 3. save as they go -----------------------------------------------
@@ -75,12 +68,8 @@
     var ups = [], dels = [];
     keys.forEach(function (k) { var v = get.call(ls, k); if (v == null) dels.push(k); else ups.push({ app: APP, key: k, value: v, updated_at: new Date().toISOString() }); });
     status("saving");
-    token().then(function (t) {
-      var H = { apikey: SB_KEY, Authorization: "Bearer " + t, "Content-Type": "application/json" };
-      var jobs = [];
-      if (ups.length) jobs.push(_fetch(SB_URL + "/rest/v1/lab_state?on_conflict=user_id,app,key", { method: "POST", keepalive: !!keepalive, headers: Object.assign({ Prefer: "resolution=merge-duplicates,return=minimal" }, H), body: JSON.stringify(ups) }));
-      dels.forEach(function (k) { jobs.push(_fetch(SB_URL + "/rest/v1/lab_state?app=eq." + encodeURIComponent(APP) + "&key=eq." + encodeURIComponent(k), { method: "DELETE", keepalive: !!keepalive, headers: H })); });
-      return Promise.all(jobs);
+    api({ op: "lab_save", app: APP, ups: ups.map(function (x) { return { key: x.key, value: x.value }; }), dels: dels, keepalive: keepalive }).then(function (r) {
+      return [r];
     }).then(function (rs) {
       if (rs.some(function (r) { return !r.ok; })) throw new Error("save");
       keys.forEach(function (k) { delete dirty[k]; }); saveDirty(); status("saved");

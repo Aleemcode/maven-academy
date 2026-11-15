@@ -1,0 +1,8 @@
+{
+  "name": "maven-academy",
+  "private": true,
+  "description": "Maven Builder Academy site and student app. Static pages plus Vercel functions in /api.",
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

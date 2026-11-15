@@ -1,17 +1,25 @@
-// Shared server helpers for the student app. Files starting with "_" are not routes on Vercel.
+// Shared server helpers for the student app (Firebase). Files starting with "_" are not routes on Vercel.
 //
 // Vercel → Project (maven-academy) → Settings → Environment Variables:
-//   SUPABASE_SERVICE_ROLE_KEY  (required) Supabase → Project "Kaban Board" → Settings → API keys → secret / service_role.
-//                              Server-side only. Never put it in any HTML or /app file.
-//   PAYSTACK_SECRET_KEY        (already set) used to confirm a student paid before their account is created.
-//   COHORT_OPENS / SEAT_MIN_KOBO  shared with /api/seats.
+//   FIREBASE_SERVICE_ACCOUNT  (required) the whole service-account JSON from Firebase → Project settings →
+//                             Service accounts → Generate new private key. Server-side only.
+//   PAYSTACK_SECRET_KEY       (already set) used to confirm a student paid before their account is created.
+//   COHORT_OPENS / SEAT_MIN_KOBO / PAYSTACK_PAGE_SLUGS  shared with /api/seats.
 
-const SB_URL = process.env.SUPABASE_URL || "https://besjzgmacljwltnzhbzn.supabase.co";
+const admin = require("firebase-admin");
 
-function serviceHeaders(extra) {
-  const k = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  return { apikey: k, Authorization: "Bearer " + k, "Content-Type": "application/json", ...(extra || {}) };
+const FACILITATOR = "aakinyoola857@gmail.com";
+
+function fb() {
+  if (admin.apps.length) return admin.app();
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) return null;
+  const sa = JSON.parse(raw);
+  return admin.initializeApp({ credential: admin.credential.cert(sa) });
 }
+const ready = () => !!fb();
+const db = () => { fb(); return admin.firestore(); };
+const auth = () => { fb(); return admin.auth(); };
 
 function send(res, status, body) {
   res.statusCode = status;
@@ -28,32 +36,34 @@ async function readJson(req) {
   try { return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}"); } catch (e) { return {}; }
 }
 
+function cookie(req, name) {
+  const raw = req.headers.cookie || "";
+  const hit = raw.split(/;\s*/).find(c => c.startsWith(name + "="));
+  return hit ? decodeURIComponent(hit.slice(name.length + 1)) : "";
+}
+
 const cleanEmail = e => String(e || "").trim().toLowerCase().replace(/^[\s,;:<>"']+|[\s,;:.<>"']+$/g, "");
 const validEmail = e => /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(e) && e.length <= 200;
 
-async function getStudent(email) {
-  const r = await fetch(`${SB_URL}/rest/v1/students?email=eq.${encodeURIComponent(email)}&select=*`, { headers: serviceHeaders() });
-  if (!r.ok) throw new Error("roster_" + r.status);
-  const rows = await r.json();
-  return rows[0] || null;
-}
-
-async function upsertStudent(row) {
-  const r = await fetch(`${SB_URL}/rest/v1/students?on_conflict=email`, {
-    method: "POST",
-    headers: serviceHeaders({ Prefer: "resolution=merge-duplicates,return=representation" }),
-    body: JSON.stringify(row)
-  });
-  if (!r.ok) throw new Error("roster_write_" + r.status);
-  return (await r.json())[0];
-}
-
-// Who is calling? Verifies a user's access token with Supabase Auth.
-async function userFromToken(token) {
+// Who is calling? Verifies a Firebase ID token (header first, then the /app cookie).
+async function caller(req) {
+  const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "") || cookie(req, "mab_at");
   if (!token) return null;
-  const r = await fetch(`${SB_URL}/auth/v1/user`, { headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: "Bearer " + token } });
-  if (!r.ok) return null;
-  return r.json();
+  try { const d = await auth().verifyIdToken(token); return { uid: d.uid, email: cleanEmail(d.email) }; } catch (e) { return null; }
+}
+
+const students = () => db().collection("students");
+async function getStudent(email) { const s = await students().doc(email).get(); return s.exists ? s.data() : null; }
+async function studentByUid(uid) {
+  const q = await students().where("user_id", "==", uid).limit(1).get();
+  return q.empty ? null : q.docs[0].data();
+}
+async function upsertStudent(row) {
+  const ref = students().doc(row.email);
+  const cur = await ref.get();
+  const base = cur.exists ? {} : { role: "student", cohort: 1, created_at: new Date().toISOString(), user_id: null, certified_at: null, cert_code: null };
+  await ref.set({ ...base, ...row }, { merge: true });
+  return (await ref.get()).data();
 }
 
 // Did this email make a qualifying Paystack payment for the current cohort?
@@ -109,4 +119,4 @@ async function paystackCohort() {
   return { payments: [...byEmail.values()] };
 }
 
-module.exports = { paystackCohort, SB_URL, serviceHeaders, send, readJson, cleanEmail, validEmail, getStudent, upsertStudent, userFromToken, paystackPayment };
+module.exports = { admin, FACILITATOR, ready, db, auth, send, readJson, cookie, cleanEmail, validEmail, caller, students, getStudent, studentByUid, upsertStudent, paystackPayment, paystackCohort };

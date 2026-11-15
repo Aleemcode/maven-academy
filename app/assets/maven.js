@@ -1,15 +1,11 @@
 /* Maven Builder Academy — student app core.
-   One Supabase client, the students-only gate, the shared header, and small helpers.
-   Load after supabase-js. Pages call MAB.boot({ page, facilitator }) and get { me, user }. */
+   The database client (Firebase, see db.js), the students-only gate, the shared header, and small helpers.
+   Load after /app/assets/db.js. Pages call MAB.boot({ page, facilitator }) and get { me, user }. */
 (function () {
-  const SB_URL = "https://besjzgmacljwltnzhbzn.supabase.co";
-  const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlc2p6Z21hY2xqd2x0bnpoYnpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4NDM4ODEsImV4cCI6MjEwODQxOTg4MX0.rM6bZG1TNLyBNkNaY72-Vv06TJoc6qNcLvIyYqmSPs0";
   const WA = (window.MAVEN_WA || "2347031117241").replace(/\D/g, "");
   const TZ = "Africa/Lagos";
 
-  const sb = window.supabase.createClient(SB_URL, SB_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
-  });
+  const sb = window.MABDB;
 
   // The labs are served through /app middleware, which reads this cookie to know who is asking.
   function syncCookie(session) {
@@ -91,5 +87,5 @@
     return { me, user: session.user, session };
   }
 
-  window.MAB = { sb, SB_URL, SB_KEY, boot, esc, safeUrl, first, initials, fmt, day, time, toast, waLink, syncCookie, TZ };
+  window.MAB = { sb, boot, esc, safeUrl, first, initials, fmt, day, time, toast, waLink, syncCookie, TZ };
 })();
