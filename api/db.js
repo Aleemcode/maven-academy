@@ -204,8 +204,12 @@ const RPC = {
 };
 
 module.exports = async (req, res) => {
-  if (req.method !== "POST") return send(res, 405, { error: { message: "method" } });
   if (!ready()) return send(res, 503, { error: { message: "not_configured" } });
+  if (req.method === "GET") { // health check: is the database reachable?
+    try { await seed(); const n = (await db().collection("cohort_sessions").get()).size; return send(res, 200, { ok: true, sessions: n }); }
+    catch (e) { return send(res, 503, { ok: false, error: String(e && e.message || e).slice(0, 200) }); }
+  }
+  if (req.method !== "POST") return send(res, 405, { error: { message: "method" } });
   const body = await readJson(req);
   try {
     await seed();
