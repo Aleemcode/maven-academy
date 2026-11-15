@@ -90,6 +90,8 @@
 .tool p{color:var(--ink-2);font-size:15px;flex:1}
 .tool .go{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14.5px}
 .welcome{margin-top:18px}
+.demo{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.demo textarea{resize:vertical}
 </style>
 <script src="/assets/site-config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -229,11 +231,32 @@
   const asked = sessions.filter(s => stateOf(s) === "done").map(s => s.n);
   const gave = asked.filter(n => fbDone.has(n)).length;
   const presented = !!(project && project.presented_at);
+  const submitted = !!(project && project.demo_submitted_at);
   document.getElementById("cert").innerHTML = `<ul class="steps">
       <li class="${project ? "ok" : ""}"><i class="${project ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Put your project on the board<small>${project ? "Done." : "This is the build you’ll present."}</small></div></li>
       <li class="${asked.length && gave === asked.length ? "ok" : ""}"><i class="${asked.length && gave === asked.length ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Share feedback after each session<small>${gave} of ${asked.length} so far. It shapes the next session.</small></div></li>
-      <li class="${presented ? "ok" : ""}"><i class="${presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Present your demo on Demo Day<small>${presented ? "Presented. Well built." : "This is what earns the certificate."}</small></div></li></ul>
-    ${me.certified_at ? `<a class="btn pri" href="/app/certificate"><i class="ph ph-certificate"></i>View my certificate</a>` : `<span class="chip"><i class="ph ph-lock-simple"></i>Unlocks after Demo Day</span>`}`;
+      <li class="${submitted || presented ? "ok" : ""}"><i class="${submitted || presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Submit your demo<small>${presented ? "Submitted." : submitted ? "Submitted. Waiting for Aleem to confirm." : project ? "Your live link, plus a short video or note if you have one." : "Put your project on the board first."}</small></div></li>
+      <li class="${presented ? "ok" : ""}"><i class="${presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Aleem confirms your demo<small>${presented ? "Confirmed. Well built." : "Your certificate unlocks the moment he does."}</small></div></li></ul>
+    ${me.certified_at ? `<a class="btn pri" href="/app/certificate"><i class="ph ph-certificate"></i>View and download my certificate</a>`
+      : project ? `<form class="demo" id="demoF" novalidate>
+          <label class="f">Live link<small>Where anyone can open your project.</small><input class="in" type="url" id="dLink" name="link" required placeholder="https://your-app.vercel.app" value="${esc(project.link || "")}"></label>
+          <label class="f">Demo video <small>Optional. A Loom, Drive or YouTube link.</small><input class="in" type="url" id="dVideo" name="video" placeholder="https://" value="${esc(project.demo_video || "")}"></label>
+          <label class="f">Anything Aleem should know <small>Optional.</small><textarea class="in" id="dNote" name="note" rows="2" maxlength="600">${esc(project.demo_note || "")}</textarea></label>
+          <p class="err" id="dErr" role="alert"></p>
+          <button class="btn pri" type="submit" id="dBtn"><i class="ph ph-paper-plane-tilt"></i>${submitted ? "Update my demo" : "Submit my demo"}</button></form>`
+      : `<span class="chip"><i class="ph ph-lock-simple"></i>Unlocks after your demo is confirmed</span>`}`;
+  const df = document.getElementById("demoF");
+  if (df) df.addEventListener("submit", async e => {
+    e.preventDefault(); const err = document.getElementById("dErr"), btn = document.getElementById("dBtn"); err.textContent = "";
+    const link = df.link.value.trim(), video = df.video.value.trim();
+    if (!safeUrl(link)) { err.textContent = "Add your live link, starting with https://"; df.link.focus(); return; }
+    if (video && !safeUrl(video)) { err.textContent = "The video link should start with https://"; df.video.focus(); return; }
+    btn.disabled = true; btn.lastChild.textContent = "Sending…";
+    const { data, error } = await sb.rpc("submit_demo", { link, video: video || null, note: df.note.value.trim() || null });
+    if (error || !data) { btn.disabled = false; btn.lastChild.textContent = "Submit my demo"; err.textContent = "That didn’t send. Check the link and try again."; return; }
+    MAB.toast("Demo submitted. Aleem will confirm it.");
+    setTimeout(() => location.reload(), 900);
+  });
 
   document.getElementById("main").setAttribute("aria-busy", "false");
 })();

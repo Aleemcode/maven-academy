@@ -22,7 +22,7 @@ const T = {
     insert: me => me.student,
     update: (me, r) => r.user_id === me.uid || me.fac,
     del: (me, r) => r.user_id === me.uid || me.fac,
-    cols: { builder: 80, project_name: 120, problem: 600, audience: 400, done_looks_like: 600, status: 20, kind: 60, features: 1200, link: 500, comfort: 40, help_needed: 600 }
+    cols: { builder: 80, project_name: 120, problem: 600, audience: 400, done_looks_like: 600, status: 20, kind: 60, features: 1200, link: 500, comfort: 40, help_needed: 600, demo_note: 600, demo_video: 500 }
   },
   feedback: {
     read: (me, r) => r.user_id === me.uid || me.fac,
@@ -145,13 +145,21 @@ const RPC = {
     }
     return true;
   },
+  async submit_demo(me, a) { // student hands in their demo for Aleem to confirm
+    if (!me.student) return false;
+    const mine = (await all("projects", [["user_id", me.uid]]))[0]; if (!mine) return false;
+    const okUrl = u => { try { const x = new URL(String(u || "")); return /^https?:$/.test(x.protocol) ? x.href.slice(0, 500) : null; } catch (e) { return null; } };
+    const link = okUrl(a.link); if (!link) throw new Error("link");
+    await db().collection("projects").doc(mine.id).set({ link, demo_video: okUrl(a.video), demo_note: cut(a.note, 600), demo_submitted_at: mine.demo_submitted_at || now() }, { merge: true });
+    return true;
+  },
   async verify_certificate(me, a) {
     const code = String(a.p_code || "").trim().toUpperCase(); if (!code) return [];
     const q = await students().where("cert_code", "==", code).limit(1).get();
     if (q.empty) return [];
     const s = q.docs[0].data(); if (!s.certified_at) return [];
     const p = s.user_id ? (await all("projects", [["user_id", s.user_id]]))[0] : null;
-    return [{ full_name: s.full_name, project_name: p ? p.project_name : null, cohort: s.cohort || 1, certified_at: s.certified_at }];
+    return [{ full_name: s.full_name, project_name: p ? p.project_name : null, link: p ? p.link || null : null, cohort: s.cohort || 1, certified_at: s.certified_at }];
   },
   async facilitator_overview(me) {
     if (!me.fac) return [];
@@ -160,6 +168,7 @@ const RPC = {
       const p = s.user_id ? ps.find(x => x.user_id === s.user_id) : null;
       return { email: s.email, full_name: s.full_name || null, role: s.role || "student", claimed: !!s.user_id, project_id: p ? p.id : null, project_name: p ? p.project_name : null,
         status: p ? p.status : null, link: p ? p.link : null, presented_at: p ? p.presented_at || null : null, comfort: p ? p.comfort || null : null, help_needed: p ? p.help_needed || null : null,
+        demo_submitted_at: p ? p.demo_submitted_at || null : null, demo_video: p ? p.demo_video || null : null, demo_note: p ? p.demo_note || null : null,
         feedback_sessions: s.user_id ? fs.filter(f => f.user_id === s.user_id).map(f => f.session).sort((a, b) => a - b) : [], certified_at: s.certified_at || null, cert_code: s.cert_code || null };
     });
     return rows.sort((a, b) => (a.role === b.role ? 0 : a.role === "student" ? 1 : -1) || String(a.full_name || "~").localeCompare(String(b.full_name || "~")) || a.email.localeCompare(b.email));
