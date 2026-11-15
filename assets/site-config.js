@@ -14,8 +14,10 @@ window.MAVEN_REGISTER_URL = "/#price";
 // Firebase web app settings for the student app (/app). These are public by design; access is controlled on the server.
 // Firebase console → Project settings → General → Your apps → Web app → SDK setup and configuration → Config.
 window.MAVEN_FIREBASE = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  appId: ""
+  apiKey: "AIzaSyDI9M_vUMc4QpSOerbRqgo3pX2uYwGv74E",
+  authDomain: "maven-academy-eb5fb.firebaseapp.com",
+  projectId: "maven-academy-eb5fb",
+  storageBucket: "maven-academy-eb5fb.firebasestorage.app",
+  messagingSenderId: "1054079263158",
+  appId: "1:1054079263158:web:e569284d84d3fa3693a117"
 };
