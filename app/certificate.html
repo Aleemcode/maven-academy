@@ -17,7 +17,12 @@
 .stage{position:relative;width:100%;overflow:hidden}
 .cert{position:absolute;left:0;top:0;width:1123px;height:794px;transform-origin:0 0;background:#FFFDF7;color:#14261D;font-family:"Instrument Sans",system-ui,sans-serif;display:grid;grid-template-columns:1fr 318px;box-shadow:0 18px 40px rgba(20,38,29,.18)}
 .cert .frame{position:absolute;inset:18px 336px 18px 18px;border:3px solid #14261D;pointer-events:none;z-index:2}
-.cert .frame::after{content:"";position:absolute;inset:7px;border:1px solid #14261D;opacity:.35}
+.cert .frame::after{content:"";position:absolute;inset:7px;border:1.5px solid #B8902F}
+.cert .guil{position:absolute;left:18px;top:18px;width:769px;height:758px;pointer-events:none;z-index:0}
+.c-main{position:relative;z-index:1}
+.micro{position:absolute;left:40px;right:358px;bottom:32px;font:700 5.5px/1 "Space Mono",monospace;letter-spacing:.18em;color:#14261D;opacity:.55;white-space:nowrap;overflow:hidden;z-index:3}
+.c-verwrap{display:flex;gap:14px;align-items:flex-end}
+.qr{width:78px;height:78px;flex:none;image-rendering:pixelated}
 .c-main{padding:62px 40px 54px 70px;display:flex;flex-direction:column;justify-content:space-between}
 .c-brand{display:flex;align-items:center;gap:14px}
 .c-brand img{height:52px;width:auto}
@@ -26,7 +31,7 @@
 .c-kick{font:700 14px/1 "Space Mono",monospace;letter-spacing:.26em;color:#AD4F16}
 .c-pre{font-size:18px;color:#4A5A50;margin:22px 0 6px}
 .c-name{font:800 84px/.95 "Bricolage Grotesque",Georgia,serif;letter-spacing:-.045em;margin:0 0 22px;max-width:680px}
-.c-name.long{font-size:64px}
+.c-name{white-space:nowrap}
 .c-body{font-size:18.5px;line-height:1.5;color:#3C4B42;max-width:600px;margin:0}
 .c-body b{color:#14261D}
 .c-link{display:inline-block;margin-top:14px;font:700 14px/1 "Space Mono",monospace;background:#D6E59A;border-radius:999px;padding:8px 14px;color:#14261D}
@@ -39,10 +44,8 @@
 .c-side .tag{font:700 12px/1 "Space Mono",monospace;letter-spacing:.22em;color:#D6E59A}
 .c-side .yr{font:800 92px/.85 "Bricolage Grotesque",Georgia,serif;letter-spacing:-.05em;color:#D6E59A;margin-top:14px}
 .c-side .yr small{display:block;font:700 13px/1.4 "Space Mono",monospace;letter-spacing:.18em;color:#C9D2C3;margin-top:12px}
-.seal{width:176px;height:176px;border-radius:50%;background:#E8722C;border:3px solid #F4F0E5;box-shadow:0 0 0 6px #14261D,0 0 0 8px #E8722C;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#14261D;align-self:center}
-.seal i{font:700 10.5px/1 "Space Mono",monospace;letter-spacing:.2em;font-style:normal}
-.seal b{font:800 30px/.95 "Bricolage Grotesque",Georgia,serif;letter-spacing:-.02em;margin:7px 0}
-.c-side ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font:700 11.5px/1.2 "Space Mono",monospace;letter-spacing:.14em;color:#C9D2C3}
+.seal{display:block;width:236px;height:296px;align-self:center;margin:-6px 0 -18px}
+.c-side ul{position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font:700 11.5px/1.2 "Space Mono",monospace;letter-spacing:.14em;color:#C9D2C3}
 .c-side li::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#D6E59A;margin-right:10px;vertical-align:1px}
 .status{max-width:560px;margin:40px auto;padding:26px 24px;text-align:center}
 .status h1{font-family:var(--disp);font-weight:800;font-size:28px;letter-spacing:-.03em;margin:10px 0 8px}
@@ -52,6 +55,7 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="/assets/site-config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -73,26 +77,115 @@
   function cert({ full_name, project_name, link, cohort, certified_at }, c) {
     const name = full_name || "Maven Builder";
     const yr = new Date(certified_at).getFullYear();
-    return `<div class="stage" id="stage"><article class="cert" id="cert" aria-label="Certificate of completion for ${esc(name)}"><i class="frame" aria-hidden="true"></i>
+    return `<div class="stage" id="stage"><article class="cert" id="cert" aria-label="Certificate of completion for ${esc(name)}"><canvas class="guil" id="guil" width="1538" height="1516" aria-hidden="true"></canvas><i class="frame" aria-hidden="true"></i><div class="micro" aria-hidden="true">${("MAVEN BUILDER ACADEMY · CERTIFIED BUILDER · " + c + " · ").repeat(14)}</div>
       <div class="c-main">
         <div class="c-brand"><img src="/assets/brand/maven-mark-dark.svg" alt=""><div><b>Maven Builder Academy</b><small>DESIGN MAVEN STUDIO</small></div></div>
         <div>
           <span class="c-kick">CERTIFICATE OF COMPLETION</span>
           <p class="c-pre">This certifies that</p>
-          <h2 class="c-name${name.length > 18 ? " long" : ""}">${esc(name)}</h2>
+          <h2 class="c-name" id="cName">${esc(name)}</h2>
           <p class="c-body">completed the <b>Builder Intensive</b>, Cohort ${esc(cohort || 1)}, and presented${project_name ? ` <b>${esc(project_name)}</b>` : " their build"} at Demo Day: a real product, designed with taste and shipped to a live link.</p>
           ${link && host(link) ? `<span class="c-link">${esc(host(link))}</span>` : ""}
         </div>
         <div class="c-foot">
           <div class="c-sig"><div class="hand">Aleem Akinyoola</div><div class="line">FACILITATOR · ${esc(longDate(certified_at).toUpperCase())}</div></div>
-          <div class="c-ver">VERIFY AT ${esc(location.host.toUpperCase())}/APP/CERTIFICATE<b>${esc(c)}</b></div>
+          <div class="c-verwrap"><canvas class="qr" id="qr" width="312" height="312" aria-label="QR code that opens the verification page"></canvas><div class="c-ver">SCAN OR VISIT<br>${esc(location.host.toUpperCase())}/APP/CERTIFICATE<b>${esc(c)}</b></div></div>
         </div>
       </div>
       <aside class="c-side">
         <div><span class="tag">COHORT ${esc(String(cohort || 1).padStart(2, "0"))} · DEMO DAY</span><div class="yr">${yr}<small>BUILDER<br>INTENSIVE</small></div></div>
-        <div class="seal"><i>MAVEN</i><b>Shipped<br>with taste</b><i>CERTIFIED</i></div>
+        <canvas class="seal" id="seal" width="708" height="888" role="img" aria-label="Gold seal: Maven Builder Academy, certified builder, ${yr}"></canvas>
         <ul><li>AI FLUENCY</li><li>DESIGN LANGUAGE</li><li>SYSTEM THINKING</li><li>PROTOTYPE</li><li>GO LIVE</li></ul>
       </aside></article></div>`;
+  }
+
+  // ---- the seal, guilloche and QR are drawn on canvas so the download matches the screen exactly ----
+  function goldGrad(g, x0, y0, x1, y1) {
+    const gr = g.createLinearGradient(x0, y0, x1, y1);
+    [[0, "#7A5A16"], [.18, "#D9B45A"], [.34, "#F7E7A6"], [.5, "#B98C2C"], [.68, "#F2D987"], [.84, "#A27A22"], [1, "#6E5014"]].forEach(([o, c]) => gr.addColorStop(o, c));
+    return gr;
+  }
+  function drawSeal(cv, { yr, cohort, mark }) {
+    const g = cv.getContext("2d"), W = cv.width, k = W / 236, cx = W / 2, cy = 118 * k, R = 104 * k;
+    g.clearRect(0, 0, cv.width, cv.height);
+    // ribbons
+    const ribbon = (dir) => {
+      g.save(); g.translate(cx, cy); g.rotate(dir * 0.32);
+      const w = 30 * k, L = 168 * k;
+      const rg = g.createLinearGradient(-w, 0, w, 0); rg.addColorStop(0, "#9E4612"); rg.addColorStop(.5, "#E8722C"); rg.addColorStop(1, "#A84C15");
+      g.fillStyle = rg; g.beginPath(); g.moveTo(-w, 0); g.lineTo(w, 0); g.lineTo(w, L); g.lineTo(0, L - 22 * k); g.lineTo(-w, L); g.closePath(); g.fill();
+      g.strokeStyle = "rgba(20,38,29,.35)"; g.lineWidth = 1.2 * k; g.stroke();
+      g.strokeStyle = "rgba(247,231,166,.55)"; g.lineWidth = 1 * k; g.beginPath(); g.moveTo(-w + 5 * k, 0); g.lineTo(-w + 5 * k, L - 6 * k); g.moveTo(w - 5 * k, 0); g.lineTo(w - 5 * k, L - 6 * k); g.stroke();
+      g.restore();
+    };
+    ribbon(1); ribbon(-1);
+    // shadow under the rosette
+    g.save(); g.shadowColor = "rgba(0,0,0,.45)"; g.shadowBlur = 14 * k; g.shadowOffsetY = 5 * k;
+    // serrated rosette edge
+    const N = 72; g.beginPath();
+    for (let i = 0; i <= N * 2; i++) { const a = i / (N * 2) * Math.PI * 2 - Math.PI / 2, r = i % 2 ? R * .935 : R; g.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); }
+    g.closePath(); g.fillStyle = goldGrad(g, cx - R, cy - R, cx + R, cy + R); g.fill(); g.restore();
+    g.strokeStyle = "#6E5014"; g.lineWidth = 1 * k; g.stroke();
+    // radial ridges (embossed foil)
+    g.save(); g.beginPath(); g.arc(cx, cy, R * .9, 0, Math.PI * 2); g.clip();
+    for (let i = 0; i < 180; i++) { const a = i / 180 * Math.PI * 2; g.strokeStyle = i % 2 ? "rgba(255,248,215,.18)" : "rgba(90,64,12,.16)"; g.lineWidth = 1.1 * k; g.beginPath(); g.moveTo(cx + Math.cos(a) * R * .66, cy + Math.sin(a) * R * .66); g.lineTo(cx + Math.cos(a) * R * .9, cy + Math.sin(a) * R * .9); g.stroke(); }
+    g.restore();
+    // rings
+    const ring = (r, w, c) => { g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.strokeStyle = c; g.lineWidth = w; g.stroke(); };
+    ring(R * .9, 2.2 * k, "#5E430F"); ring(R * .885, 1 * k, "rgba(255,246,210,.8)");
+    // curved text band
+    const txt = "MAVEN BUILDER ACADEMY ✦ CERTIFIED BUILDER ✦ ";
+    g.save(); g.fillStyle = "#3A2A08"; g.font = `700 ${11.2 * k}px "Space Mono", monospace`; g.textAlign = "center"; g.textBaseline = "middle";
+    const rt = R * .775, chars = [...txt], step = Math.PI * 2 / chars.length;
+    chars.forEach((ch, i) => { const a = -Math.PI / 2 + i * step; g.save(); g.translate(cx + Math.cos(a) * rt, cy + Math.sin(a) * rt); g.rotate(a + Math.PI / 2); g.fillText(ch, 0, 0); g.restore(); });
+    g.restore();
+    ring(R * .665, 2 * k, "#5E430F"); ring(R * .65, 1 * k, "rgba(255,246,210,.85)");
+    // centre medallion: forest with gold type
+    const cr = R * .62; const mg = g.createRadialGradient(cx - cr * .3, cy - cr * .4, cr * .1, cx, cy, cr); mg.addColorStop(0, "#22402F"); mg.addColorStop(1, "#0E1C14");
+    g.beginPath(); g.arc(cx, cy, cr, 0, Math.PI * 2); g.fillStyle = mg; g.fill();
+    ring(cr - 5 * k, 1 * k, "rgba(217,180,90,.7)");
+    g.textAlign = "center"; g.textBaseline = "alphabetic";
+    g.fillStyle = goldGrad(g, cx - cr, cy - cr, cx + cr, cy + cr);
+    g.font = `700 ${8.4 * k}px "Space Mono", monospace`; g.fillText("COHORT " + String(cohort || 1).padStart(2, "0") + " · " + yr, cx, cy - 30 * k);
+    if (mark) { // the Maven mark, foiled in gold
+      const ms = 46 * k, off = document.createElement("canvas"); off.width = off.height = Math.ceil(ms);
+      const o = off.getContext("2d"); const ar = (mark.naturalWidth || 1) / (mark.naturalHeight || 1); const mw = ar >= 1 ? ms : ms * ar, mh = ar >= 1 ? ms / ar : ms;
+      o.drawImage(mark, (ms - mw) / 2, (ms - mh) / 2, mw, mh); o.globalCompositeOperation = "source-in"; o.fillStyle = goldGrad(o, 0, 0, ms, ms); o.fillRect(0, 0, ms, ms);
+      g.drawImage(off, cx - ms / 2, cy - ms / 2 - 2 * k);
+    } else { g.font = `800 ${30 * k}px "Bricolage Grotesque", Georgia, serif`; g.fillText("M", cx, cy + 10 * k); }
+    g.font = `700 ${8.4 * k}px "Space Mono", monospace`; g.fillText("SHIPPED WITH TASTE", cx, cy + 34 * k);
+    // light sweep
+    g.save(); g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.clip();
+    const sh = g.createLinearGradient(cx - R, cy - R, cx + R * .2, cy + R * .2); sh.addColorStop(0, "rgba(255,255,255,.22)"); sh.addColorStop(.45, "rgba(255,255,255,0)"); g.fillStyle = sh; g.fillRect(cx - R, cy - R, R * 2, R * 2); g.restore();
+  }
+  function drawGuilloche(cv) {
+    const g = cv.getContext("2d"), s = cv.width / 769; g.clearRect(0, 0, cv.width, cv.height);
+    const cx = 640 * s, cy = 600 * s; g.lineWidth = .6 * s;
+    for (let j = 0; j < 3; j++) {
+      g.strokeStyle = ["rgba(184,144,47,.10)", "rgba(20,38,29,.035)", "rgba(184,144,47,.07)"][j];
+      const Rr = (150 + j * 46) * s, r = (17 + j * 5) * s, d = (60 + j * 14) * s;
+      g.beginPath();
+      for (let t = 0; t <= Math.PI * 2 * r / s; t += .012) { const x = (Rr - r) * Math.cos(t) + d * Math.cos((Rr - r) / r * t), y = (Rr - r) * Math.sin(t) - d * Math.sin((Rr - r) / r * t); g.lineTo(cx + x, cy + y); }
+      g.stroke();
+    }
+  }
+  function drawQR(cv, text) {
+    if (!window.qrcode) { cv.remove(); return; }
+    const q = qrcode(0, "M"); q.addData(text); q.make();
+    const n = q.getModuleCount(), g = cv.getContext("2d"), m = cv.width / (n + 2);
+    g.fillStyle = "#FFFDF7"; g.fillRect(0, 0, cv.width, cv.height); g.fillStyle = "#14261D";
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) g.fillRect(Math.round((c + 1) * m), Math.round((r + 1) * m), Math.ceil(m), Math.ceil(m));
+  }
+  async function paint(row, c) {
+    await document.fonts.ready;
+    try { await Promise.all(['800 34px "Bricolage Grotesque"', '700 11px "Space Mono"'].map(f => document.fonts.load(f))); } catch (e) {}
+    const nm = document.getElementById("cName");
+    if (nm) { let fs = 84; nm.style.fontSize = fs + "px"; while (nm.scrollWidth > 660 && fs > 40) { fs -= 2; nm.style.fontSize = fs + "px"; } if (nm.scrollWidth > 660) { nm.style.whiteSpace = "normal"; } }
+    const yr = new Date(row.certified_at).getFullYear();
+    const mark = await new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(null); im.src = "/assets/brand/maven-mark-dark.svg"; });
+    drawSeal(document.getElementById("seal"), { yr, cohort: row.cohort, mark });
+    drawGuilloche(document.getElementById("guil"));
+    drawQR(document.getElementById("qr"), verifyUrl(c));
   }
   function fit() {
     const st = document.getElementById("stage"), c = document.getElementById("cert"); if (!st || !c) return;
@@ -119,7 +212,7 @@
     const row = (data || [])[0];
     if (!row) { main.innerHTML = `<div class="card status"><img src="/assets/brand/maven-mark-dark.svg" alt="" style="height:40px"><h1>No certificate with that code</h1><p>Check the code and try again.</p></div>`; return; }
     main.innerHTML = `<span class="verified"><i class="ph-fill ph-seal-check"></i>Verified by Maven Builder Academy</span><div style="height:18px"></div>${cert(row, code)}`;
-    fit(); return;
+    fit(); paint(row, code); return;
   }
 
   const { me } = await boot({ page: "cert" });
@@ -133,7 +226,7 @@
   main.innerHTML = `<span class="kick">Well built, ${esc(MAB.first(me.full_name))}</span><h1 class="hello">Your certificate</h1>
     <div class="tools no-print"><button class="btn pri" type="button" id="dlPdf"><i class="ph ph-file-pdf"></i>Download PDF</button><button class="btn" type="button" id="dlPng"><i class="ph ph-image"></i>Download image</button><a class="btn" href="${share}" target="_blank" rel="noopener"><i class="ph ph-linkedin-logo"></i>Share on LinkedIn</a><button class="btn" type="button" id="copy"><i class="ph ph-link"></i>Copy verify link</button></div>
     ${cert(row, me.cert_code)}`;
-  fit(); wireDownloads(fileName(me.full_name));
+  fit(); await paint(row, me.cert_code); wireDownloads(fileName(me.full_name));
   document.getElementById("copy").onclick = async () => { try { await navigator.clipboard.writeText(verifyUrl(me.cert_code)); MAB.toast("Verify link copied"); } catch (e) { MAB.toast(verifyUrl(me.cert_code)); } };
 })();
 </script>
