@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cohort feedback · Maven Builder Academy</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Tell Aleem how Cohort 1 of Maven Builder Academy went. Three minutes.">
+<link rel="icon" type="image/svg+xml" href="/assets/brand/maven-mark-dark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="/app/assets/app.css">
+<style>
+.wrap{max-width:640px;margin:0 auto;padding:28px 16px 64px}
+.hero{background:var(--forest);color:var(--cream);border:var(--bw) solid var(--forest);border-radius:24px;padding:28px 22px;box-shadow:6px 6px 0 var(--terra);margin-bottom:24px}
+.hero .kick{color:var(--lime)}
+.hero h1{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,8vw,2.9rem);line-height:1;letter-spacing:-.04em;margin:12px 0}
+.hero p{color:#C9D1C6}
+.script{font-family:"Caveat",cursive;font-size:26px;color:var(--terra);margin-top:6px}
+.q{background:var(--paper);border:var(--bw) solid var(--forest);border-radius:20px;padding:20px 18px;margin-bottom:16px;box-shadow:4px 4px 0 var(--forest)}
+.q .t{display:block;font-weight:700;font-size:18px;margin-bottom:4px}
+.q .h{display:block;color:var(--muted);font-size:14px;margin-bottom:12px}
+.num{font-family:var(--mono);font-size:12px;color:var(--terra-d);letter-spacing:.14em;margin-bottom:6px;display:block;font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts input{position:absolute;opacity:0;pointer-events:none}
+.opts label{flex:1 1 auto;min-width:48px;min-height:46px;display:grid;place-items:center;text-align:center;border:var(--bw) solid var(--forest);border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer;background:var(--cream);user-select:none;transition:transform .08s}
+.opts label:active{transform:scale(.96)}
+.opts input:checked+label{background:var(--terra);box-shadow:3px 3px 0 var(--forest)}
+.opts input:focus-visible+label{outline:3px solid #3B82C4;outline-offset:2px}
+.nps label{min-width:40px;padding:8px 0;flex:1 1 40px}
+.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:8px}
+.send{width:100%;font-family:var(--disp);font-weight:800;font-size:22px;background:var(--terra);color:var(--forest);border:var(--bw) solid var(--forest);border-radius:18px;padding:18px;box-shadow:5px 5px 0 var(--forest);margin-top:8px}
+.send:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--forest)}
+.send[disabled]{opacity:.6;cursor:wait}
+.req{color:var(--terra-d)}
+.done .hero{box-shadow:6px 6px 0 var(--lime)}
+.done h1{color:var(--lime)}
+.priv{font-size:13.5px;color:var(--muted);text-align:center;margin-top:12px}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:20px;text-decoration:none;color:var(--forest)}
+.top img{height:34px}.top b{font-family:var(--disp);font-weight:800;font-size:18px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+.feature{background:var(--lime)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:15px;margin-top:12px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--forest);flex:none;margin-top:1px}
+#o-nps{display:grid;grid-template-columns:repeat(11,minmax(0,1fr))}
+#o-nps label{min-width:0;padding:8px 0}
+@media (max-width:560px){#o-nps{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.f{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px}
+.f small{font-weight:500;color:var(--muted)}
+</style>
+</head>
+<body>
+<main class="wrap">
+<a class="top" href="/"><img src="/assets/brand/maven-mark-dark.svg" alt=""><b>Maven Builder Academy</b></a>
+<section id="formView">
+  <div class="hero"><span class="kick">Cohort 1 · 3 minutes</span><h1>How did it really go?</h1><p>Honest answers make Cohort 2 better. If you fell behind or went quiet, your answer matters most.</p></div>
+  <form id="f" novalidate>
+    <div class="q"><span class="num">01</span><span class="t" id="q1">Where did you end up?</span>
+      <div class="opts" role="radiogroup" aria-labelledby="q1">
+        <input type="radio" name="finish" id="fi1" value="presented"><label for="fi1">Presented at Demo Day</label>
+        <input type="radio" name="finish" id="fi2" value="built"><label for="fi2">Built it, didn’t present</label>
+        <input type="radio" name="finish" id="fi3" value="behind"><label for="fi3">Fell behind</label>
+        <input type="radio" name="finish" id="fi4" value="not_started"><label for="fi4">Didn’t really start</label></div></div>
+    <div class="q"><span class="num">02</span><label class="t" for="valuable">What was the most valuable thing you learned?</label>
+      <textarea class="in" id="valuable" name="valuable" maxlength="1200" rows="3"></textarea></div>
+    <div class="q"><span class="num">03</span><span class="t" id="q3">What made it hard to keep up?</span><span class="h">Pick any that apply.</span>
+      <div class="opts" role="group" aria-labelledby="q3">
+        <input type="checkbox" name="hard" id="h1" value="time"><label for="h1">Time</label>
+        <input type="checkbox" name="hard" id="h2" value="pace"><label for="h2">Pace</label>
+        <input type="checkbox" name="hard" id="h3" value="tools"><label for="h3">The tools</label>
+        <input type="checkbox" name="hard" id="h4" value="data"><label for="h4">Internet or data</label>
+        <input type="checkbox" name="hard" id="h5" value="confidence"><label for="h5">Confidence</label>
+        <input type="checkbox" name="hard" id="h6" value="other"><label for="h6">Something else</label></div>
+      <textarea class="in" id="hard_note" name="hard_note" maxlength="600" rows="2" placeholder="Tell me more (optional)" style="margin-top:12px"></textarea></div>
+    <div class="q"><span class="num">04</span><label class="t" for="change">One thing I should change for Cohort 2?</label>
+      <textarea class="in" id="change" name="change" maxlength="1200" rows="3"></textarea></div>
+    <div class="q"><span class="num">05</span><span class="t" id="q5">How likely are you to recommend Maven to a friend?</span>
+      <div class="opts nps" role="radiogroup" aria-labelledby="q5" id="o-nps"></div>
+      <div class="scale"><span>Not likely</span><span>Very likely</span></div></div>
+    <div class="q"><span class="num">06</span><span class="t">Who’s answering?</span><span class="h">Optional. Your email only stops you being counted twice; it’s never shared.</span>
+      <div class="two"><label class="f">Name<input class="in" id="name" name="name" maxlength="80" autocomplete="name"></label>
+      <label class="f">Email<input class="in" id="email" name="email" type="email" maxlength="200" autocomplete="email" inputmode="email"></label></div></div>
+    <div class="q feature"><span class="num">07 · OPTIONAL</span><label class="t" for="testimonial">Want to be featured on the Maven website?</label>
+      <span class="h" style="color:var(--forest)">2–3 sentences: where you were before, what you built, what changed.</span>
+      <textarea class="in" id="testimonial" name="testimonial" maxlength="800" rows="3"></textarea>
+      <div class="two" style="margin-top:12px"><label class="f">Project name<input class="in" id="project" name="project" maxlength="120"></label>
+      <label class="f">Live link<input class="in" id="link" name="link" type="url" maxlength="500" placeholder="https://"></label></div>
+      <label class="check"><input type="checkbox" id="consent" name="consent"><span>Maven can show this, with my name and project, on its website and social pages.</span></label></div>
+    <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <button class="send" type="submit" id="btn">Send my feedback</button>
+    <p class="err" id="err" role="alert" style="margin-top:12px"></p>
+    <p class="priv">Only Aleem reads your answers. Testimonials appear publicly only if you tick the box.</p>
+  </form>
+</section>
+<section class="done" id="doneView" hidden aria-live="polite">
+  <div class="hero"><span class="kick">Received</span><h1>Thank you, builder.</h1><p id="doneMsg">Your feedback is in. It goes straight into planning Cohort 2.</p><p class="script">now go ship the next thing</p></div>
+  <button class="btn" type="button" id="again"><i class="ph ph-pencil-simple"></i>Change my answers</button>
+</section>
+</main>
+<script>
+(function(){
+  const KEY = "mab_cohort1_feedback";
+  const $ = id => document.getElementById(id), f = $("f");
+  $("o-nps").innerHTML = Array.from({ length: 11 }, (_, i) => `<input type="radio" name="nps" id="n${i}" value="${i}"><label for="n${i}">${i}</label>`).join("");
+  const show = done => { $("formView").hidden = done; $("doneView").hidden = !done; window.scrollTo(0, 0); };
+  let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
+  if (saved) {
+    show(true); $("doneMsg").textContent = "You already sent your feedback from this device. Thank you.";
+    for (const [k, v] of Object.entries(saved)) {
+      if (k === "hard") (v || []).forEach(h => { const x = f.querySelector(`[name=hard][value="${h}"]`); if (x) x.checked = true; });
+      else if (k === "finish" || k === "nps") { const x = f.querySelector(`[name=${k}][value="${v}"]`); if (x) x.checked = true; }
+      else if (k === "consent") $("consent").checked = !!v;
+      else if (f.elements[k] && typeof v === "string") f.elements[k].value = v;
+    }
+  }
+  $("again").onclick = () => show(false);
+  f.addEventListener("submit", async e => {
+    e.preventDefault(); const err = $("err"), btn = $("btn"); err.textContent = "";
+    const val = n => (f.elements[n] && f.elements[n].value || "").trim();
+    const pick = n => { const x = f.querySelector(`[name=${n}]:checked`); return x ? x.value : null; };
+    const body = { finish: pick("finish"), valuable: val("valuable"), hard: [...f.querySelectorAll("[name=hard]:checked")].map(x => x.value), hard_note: val("hard_note"),
+      change: val("change"), nps: pick("nps"), name: val("name"), email: val("email"), testimonial: val("testimonial"), project: val("project"), link: val("link"),
+      consent: $("consent").checked, website: val("website") };
+    if (!body.valuable && !body.change && body.nps == null && !body.testimonial) { err.textContent = "Answer at least one question before sending."; return; }
+    if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) { err.textContent = "That email doesn’t look right. Fix it or leave it empty."; $("email").focus(); return; }
+    if (body.testimonial && body.consent && !body.name) { err.textContent = "Add your name so we can show your testimonial."; $("name").focus(); return; }
+    if (body.link && !/^https?:\/\//i.test(body.link)) body.link = "https://" + body.link;
+    btn.disabled = true; btn.textContent = "Sending…";
+    try {
+      const r = await fetch("/api/cohort-feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (!r.ok) throw new Error(r.status);
+      try { const { website, ...keep } = body; localStorage.setItem(KEY, JSON.stringify(keep)); } catch (x) {}
+      $("doneMsg").textContent = "Your feedback is in. It goes straight into planning Cohort 2."; show(true);
+    } catch (x) { err.textContent = "That didn’t send. Check your connection and tap again."; }
+    btn.disabled = false; btn.textContent = "Send my feedback";
+  });
+})();
+</script>
+</body>
+</html>

@@ -37,6 +37,11 @@ const T = {
     del: (me, r) => r.user_id === me.uid || me.fac,
     cols: { author: 80, name: 120, tool: 40, prompt: 60000, is_public: "b" }
   },
+  cohort_feedback: {
+    read: me => me.fac,
+    update: me => me.fac,
+    cols: { featured: "b" }
+  },
   taste_cards: {
     read: me => me.student,
     hide: () => ["edit_key"],

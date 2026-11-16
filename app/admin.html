@@ -57,6 +57,20 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
 .quotes li{background:var(--cream);border:2px solid var(--hair);border-radius:12px;padding:10px 12px;font-size:14px}
 .quotes li span{display:block;font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:4px}
 .addf{padding:20px;display:flex;flex-direction:column;gap:14px;max-width:520px}
+.rv{display:flex;flex-direction:column;gap:16px}
+.rv-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.rv-link{font-family:var(--mono);font-size:13px;background:var(--cream);border:2px solid var(--forest);border-radius:999px;padding:8px 14px}
+.rv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.rv-bars{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.rv-bars div{display:grid;grid-template-columns:130px 1fr 28px;gap:10px;align-items:center}
+.rv-bars i{display:block;height:10px;border-radius:99px;background:var(--terra)}
+.rv-item{background:var(--paper);border:2px solid var(--forest);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.rv-item header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.rv-item dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:6px 12px;margin:0;font-size:14.5px}
+.rv-item dt{color:var(--muted);font-weight:600}.rv-item dd{margin:0}
+.rv-item>.btn{align-self:flex-start}
+.rv-quote{background:var(--lime);border:2px solid var(--forest);border-radius:14px;padding:12px 14px;font-size:15px}
+@media (max-width:600px){.rv-item dl{grid-template-columns:1fr}.rv-bars div{grid-template-columns:100px 1fr 24px}}
 </style>
 <script src="/assets/site-config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -75,6 +89,7 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
     <button type="button" role="tab" data-tab="students" aria-selected="true">Students</button>
     <button type="button" role="tab" data-tab="sessions" aria-selected="false">Sessions</button>
     <button type="button" role="tab" data-tab="feedback" aria-selected="false">Feedback</button>
+    <button type="button" role="tab" data-tab="review" aria-selected="false">Cohort review</button>
     <button type="button" role="tab" data-tab="add" aria-selected="false">Add a student</button>
   </div>
 
@@ -85,6 +100,7 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
   </section>
   <section data-panel="sessions" hidden><div class="sess" id="sess"></div></section>
   <section data-panel="feedback" hidden><div class="fbs" id="fbs"></div></section>
+  <section data-panel="review" hidden><div class="rv" id="rv"><p class="empty">Loading…</p></div></section>
   <section data-panel="add" hidden>
     <form class="card addf" id="addF" novalidate>
       <h2 class="sec">Add someone who paid another way</h2>
@@ -271,6 +287,38 @@ td .sub{display:block;color:var(--muted);font-size:13px;word-break:break-all}
   });
 
   load().then(() => sync(false));
+
+  // cohort review: answers from the public /feedback page
+  const FIN = { presented: "Presented at Demo Day", built: "Built, didn’t present", behind: "Fell behind", not_started: "Didn’t really start" };
+  const HARDN = { time: "Time", pace: "Pace", tools: "The tools", data: "Internet or data", confidence: "Confidence", other: "Something else" };
+  let review = [];
+  async function loadReview() {
+    const { data } = await sb.from("cohort_feedback").select("*").order("updated_at", { ascending: false });
+    review = data || []; renderReview();
+  }
+  function renderReview() {
+    const n = review.length, url = location.origin + "/feedback";
+    const np = review.map(r => r.nps).filter(v => v !== null && v !== undefined);
+    const nps = np.length ? Math.round(100 * (np.filter(v => v >= 9).length - np.filter(v => v <= 6).length) / np.length) : "–";
+    const count = (key, map) => Object.keys(map).map(k => [map[k], review.filter(r => key === "hard" ? (r.hard || []).includes(k) : r[key] === k).length]);
+    const bars = rows => { const max = Math.max(1, ...rows.map(x => x[1])); return `<div class="rv-bars">${rows.map(([l, c]) => `<div><span>${esc(l)}</span><i style="width:${Math.max(2, c / max * 100)}%"></i><b>${c}</b></div>`).join("")}</div>`; };
+    const quotes = review.filter(r => r.testimonial && r.consent);
+    document.getElementById("rv").innerHTML = `<div class="rv-head"><div><span class="kick">Share this link with the group</span><div class="rv-link" id="rvLink">${esc(url)}</div></div><button class="btn sm" type="button" id="rvCopy"><i class="ph ph-copy"></i>Copy link</button></div>
+      <div class="rv-stats"><div class="card stat"><b>${n}</b>responses</div><div class="card stat"><b>${nps}</b>NPS</div><div class="card stat"><b>${quotes.length}</b>testimonials you can use</div><div class="card stat"><b>${review.filter(r => r.featured).length}</b>featured</div></div>
+      ${n ? `<div class="two-col" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px"><article class="card" style="padding:16px"><h3 class="sec" style="font-size:18px">Where they ended up</h3>${bars(count("finish", FIN))}</article><article class="card" style="padding:16px"><h3 class="sec" style="font-size:18px">What made it hard</h3>${bars(count("hard", HARDN))}</article></div>` : ""}
+      ${review.map(r => `<article class="rv-item"><header><div><b>${esc(r.name || "Anonymous")}</b>${r.email ? `<span class="sub"> · ${esc(r.email)}</span>` : ""}</div><div>${r.finish ? `<span class="chip">${esc(FIN[r.finish])}</span>` : ""} ${r.nps != null ? `<span class="chip ${r.nps >= 9 ? "lime" : ""}">NPS ${r.nps}</span>` : ""}</div></header>
+        <dl>${r.valuable ? `<dt>Most valuable</dt><dd>${esc(r.valuable)}</dd>` : ""}${(r.hard || []).length || r.hard_note ? `<dt>Made it hard</dt><dd>${esc((r.hard || []).map(h => HARDN[h]).join(", "))}${r.hard_note ? ` · ${esc(r.hard_note)}` : ""}</dd>` : ""}${r.change ? `<dt>Change for Cohort 2</dt><dd>${esc(r.change)}</dd>` : ""}</dl>
+        ${r.testimonial ? `<div class="rv-quote">“${esc(r.testimonial)}”${r.project ? `<br><b>${esc(r.project)}</b>` : ""}${safeUrl(r.link) ? ` · <a href="${esc(safeUrl(r.link))}" target="_blank" rel="noopener">live link</a>` : ""}</div>
+          ${r.consent ? `<button class="btn sm ${r.featured ? "pri" : ""}" type="button" data-feature="${esc(r.id)}" data-on="${r.featured ? 0 : 1}"><i class="ph ph-star"></i>${r.featured ? "Featured on the website" : "Feature on the website"}</button>` : `<span class="sub">Not cleared for public use.</span>`}` : ""}</article>`).join("") || `<p class="empty">No responses yet. Share the link above with the group.</p>`}`;
+    document.getElementById("rvCopy").onclick = async () => { try { await navigator.clipboard.writeText(url); toast("Link copied"); } catch (e) { toast(url); } };
+  }
+  document.getElementById("rv").addEventListener("click", async e => {
+    const b = e.target.closest("[data-feature]"); if (!b) return; b.disabled = true;
+    const { error } = await sb.from("cohort_feedback").update({ featured: b.dataset.on === "1" }).eq("id", b.dataset.feature);
+    if (error) { b.disabled = false; toast("Couldn’t update."); return; }
+    const r = review.find(x => x.id === b.dataset.feature); if (r) r.featured = b.dataset.on === "1"; renderReview();
+  });
+  loadReview();
 })();
 </script>
 </body>
