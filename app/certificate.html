@@ -218,6 +218,14 @@
     document.getElementById("vf").onsubmit = e => { e.preventDefault(); const v = document.getElementById("vc").value.trim(); if (v) location.href = "/verify/" + encodeURIComponent(v.toUpperCase()); };
     return;
   }
+  if (code === "SAMPLE") { // a clearly marked example, so students can see what a verified certificate looks like
+    document.getElementById("shell").remove();
+    const row = { full_name: "Your Full Name", project_name: "Your Project", link: "https://your-project.vercel.app", cohort: 1, certified_at: new Date().toISOString() };
+    main.innerHTML = `<span class="verified" style="background:var(--lime)"><i class="ph ph-info"></i>Sample certificate · not issued to anyone</span>
+      <p style="margin:14px 0 18px;color:var(--ink-2);max-width:72ch">This is what a verified Maven Builder Academy certificate looks like. A real one shows the builder’s name, their capstone project and live link, the issue date and a unique ID. Anyone can check a real certificate by scanning its QR code or entering its ID at <a href="/verify">${esc(location.host.replace(/^www\./, ""))}/verify</a>.</p>
+      <div style="position:relative">${cert(row, "MAB1-SAMPLE")}<div aria-hidden="true" style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none"><span style="font:800 clamp(48px,12vw,150px)/1 'Bricolage Grotesque',sans-serif;color:rgba(232,114,44,.22);transform:rotate(-18deg);letter-spacing:.06em">SAMPLE</span></div></div>`;
+    fit(); paint(row, "SAMPLE"); return;
+  }
   if (code) {
     document.getElementById("shell").remove();
     const { data } = await sb.rpc("verify_certificate", { p_code: code });
