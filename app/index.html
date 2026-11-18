@@ -234,9 +234,10 @@
   const submitted = !!(project && project.demo_submitted_at);
   document.getElementById("cert").innerHTML = `<ul class="steps">
       <li class="${project ? "ok" : ""}"><i class="${project ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Put your project on the board<small>${project ? "Done." : "This is the build you’ll present."}</small></div></li>
-      <li class="${asked.length && gave === asked.length ? "ok" : ""}"><i class="${asked.length && gave === asked.length ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Share feedback after each session<small>${gave} of ${asked.length} so far. It shapes the next session.</small></div></li>
-      <li class="${submitted || presented ? "ok" : ""}"><i class="${submitted || presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Submit your demo<small>${presented ? "Submitted." : submitted ? "Submitted. Waiting for Aleem to confirm." : project ? "Your live link, plus a short video or note if you have one." : "Put your project on the board first."}</small></div></li>
-      <li class="${presented ? "ok" : ""}"><i class="${presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Aleem confirms your demo<small>${presented ? "Confirmed. Well built." : "Your certificate unlocks the moment he does."}</small></div></li></ul>
+      <li class="${submitted || presented ? "ok" : ""}"><i class="${submitted || presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Confirm your name and submit your demo<small>${presented || submitted ? "Submitted." : project ? "Your full name as it should appear, and your live link. Use the form below." : "Put your project on the board first."}</small></div></li>
+      <li class="${presented ? "ok" : ""}"><i class="${presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Aleem confirms your demo<small>${presented ? "Confirmed. Well built." : submitted ? "Waiting for Aleem to review it. Your certificate unlocks the moment he confirms." : "Your certificate unlocks the moment he confirms."}</small></div></li>
+      <li class="${me.certified_at ? "ok" : ""}"><i class="${me.certified_at ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Download and share your certificate<small>${me.certified_at ? "Ready. PDF or image, with your own verify link." : "PDF or image, with a QR code anyone can scan to check it’s genuine."}</small></div></li></ul>
+    <p class="hint" style="margin:10px 0 14px;font-size:14px;color:var(--muted)">Optional, not required for the certificate: session feedback (${gave} of ${asked.length} given) and the <a href="/feedback">cohort feedback form</a>. Both help shape Cohort 2.</p>
     ${me.certified_at ? `<a class="btn pri" href="/app/certificate"><i class="ph ph-certificate"></i>View and download my certificate</a>`
       : project ? `<form class="demo" id="demoF" novalidate>
           <label class="f">Your name for the certificate<small>Exactly as it should appear: full name, correct spelling.</small><input class="in" type="text" id="dName" name="cname" required maxlength="80" autocomplete="name" value="${esc(me.cert_name || me.full_name || "")}"></label>
@@ -245,7 +246,7 @@
           <label class="f">Anything Aleem should know <small>Optional.</small><textarea class="in" id="dNote" name="note" rows="2" maxlength="600">${esc(project.demo_note || "")}</textarea></label>
           <p class="err" id="dErr" role="alert"></p>
           <button class="btn pri" type="submit" id="dBtn"><i class="ph ph-paper-plane-tilt"></i>${submitted ? "Update my demo" : "Submit my demo"}</button></form>`
-      : `<span class="chip"><i class="ph ph-lock-simple"></i>Unlocks after your demo is confirmed</span>`}`;
+      : `<a class="btn pri" href="/app/board"><i class="ph ph-kanban"></i>Add your project to the board</a>`}`;
   const df = document.getElementById("demoF");
   if (df) df.addEventListener("submit", async e => {
     e.preventDefault(); const err = document.getElementById("dErr"), btn = document.getElementById("dBtn"); err.textContent = "";
