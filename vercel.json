@@ -8,11 +8,11 @@
     },
     {
       "source": "/verify",
-      "destination": "/app/certificate.html"
+      "destination": "/app/certificate"
     },
     {
       "source": "/verify/:code",
-      "destination": "/app/certificate.html"
+      "destination": "/app/certificate"
     }
   ]
 }
