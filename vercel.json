@@ -2,6 +2,17 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/app/lab-boot", "destination": "/api/lab-boot" }
+    {
+      "source": "/app/lab-boot",
+      "destination": "/api/lab-boot"
+    },
+    {
+      "source": "/verify",
+      "destination": "/app/certificate.html"
+    },
+    {
+      "source": "/verify/:code",
+      "destination": "/app/certificate.html"
+    }
   ]
 }

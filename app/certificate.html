@@ -68,37 +68,41 @@
 <script>
 (async function(){
   const { sb, boot, esc, fmt } = MAB;
-  const code = (new URLSearchParams(location.search).get("c") || "").trim().toUpperCase();
+  const pathCode = (location.pathname.match(/^\/verify\/([^\/?#]+)/) || [])[1];
+  const code = decodeURIComponent(pathCode || new URLSearchParams(location.search).get("c") || "").trim().toUpperCase();
+  const onVerify = /^\/verify/.test(location.pathname);
   const main = document.getElementById("main");
   const longDate = d => fmt(d, { day: "numeric", month: "long", year: "numeric" });
-  const verifyUrl = c => `${location.origin}/app/certificate?c=${encodeURIComponent(c)}`;
+  const safeLink = u => { try { const x = new URL(u); return /^https?:$/.test(x.protocol) ? x.href : ""; } catch (e) { return ""; } };
+  const verifyUrl = c => `${location.origin}/verify/${encodeURIComponent(c)}`;
+  const COHORTS = { 1: { dates: "24 October to 15 November 2026", short: "24 OCT – 15 NOV 2026", hours: 16 } };
+  const shortLink = u => { try { const x = new URL(u); return (x.host + x.pathname).replace(/^www\./, "").replace(/\/$/, ""); } catch (e) { return ""; } };
 
   const host = u => { try { return new URL(u).host.replace(/^www\./, ""); } catch (e) { return ""; } };
-  function cert({ full_name, project_name, link, cohort, certified_at }, c) {
-    const name = full_name || "Maven Builder";
-    const yr = new Date(certified_at).getFullYear();
-    return `<div class="stage" id="stage"><article class="cert" id="cert" aria-label="Certificate of completion for ${esc(name)}"><canvas class="guil" id="guil" width="1538" height="1516" aria-hidden="true"></canvas><i class="frame" aria-hidden="true"></i><div class="micro" aria-hidden="true">${("MAVEN BUILDER ACADEMY · CERTIFIED BUILDER · " + c + " · ").repeat(14)}</div>
+  function cert({ full_name, project_name, link, cohort, certified_at, issued_at }, c) {
+    const name = full_name || "Maven Builder", co = COHORTS[cohort || 1] || COHORTS[1], n = cohort || 1;
+    const issued = issued_at || certified_at, yr = new Date(issued).getFullYear(), live = link ? shortLink(link) : "";
+    return `<div class="stage" id="stage"><article class="cert" id="cert" aria-label="Certificate of completion for ${esc(name)}"><canvas class="guil" id="guil" width="1538" height="1516" aria-hidden="true"></canvas><i class="frame" aria-hidden="true"></i><div class="micro" aria-hidden="true">${("MAVEN BUILDER ACADEMY · CERTIFICATE OF COMPLETION · " + c + " · ").repeat(12)}</div>
       <div class="c-main">
-        <div class="c-brand"><img src="/assets/brand/maven-mark-dark.svg" alt=""><div><b>Maven Builder Academy</b><small>DESIGN MAVEN STUDIO</small></div></div>
+        <div class="c-brand"><img src="/assets/brand/maven-mark-dark.svg" alt=""><div><b>Maven Builder Academy</b><small>BY DESIGN MAVEN STUDIO</small></div></div>
         <div>
           <span class="c-kick">CERTIFICATE OF COMPLETION</span>
-          <p class="c-pre">This certifies that</p>
+          <p class="c-pre">This is to certify that</p>
           <h2 class="c-name" id="cName">${esc(name)}</h2>
-          <p class="c-body">completed the <b>Builder Intensive</b>, Cohort ${esc(cohort || 1)}, and presented${project_name ? ` <b>${esc(project_name)}</b>` : " their build"} at Demo Day: a real product, designed with taste and shipped to a live link.</p>
-          ${link && host(link) ? `<span class="c-link">${esc(host(link))}</span>` : ""}
+          <p class="c-body">has successfully completed <b>Maven Builder Academy, Cohort ${esc(n)}</b>, held from ${esc(co.dates)} (${esc(co.hours)} hours of live instruction and guided building), and presented the capstone project${project_name ? ` <b>${esc(project_name)}</b>` : ""}, designed with taste and shipped to a live link, at Demo Day.</p>
+          ${live ? `<span class="c-link">${esc(live)}</span>` : ""}
         </div>
         <div class="c-foot">
-          <div class="c-sig"><div class="hand">Aleem Akinyoola</div><div class="line">FACILITATOR · ${esc(longDate(certified_at).toUpperCase())}</div></div>
-          <div class="c-verwrap"><canvas class="qr" id="qr" width="312" height="312" aria-label="QR code that opens the verification page"></canvas><div class="c-ver">SCAN OR VISIT<br>${esc(location.host.toUpperCase())}/APP/CERTIFICATE<b>${esc(c)}</b></div></div>
+          <div class="c-sig"><div class="hand">Aleem Akinyoola</div><div class="line">FOUNDER &amp; LEAD FACILITATOR</div></div>
+          <div class="c-verwrap"><canvas class="qr" id="qr" width="312" height="312" aria-label="QR code that opens the verification page"></canvas><div class="c-ver">CERTIFICATE ID<b>${esc(c)}</b>ISSUED ${esc(longDate(issued).toUpperCase())}<br>VERIFY: ${esc(location.host.replace(/^www\./, "").toUpperCase())}/VERIFY</div></div>
         </div>
       </div>
       <aside class="c-side">
-        <div><span class="tag">COHORT ${esc(String(cohort || 1).padStart(2, "0"))} · DEMO DAY</span><div class="yr">${yr}<small>BUILDER<br>INTENSIVE</small></div></div>
-        <canvas class="seal" id="seal" width="708" height="888" role="img" aria-label="Gold seal: Maven Builder Academy, certified builder, ${yr}"></canvas>
-        <ul><li>AI FLUENCY</li><li>DESIGN LANGUAGE</li><li>SYSTEM THINKING</li><li>PROTOTYPE</li><li>GO LIVE</li></ul>
+        <div><span class="tag">COHORT ${esc(n)} · DEMO DAY</span><div class="yr">${yr}<small>${esc(co.short)}<br>${esc(co.hours)} HOURS</small></div></div>
+        <canvas class="seal" id="seal" width="708" height="888" role="img" aria-label="Gold seal: Maven Builder Academy, certificate of completion, verified, Cohort ${esc(n)}, ${yr}"></canvas>
+        <div><span class="tag" style="display:block;margin-bottom:12px">PROGRAMME COVERED</span><ul><li>AI FLUENCY</li><li>DESIGN LANGUAGE</li><li>SYSTEM THINKING</li><li>PROTOTYPING</li><li>DEPLOYMENT</li></ul></div>
       </aside></article></div>`;
   }
-
   // ---- the seal, guilloche and QR are drawn on canvas so the download matches the screen exactly ----
   function goldGrad(g, x0, y0, x1, y1) {
     const gr = g.createLinearGradient(x0, y0, x1, y1);
@@ -134,8 +138,9 @@
     const ring = (r, w, c) => { g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.strokeStyle = c; g.lineWidth = w; g.stroke(); };
     ring(R * .9, 2.2 * k, "#5E430F"); ring(R * .885, 1 * k, "rgba(255,246,210,.8)");
     // curved text band
-    const txt = "MAVEN BUILDER ACADEMY ✦ CERTIFIED BUILDER ✦ ";
+    const txt = "MAVEN BUILDER ACADEMY ✦ CERTIFICATE OF COMPLETION ✦ ";
     g.save(); g.fillStyle = "#3A2A08"; g.font = `700 ${11.2 * k}px "Space Mono", monospace`; g.textAlign = "center"; g.textBaseline = "middle";
+    g.font = `700 ${9.6 * k}px "Space Mono", monospace`;
     const rt = R * .775, chars = [...txt], step = Math.PI * 2 / chars.length;
     chars.forEach((ch, i) => { const a = -Math.PI / 2 + i * step; g.save(); g.translate(cx + Math.cos(a) * rt, cy + Math.sin(a) * rt); g.rotate(a + Math.PI / 2); g.fillText(ch, 0, 0); g.restore(); });
     g.restore();
@@ -146,14 +151,14 @@
     ring(cr - 5 * k, 1 * k, "rgba(217,180,90,.7)");
     g.textAlign = "center"; g.textBaseline = "alphabetic";
     g.fillStyle = goldGrad(g, cx - cr, cy - cr, cx + cr, cy + cr);
-    g.font = `700 ${8.4 * k}px "Space Mono", monospace`; g.fillText("COHORT " + String(cohort || 1).padStart(2, "0") + " · " + yr, cx, cy - 30 * k);
+    g.font = `700 ${8.4 * k}px "Space Mono", monospace`; g.fillText("COHORT " + (cohort || 1) + " · " + yr, cx, cy - 30 * k);
     if (mark) { // the Maven mark, foiled in gold
       const ms = 46 * k, off = document.createElement("canvas"); off.width = off.height = Math.ceil(ms);
       const o = off.getContext("2d"); const ar = (mark.naturalWidth || 1) / (mark.naturalHeight || 1); const mw = ar >= 1 ? ms : ms * ar, mh = ar >= 1 ? ms / ar : ms;
       o.drawImage(mark, (ms - mw) / 2, (ms - mh) / 2, mw, mh); o.globalCompositeOperation = "source-in"; o.fillStyle = goldGrad(o, 0, 0, ms, ms); o.fillRect(0, 0, ms, ms);
       g.drawImage(off, cx - ms / 2, cy - ms / 2 - 2 * k);
     } else { g.font = `800 ${30 * k}px "Bricolage Grotesque", Georgia, serif`; g.fillText("M", cx, cy + 10 * k); }
-    g.font = `700 ${8.4 * k}px "Space Mono", monospace`; g.fillText("SHIPPED WITH TASTE", cx, cy + 34 * k);
+    g.font = `700 ${8.4 * k}px "Space Mono", monospace`; g.fillText("VERIFIED", cx, cy + 34 * k);
     // light sweep
     g.save(); g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.clip();
     const sh = g.createLinearGradient(cx - R, cy - R, cx + R * .2, cy + R * .2); sh.addColorStop(0, "rgba(255,255,255,.22)"); sh.addColorStop(.45, "rgba(255,255,255,0)"); g.fillStyle = sh; g.fillRect(cx - R, cy - R, R * 2, R * 2); g.restore();
@@ -206,12 +211,21 @@
   }
   const fileName = n => "maven-certificate-" + String(n || "builder").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+  if (onVerify && !code) {
+    document.getElementById("shell").remove();
+    main.innerHTML = `<div class="card status"><img src="/assets/brand/maven-mark-dark.svg" alt="" style="height:40px"><h1>Verify a certificate</h1><p>Enter the certificate ID printed on a Maven Builder Academy certificate.</p>
+      <form id="vf" style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center"><input class="in" id="vc" placeholder="MAB1-XXXXXX" aria-label="Certificate ID" style="max-width:240px;text-transform:uppercase"><button class="btn pri" type="submit">Verify</button></form></div>`;
+    document.getElementById("vf").onsubmit = e => { e.preventDefault(); const v = document.getElementById("vc").value.trim(); if (v) location.href = "/verify/" + encodeURIComponent(v.toUpperCase()); };
+    return;
+  }
   if (code) {
     document.getElementById("shell").remove();
     const { data } = await sb.rpc("verify_certificate", { p_code: code });
     const row = (data || [])[0];
     if (!row) { main.innerHTML = `<div class="card status"><img src="/assets/brand/maven-mark-dark.svg" alt="" style="height:40px"><h1>No certificate with that code</h1><p>Check the code and try again.</p></div>`; return; }
-    main.innerHTML = `<span class="verified"><i class="ph-fill ph-seal-check"></i>Verified by Maven Builder Academy</span><div style="height:18px"></div>${cert(row, code)}`;
+    const live = safeLink(row.link);
+    main.innerHTML = `<span class="verified"><i class="ph-fill ph-seal-check"></i>Verified by Maven Builder Academy</span>
+      <p style="margin:14px 0 18px;color:var(--ink-2);max-width:70ch"><b style="color:var(--forest)">${esc(row.full_name)}</b> completed Maven Builder Academy, Cohort ${esc(row.cohort || 1)}. Certificate ${esc(code)}, issued ${esc(longDate(row.issued_at || row.certified_at))}.${live ? ` Capstone project: <a href="${esc(live)}" target="_blank" rel="noopener">${esc(row.project_name || shortLink(live))}</a>.` : ""}</p>${cert(row, code)}`;
     fit(); paint(row, code); return;
   }
 
@@ -221,7 +235,8 @@
     return;
   }
   const { data: proj } = await sb.rpc("my_project");
-  const row = { full_name: me.full_name, project_name: (proj || [])[0]?.project_name, link: (proj || [])[0]?.link, cohort: me.cohort, certified_at: me.certified_at };
+  const p0 = (proj || [])[0] || {};
+  const row = { full_name: me.cert_name || me.full_name, project_name: p0.project_name, link: p0.link, cohort: me.cohort, certified_at: me.certified_at, issued_at: p0.demo_submitted_at || me.certified_at };
   const share = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verifyUrl(me.cert_code))}`;
   main.innerHTML = `<span class="kick">Well built, ${esc(MAB.first(me.full_name))}</span><h1 class="hello">Your certificate</h1>
     <div class="tools no-print"><button class="btn pri" type="button" id="dlPdf"><i class="ph ph-file-pdf"></i>Download PDF</button><button class="btn" type="button" id="dlPng"><i class="ph ph-image"></i>Download image</button><a class="btn" href="${share}" target="_blank" rel="noopener"><i class="ph ph-linkedin-logo"></i>Share on LinkedIn</a><button class="btn" type="button" id="copy"><i class="ph ph-link"></i>Copy verify link</button></div>

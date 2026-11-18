@@ -155,6 +155,8 @@ const RPC = {
     const mine = (await all("projects", [["user_id", me.uid]]))[0]; if (!mine) return false;
     const okUrl = u => { try { const x = new URL(String(u || "")); return /^https?:$/.test(x.protocol) ? x.href.slice(0, 500) : null; } catch (e) { return null; } };
     const link = okUrl(a.link); if (!link) throw new Error("link");
+    const cname = cut(String(a.name || "").trim(), 80); if (!cname || cname.length < 2) throw new Error("name");
+    const st = await studentByUid(me.uid); if (st) await students().doc(st.email).set({ cert_name: cname }, { merge: true });
     await db().collection("projects").doc(mine.id).set({ link, demo_video: okUrl(a.video), demo_note: cut(a.note, 600), demo_submitted_at: mine.demo_submitted_at || now() }, { merge: true });
     return true;
   },
@@ -164,7 +166,7 @@ const RPC = {
     if (q.empty) return [];
     const s = q.docs[0].data(); if (!s.certified_at) return [];
     const p = s.user_id ? (await all("projects", [["user_id", s.user_id]]))[0] : null;
-    return [{ full_name: s.full_name, project_name: p ? p.project_name : null, link: p ? p.link || null : null, cohort: s.cohort || 1, certified_at: s.certified_at }];
+    return [{ full_name: s.cert_name || s.full_name, project_name: p ? p.project_name : null, link: p ? p.link || null : null, cohort: s.cohort || 1, certified_at: s.certified_at, issued_at: (p && p.demo_submitted_at) || s.certified_at }];
   },
   async facilitator_overview(me) {
     if (!me.fac) return [];

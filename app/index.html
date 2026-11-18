@@ -239,7 +239,8 @@
       <li class="${presented ? "ok" : ""}"><i class="${presented ? "ph-fill ph-check-circle" : "ph ph-circle"}"></i><div>Aleem confirms your demo<small>${presented ? "Confirmed. Well built." : "Your certificate unlocks the moment he does."}</small></div></li></ul>
     ${me.certified_at ? `<a class="btn pri" href="/app/certificate"><i class="ph ph-certificate"></i>View and download my certificate</a>`
       : project ? `<form class="demo" id="demoF" novalidate>
-          <label class="f">Live link<small>Where anyone can open your project.</small><input class="in" type="url" id="dLink" name="link" required placeholder="https://your-app.vercel.app" value="${esc(project.link || "")}"></label>
+          <label class="f">Your name for the certificate<small>Exactly as it should appear: full name, correct spelling.</small><input class="in" type="text" id="dName" name="cname" required maxlength="80" autocomplete="name" value="${esc(me.cert_name || me.full_name || "")}"></label>
+          <label class="f">Live link<small>Where anyone can open your project. This exact link is printed on your certificate.</small><input class="in" type="url" id="dLink" name="link" required placeholder="https://your-app.vercel.app" value="${esc(project.link || "")}"></label>
           <label class="f">Demo video <small>Optional. A Loom, Drive or YouTube link.</small><input class="in" type="url" id="dVideo" name="video" placeholder="https://" value="${esc(project.demo_video || "")}"></label>
           <label class="f">Anything Aleem should know <small>Optional.</small><textarea class="in" id="dNote" name="note" rows="2" maxlength="600">${esc(project.demo_note || "")}</textarea></label>
           <p class="err" id="dErr" role="alert"></p>
@@ -249,10 +250,12 @@
   if (df) df.addEventListener("submit", async e => {
     e.preventDefault(); const err = document.getElementById("dErr"), btn = document.getElementById("dBtn"); err.textContent = "";
     const link = df.link.value.trim(), video = df.video.value.trim();
+    const cname = df.cname.value.trim().replace(/\s+/g, " ");
+    if (cname.length < 3 || !/\s/.test(cname)) { err.textContent = "Add your full name (first and last) as it should appear on your certificate."; df.cname.focus(); return; }
     if (!safeUrl(link)) { err.textContent = "Add your live link, starting with https://"; df.link.focus(); return; }
     if (video && !safeUrl(video)) { err.textContent = "The video link should start with https://"; df.video.focus(); return; }
     btn.disabled = true; btn.lastChild.textContent = "Sending…";
-    const { data, error } = await sb.rpc("submit_demo", { link, video: video || null, note: df.note.value.trim() || null });
+    const { data, error } = await sb.rpc("submit_demo", { name: cname, link, video: video || null, note: df.note.value.trim() || null });
     if (error || !data) { btn.disabled = false; btn.lastChild.textContent = "Submit my demo"; err.textContent = "That didn’t send. Check the link and try again."; return; }
     MAB.toast("Demo submitted. Aleem will confirm it.");
     setTimeout(() => location.reload(), 900);
