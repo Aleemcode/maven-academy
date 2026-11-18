@@ -2,6 +2,8 @@
    The database client (Firebase, see db.js), the students-only gate, the shared header, and small helpers.
    Load after /app/assets/db.js. Pages call MAB.boot({ page, facilitator }) and get { me, user }. */
 (function () {
+  // The class app is never shown inside a frame (e.g. a lab panel): if it is, take over the whole tab instead.
+  if (window.top !== window) { try { window.top.location.replace(location.href); } catch (e) {} return; }
   const WA = (window.MAVEN_WA || "2347031117241").replace(/\D/g, "");
   const TZ = "Africa/Lagos";
 

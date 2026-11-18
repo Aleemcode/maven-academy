@@ -7,6 +7,11 @@
 (function () {
   "use strict";
   var M = window.__MAB || {}, APP = M.app;
+  // A lab inside the Lab or Learn panel that lost its embed setting (e.g. after signing in again) gets it back.
+  if (window.top !== window && !/[?&]embed=/.test(location.search)) {
+    var mode = /^\/app\/learn/.test(window.top.location.pathname) ? "learn" : "1";
+    location.replace(location.pathname + (location.search ? location.search + "&" : "?") + "embed=" + mode + location.hash); return;
+  }
   var SB_URL = "https://besjzgmacljwltnzhbzn.supabase.co"; // old address the Taste Lab still calls; translated below
   var SYNC = { "taste-lab": /^tl2_(?!admin)/, "prompt-lab": /^mab_promptlab$/ }[APP];
   var ls; try { ls = window.localStorage; } catch (e) { ls = null; }
@@ -90,7 +95,7 @@
     pill.setAttribute("data-s", s);
   }
   function mount() {
-    if (/[?&]embed=/.test(location.search)) return; // inside the Maven Lab: no floating home pill
+    if (/[?&]embed=/.test(location.search) || window.top !== window) return; // inside the Maven Lab or Learn: no floating home pill
     var css = document.createElement("style");
     css.textContent = ".mab-pill{position:fixed;left:14px;bottom:14px;z-index:90;display:flex;align-items:center;gap:10px;background:#FFFDF7;color:#14261D;border:2.5px solid #14261D;border-radius:999px;box-shadow:3px 3px 0 #14261D;padding:5px 14px 5px 5px;font:600 13px/1.2 'Instrument Sans',system-ui,sans-serif;text-decoration:none;transition:transform .12s,box-shadow .12s}" +
       ".mab-pill:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #14261D}.mab-pill:focus-visible{outline:3px solid #3B82C4;outline-offset:2px}" +
@@ -100,7 +105,7 @@
       (APP==="taste-lab"?".side{padding-bottom:88px!important}":"")+"@media (max-width:600px){.mab-pill{left:10px;bottom:10px;padding:4px 4px}.mab-pill span{display:none}}@media print{.mab-pill{display:none}}";
     document.head.appendChild(css);
     pill = document.createElement("a");
-    pill.className = "mab-pill"; pill.href = "/app"; pill.setAttribute("aria-label", "Back to Maven student home");
+    pill.className = "mab-pill"; pill.href = "/app"; pill.target = "_top"; pill.setAttribute("aria-label", "Back to Maven student home");
     pill.innerHTML = '<img src="/assets/brand/maven-mark-dark.svg" alt=""><span><b>Maven home</b><small></small></span>';
     label = pill.querySelector("small");
     document.body.appendChild(pill);
