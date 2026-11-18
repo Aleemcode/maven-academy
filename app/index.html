@@ -162,8 +162,11 @@
   function renderNext() {
     const el = document.getElementById("next"), s = upcoming();
     if (!s) {
-      el.innerHTML = `<div><span class="kick">Cohort complete</span><h2>You made it to the end.</h2><div class="when"><span>Replays stay below. Your tools stay open.</span></div></div>
-        <div><a class="btn pri block" href="/app/certificate"><i class="ph ph-certificate"></i>See my certificate</a></div>`;
+      const certified = !!me.certified_at, sent = !!(project && project.demo_submitted_at);
+      el.innerHTML = `<div><span class="kick">Cohort complete</span><h2>${certified ? "You made it to the end." : "All sessions done. One step left."}</h2><div class="when"><span>${certified ? "Your certificate is ready. Replays stay below and your tools stay open." : sent ? "Your demo is with Aleem for review. Your certificate unlocks once he confirms it." : "Complete your demo to earn your certificate: put your project on the board, go live, then submit your demo."}</span></div></div>
+        <div>${certified ? `<a class="btn pri block" href="/app/certificate"><i class="ph ph-certificate"></i>Download my certificate</a>`
+          : sent ? `<a class="btn block" href="#cert"><i class="ph ph-hourglass-medium"></i>Demo under review</a>`
+          : `<a class="btn pri block" href="#cert"><i class="ph ph-presentation-chart"></i>Complete your demo</a>`}</div>`;
       return;
     }
     const st = new Date(s.starts_at).getTime(), live = stateOf(s) === "live", url = safeUrl(s.meet_url);

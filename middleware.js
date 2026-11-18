@@ -18,7 +18,7 @@ export default function middleware(req) {
   const app = m[1], rest = m[2];
   if (!rest) return Response.redirect(new URL(`/app/${app}/${url.search}`, url), 308);
   if (!hasCookie(req, "mab_at")) {
-    return Response.redirect(new URL(`/app/login?next=${encodeURIComponent(`/app/${app}/`)}`, url), 302);
+    return Response.redirect(new URL(`/app/login?next=${encodeURIComponent(`/app/${app}/${url.search}`)}`, url), 302);
   }
   // fall through to the static files
 }

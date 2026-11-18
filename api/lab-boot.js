@@ -19,7 +19,8 @@ module.exports = async (req, res) => {
     res.setHeader("Cache-Control", "private, no-store");
     res.end(body);
   };
-  const toLogin = `location.replace("/app/login?next=" + encodeURIComponent("/app/${app}/"));throw new Error("login required");`;
+  // inside the Lab/Learn frames, send the whole page to log in, never just the frame
+  const toLogin = `(window.top||window).location.replace("/app/login?next=" + encodeURIComponent(window.top!==window ? (window.top.location.pathname + window.top.location.search) : "/app/${app}/"));throw new Error("login required");`;
   const offline = `window.__MAB={app:${JSON.stringify(app)},state:{},offline:true};`;
 
   const token = cookie(req, "mab_at");
@@ -27,10 +28,10 @@ module.exports = async (req, res) => {
   if (!ready()) return js(offline);
 
   let uid;
-  try { uid = (await auth().verifyIdToken(token)).uid; } catch (e) { return js(toLogin); }
+  try { uid = (await auth().verifyIdToken(token)).uid; } catch (e) { console.log("lab-boot: session cookie rejected", e && e.code); return js(toLogin); }
   try {
     const st = await studentByUid(uid);
-    if (!st) return js(`location.replace("/app");throw new Error("not on roster");`);
+    if (!st) { console.log("lab-boot: no roster entry for this login"); return js(`(window.top||window).location.replace("/app");throw new Error("not on roster");`); }
     const state = await labState(uid, app);
     const taste = {};
     if (app === "prompt-lab") {

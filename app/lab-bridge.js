@@ -11,7 +11,7 @@
   var SYNC = { "taste-lab": /^tl2_(?!admin)/, "prompt-lab": /^mab_promptlab$/ }[APP];
   var ls; try { ls = window.localStorage; } catch (e) { ls = null; }
   var set = Storage.prototype.setItem, rem = Storage.prototype.removeItem, get = Storage.prototype.getItem;
-  var toLogin = function () { location.replace("/app/login?next=" + encodeURIComponent("/app/" + APP + "/")); };
+  var toLogin = function () { var T = window.top || window; T.location.replace("/app/login?next=" + encodeURIComponent(T !== window ? T.location.pathname + T.location.search : "/app/" + APP + "/")); };
 
   // The class app keeps a fresh Firebase ID token in the mab_at cookie (Path=/app) while it is open.
   function readToken() { var m = document.cookie.match(/(?:^|;\s*)mab_at=([^;]+)/); return m ? decodeURIComponent(m[1]) : ""; }

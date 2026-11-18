@@ -231,7 +231,7 @@
 
   const { me } = await boot({ page: "cert" });
   if (!me.certified_at || !me.cert_code) {
-    main.innerHTML = `<div class="card status rise"><i class="ph ph-lock-simple" style="font-size:40px"></i><h1>Your certificate unlocks after your demo</h1><p>Submit your demo from your home page. As soon as Aleem confirms it, your certificate appears here, ready to download.</p><div style="margin-top:18px"><a class="btn pri" href="/app"><i class="ph ph-house"></i>Back to home</a></div></div>`;
+    main.innerHTML = `<div class="card status rise"><i class="ph ph-lock-simple" style="font-size:40px"></i><h1>Complete your demo to earn your certificate</h1><p>Your certificate is issued once your demo is submitted and confirmed: put your project on the board, take it live, then submit your demo from your home page.</p><div style="margin-top:18px"><a class="btn pri" href="/app#cert"><i class="ph ph-presentation-chart"></i>Complete your demo</a></div></div>`;
     return;
   }
   const { data: proj } = await sb.rpc("my_project");
